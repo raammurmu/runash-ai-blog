@@ -1,24 +1,26 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
+import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-
-const inter = Inter({ subsets: ["latin"] })
+import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "RunAsh AI Blog - Innovation in Live Streaming & AI",
-  description:
-    "Discover the latest innovations in live streaming, AI platforms, e-commerce solutions, and cutting-edge technology.",
-  keywords: "live streaming, AI, e-commerce, API, chat platform, grocery store, payments",
-  authors: [{ name: "RunAsh AI Team" }],
+  title: "RunAsh AI Blog",
+  description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more — by RunAsh AI.",
+  metadataBase: new URL("https://runash.example.com"),
   openGraph: {
     title: "RunAsh AI Blog",
-    description: "Innovation in Live Streaming & AI Technology",
-    images: ["/placeholder.svg?height=630&width=1200"],
+    description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more.",
+    url: "https://runash.example.com",
+    siteName: "RunAsh AI Blog",
+    type: "website",
   },
-    generator: 'v0.dev'
+  twitter: {
+    card: "summary_large_image",
+    title: "RunAsh AI Blog",
+    description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more.",
+  },
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -28,8 +30,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <body className="min-h-svh bg-background text-foreground antialiased">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />
         </ThemeProvider>
