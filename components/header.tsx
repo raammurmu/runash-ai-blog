@@ -70,7 +70,7 @@ export function Header() {
         <div className="flex items-center space-x-6">
           <Link href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-r from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">RA</span>
+              <span className="text-white font-bold text-sm">R</span>
             </div>
             <span className="font-bold text-xl">RunAsh AI</span>
           </Link>
@@ -124,12 +124,12 @@ export function Header() {
             Share
           </Button>
 
-          <Button variant="outline" size="sm" asChild>
+          {/*    <Button variant="outline" size="sm" asChild>
             <Link href="/create">
               <Plus className="h-4 w-4 mr-2" />
               New Post
             </Link>
-          </Button>
+          </Button> */}
 
           <Popover>
             <PopoverTrigger asChild>
@@ -172,7 +172,7 @@ export function Header() {
 
           <ThemeToggle />
 
-          <DropdownMenu>
+          {/*   <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
@@ -206,7 +206,7 @@ export function Header() {
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </header>
