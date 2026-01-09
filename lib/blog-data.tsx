@@ -30,17 +30,17 @@ function authorRef(username: string) {
 export const blogPosts: BlogPost[] = [
   {
     id: "1",
-    title: "Building Real-time Video Streaming with AI Enhancement",
-    slug: "real-time-video-streaming-ai",
-    excerpt: "Implement low-latency streaming pipelines with AI features like auto quality and moderation.",
+    title: "Introducing",
+    slug: "RunAsh",
+    excerpt: "RunAsh is an AI live streaming platform, where the sellers can demonstrate their product for buyer.",
     content: `
       <h2>Overview</h2>
-      <p>Delivering live video at scale requires managing latency, quality, and reliability. In this guide we design an end-to-end pipeline from ingest to playback, adding AI for automatic bitrate selection and content moderation.</p>
+      <p>RunAsh is an AI live streaming platform.</p>
       <h3>Pipeline</h3>
-      <p>We use an RTMP/WebRTC ingest, a transcoding stage, an origin, and a global CDN. We measure effective latency (glass-to-glass) and use QoS events to adapt.</p>
-      <pre><code>{"{ \\"ingest\\": \\"WebRTC\\", \\"codec\\": \\"H.264\\", \\"profile\\": \\"baseline\\" }"}</code></pre>
-      <h3>AI Moderation</h3>
-      <p>Frames are sampled for inference. We run a lightweight model to detect sensitive content and apply policy-driven actions without blocking the main stream.</p>
+      <p>We enable retailer to physical sales experience.</p>
+      <pre><code></code></pre>
+      <h3>AI-Powered</h3>
+      <p>The future of live streaming.</p>
       <h3>Takeaways</h3>
       <ul>
         <li>Use ABR for adaptive quality</li>
@@ -51,12 +51,12 @@ export const blogPosts: BlogPost[] = [
     category: "Live Streaming",
     gradient: "bg-gradient-to-br from-orange-400 to-red-500",
     emoji: "🎥",
-    author: authorRef("alexchen"),
-    publishedAt: "2024-01-15",
+    author: authorRef("rammurmu"),
+    publishedAt: "2026-01-09",
     readTime: "8 min read",
-    likes: 124,
-    comments: 6,
-    upvotes: 89,
+    likes: 0,
+    comments: 0,
+    upvotes: 0,
     tags: ["streaming", "ai", "video", "real-time"],
   },
 ]
@@ -66,10 +66,10 @@ let commentsStore: Comment[] = [
   {
     id: "c1",
     postId: "1",
-    author: authorRef("sarahj"),
-    content: "Loved the breakdown of QoS signals and ABR tuning.",
-    createdAt: "2024-01-16T09:40:00Z",
-    likes: 3,
+    author: authorRef("rammurmu"),
+    content: "Introducing.",
+    createdAt: "2026-01-09PT09:46:00Z",
+    likes: 0,
   },
   
 ]
