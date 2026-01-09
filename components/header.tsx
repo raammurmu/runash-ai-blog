@@ -2,122 +2,113 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Bell, Plus, User, Settings, LogOut, Share2, BookOpen, Heart, Check } from "lucide-react"
+import { Search, Bell, Plus, User, Settings, LogOut, Share2, Heart, Menu, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-// --- Mock Data ---
-const notifications = [
-  { id: 1, message: "John liked your post 'AI in Live Streaming'", time: "2m ago", unread: true },
-  { id: 2, message: "Sarah commented on 'Payment Integration'", time: "1h ago", unread: true },
-]
-
 export function Header() {
-  const [copied, setCopied] = useState(false)
-  const unreadCount = notifications.filter((n) => n.unread).length
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try { await navigator.share({ title: "RunAsh AI", url: window.location.href }) } catch {}
-    } else {
-      await navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
-  }
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container flex h-16 items-center justify-between gap-4 px-4">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 gap-4">
         
-        {/* Logo & Search */}
-        <div className="flex items-center gap-6 flex-1">
+        {/* LEFT: Logo & Desktop Search */}
+        <div className="flex items-center gap-4 flex-1">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="size-8 rounded-lg bg-gradient-to-br from-orange-400 to-yellow-500 flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-xs">RA</span>
+            <div className="size-8 rounded-lg bg-gradient-to-br from-orange-400 to-yellow-500 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+              RA
             </div>
-            <span className="hidden font-bold text-lg md:inline-block">RunAsh AI</span>
+            <span className="hidden font-bold text-lg lg:inline-block tracking-tight">RunAsh AI</span>
           </Link>
-          <SearchBar />
+
+          {/* Desktop Search Bar (Hidden on Mobile) */}
+          <div className="hidden md:relative md:block w-full max-w-[300px] lg:max-w-[400px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
+            <Input placeholder="Search posts..." className="pl-9 h-9 bg-muted/50 focus-visible:bg-background transition-all" />
+          </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={handleShare} className="hidden sm:flex">
-            {copied ? <Check className="h-4 w-4 text-green-500" /> : <Share2 className="h-4 w-4" />}
+        {/* RIGHT: Actions */}
+        <div className="flex items-center gap-1 sm:gap-2">
+          
+          {/* Mobile Search Toggle */}
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <Search className="size-5" />
           </Button>
 
-          <Button size="sm" asChild className="hidden md:flex gap-2">
-            <Link href="/create"> <Plus className="h-4 w-4" /> New Post </Link>
-          </Button>
+          <div className="hidden sm:flex items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-2 border-dashed">
+              <Plus className="size-4" /> <span className="hidden lg:inline">New Post</span>
+            </Button>
+          </div>
 
-          <NotificationBell count={unreadCount} />
-          <ThemeToggle />
+          <NotificationBell />
+          
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
+
           <UserMenu />
+
+          {/* Mobile Menu Drawer */}
+          <MobileDrawer />
         </div>
       </div>
+
+      {/* Expandable Mobile Search Input */}
+      {isSearchOpen && (
+        <div className="p-3 border-b bg-background md:hidden animate-in slide-in-from-top-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
+            <Input autoFocus placeholder="Search..." className="pl-9 w-full" />
+          </div>
+        </div>
+      )}
     </header>
   )
 }
 
-/* --- Sub-Components for Clarity --- */
-
-function SearchBar() {
-  const [open, setOpen] = useState(false)
+function MobileDrawer() {
   return (
-    <div className="relative w-full max-w-sm hidden sm:block">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-      <Input 
-        placeholder="Search..." 
-        className="pl-9 bg-muted/50 focus-visible:bg-background transition-colors"
-        onFocus={() => setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 200)}
-      />
-      {open && (
-        <div className="absolute top-full mt-2 w-full bg-popover border rounded-xl shadow-xl p-2 z-50">
-          <p className="text-[10px] font-medium text-muted-foreground px-2 py-1 uppercase">Recent Topics</p>
-          <div className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg cursor-pointer text-sm">
-            <BookOpen className="h-4 w-4 opacity-70" /> AI-Powered Streaming
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="size-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[280px]">
+        <SheetHeader className="text-left pb-6 border-b">
+          <SheetTitle>Menu</SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col gap-4 py-6">
+          <Button variant="outline" className="justify-start gap-3" asChild>
+            <Link href="/create"><Plus className="size-4" /> Create New Post</Link>
+          </Button>
+          <Button variant="outline" className="justify-start gap-3">
+            <Share2 className="size-4" /> Share Platform
+          </Button>
+          <div className="flex items-center justify-between px-2 pt-4 border-t">
+            <span className="text-sm font-medium">Appearance</span>
+            <ThemeToggle />
           </div>
         </div>
-      )}
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }
 
-function NotificationBell({ count }: { count: number }) {
+function NotificationBell() {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {count > 0 && (
-            <Badge className="absolute -top-0.5 -right-0.5 px-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px]">
-              {count}
-            </Badge>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h4 className="font-semibold">Notifications</h4>
-          <Button variant="link" size="sm" className="h-auto p-0 text-xs">Mark all read</Button>
-        </div>
-        <div className="max-h-64 overflow-auto p-2">
-          {notifications.map(n => (
-            <div key={n.id} className="p-3 hover:bg-muted rounded-md text-sm transition-colors mb-1">
-              <p className={n.unread ? "font-medium" : "text-muted-foreground"}>{n.message}</p>
-              <span className="text-xs opacity-60">{n.time}</span>
-            </div>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <Button variant="ghost" size="icon" className="relative">
+      <Bell className="size-5" />
+      <Badge className="absolute top-1 right-1 size-2 p-0 bg-orange-500 border-2 border-background" />
+    </Button>
   )
 }
 
@@ -125,19 +116,19 @@ function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="size-8 rounded-full p-0">
-          <Avatar className="size-8">
+        <Button variant="ghost" className="size-9 rounded-full p-0">
+          <Avatar className="size-9 border">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>RA</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem asChild><Link href="/profile"><User className="mr-2 h-4 w-4" /> Profile</Link></DropdownMenuItem>
-        <DropdownMenuItem asChild><Link href="/settings"><Settings className="mr-2 h-4 w-4" /> Settings</Link></DropdownMenuItem>
-        <DropdownMenuItem asChild><Link href="/favorites"><Heart className="mr-2 h-4 w-4" /> Favorites</Link></DropdownMenuItem>
+      <DropdownMenuContent align="end" className="w-56 mt-2">
+        <DropdownMenuItem className="py-2"><User className="mr-3 size-4" /> Profile</DropdownMenuItem>
+        <DropdownMenuItem className="py-2"><Settings className="mr-3 size-4" /> Settings</DropdownMenuItem>
+        <DropdownMenuItem className="py-2"><Heart className="mr-3 size-4" /> Favorites</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive"><LogOut className="mr-2 h-4 w-4" /> Logout</DropdownMenuItem>
+        <DropdownMenuItem className="py-2 text-destructive"><LogOut className="mr-3 size-4" /> Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
