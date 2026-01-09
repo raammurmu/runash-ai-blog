@@ -31,24 +31,24 @@ export const blogPosts: BlogPost[] = [
   {
     id: "1",
     title: "Introducing",
-    slug: "RunAsh",
-    excerpt: "RunAsh is an AI live streaming platform, where the sellers can demonstrate their product for buyer.",
+    slug: "platform",
+    excerpt: "RunAsh.",
     content: `
       <h2>Overview</h2>
-      <p>RunAsh is an AI live streaming platform.</p>
-      <h3>Pipeline</h3>
-      <p>We enable retailer to physical sales experience.</p>
+      <p>RunAsh is an AI live streaming platform,wher the sellers can demonstrate their product for buyers.</p>
+      <h3></h3>
+      <p></p>
       <pre><code></code></pre>
-      <h3>AI-Powered</h3>
-      <p>The future of live streaming.</p>
-      <h3>Takeaways</h3>
+      <h3></h3>
+      <p></p>
+      <h3></h3>
       <ul>
-        <li>Use ABR for adaptive quality</li>
-        <li>Emit client QoS beacons every 2s</li>
-        <li>Moderate asynchronously with backpressure</li>
+        <li></li>
+        <li></li>
+        <li></li>
       </ul>
     `,
-    category: "Live Streaming",
+    category: "Company",
     gradient: "bg-gradient-to-br from-orange-400 to-red-500",
     emoji: "🎥",
     author: authorRef("rammurmu"),
@@ -67,7 +67,7 @@ let commentsStore: Comment[] = [
     id: "c1",
     postId: "1",
     author: authorRef("rammurmu"),
-    content: "Introducing.",
+    content: "Great initiative.",
     createdAt: "2026-01-09PT09:46:00Z",
     likes: 0,
   },
@@ -85,13 +85,13 @@ export function getBlogPost(slug: string): BlogPost | undefined {
 export function getAllCategories() {
   const unique = new Map<string, { name: string; slug: string; description: string }>()
   const descriptions: Record<string, string> = {
-    "Live Streaming": "Protocols, QoS, encoding, and global delivery.",
-    "AI Platform": "Inference, embeddings, moderation, and personalization.",
-    "Live Shopping": "Commerce meets livestreaming with real-time UX.",
-    "API Platform": "Contracts, gateways, testing, and observability.",
-    "Payment Systems": "Billing, fraud prevention, and compliance.",
-    "Chat Platform": "Messaging, presence, and scale.",
-    "Grocery Store": "Logistics, routing, and forecasting for delivery.",
+    "Company": "Protocols, QoS, encoding, and global delivery.",
+    "Research": "Inference, embeddings, moderation, and personalization.",
+    "Community": "Commerce meets livestreaming with real-time UX.",
+    "Open Source Collab": "Contracts, gateways, testing, and observability.",
+    "Guid": "Billing, fraud prevention, and compliance.",
+    "Partnerships": "Messaging, presence, and scale.",
+    "Release": "Logistics, routing, and forecasting for delivery.",
   }
   for (const p of blogPosts) {
     if (!unique.has(p.category)) {
