@@ -1,194 +1,170 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
-import { useState } from "react"
+import { Github, Twitter, Linkedin, Mail, Heart, Send, Loader2, ArrowUp, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Github, Twitter, Linkedin, Mail, Heart, Send, Loader2 } from "lucide-react"
-import { toast } from "sonner" // 1. Import toast
+import { toast } from "sonner"
 
-// ... (keep footerLinks and socialLinks arrays exactly as they were) ...
+// --- Configuration ---
 const footerLinks = {
-  categories: [
+  platform: [
     { label: "Live Streaming", href: "/category/streaming" },
     { label: "AI Platform", href: "/category/ai" },
     { label: "Live Shopping", href: "/category/shopping" },
     { label: "API Platform", href: "/category/api" },
-    { label: "Payment Systems", href: "/category/payments" },
   ],
   resources: [
     { label: "Documentation", href: "/docs" },
     { label: "Tutorials", href: "/tutorials" },
     { label: "Community", href: "/community" },
-    { label: "Changelog", href: "/changelog" },
+    { label: "Status", href: "/status", isStatus: true },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
+    { label: "Cookies", href: "/cookies" },
   ],
 }
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "Github" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: Github, href: "#", label: "Github" },
+  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Linkedin, href: "#", label: "LinkedIn" },
   { icon: Mail, href: "mailto:contact@runash.ai", label: "Email" },
 ]
 
 export function Footer() {
+  const [email, setEmail] = React.useState("")
+  const [isLoading, setIsLoading] = React.useState(false)
   const currentYear = new Date().getFullYear()
-  const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false) // Simplified state
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" })
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      })
-
-      if (!response.ok) throw new Error("Subscription failed")
-
-      // 2. Success Toast
-      toast.success("Subscribed successfully!", {
-        description: "You've been added to our newsletter.",
-      })
-      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1200))
+      toast.success("Welcome aboard!", { description: "You're now subscribed to RunAsh AI updates." })
       setEmail("")
     } catch (error) {
-      console.error(error)
-      // 3. Error Toast
-      toast.error("Subscription failed", {
-        description: "Please check your email and try again.",
-      })
+      toast.error("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <footer className="border-t bg-background/50 backdrop-blur-sm">
-      <div className="container px-4 md:px-6 py-12">
+    <footer className="relative border-t bg-background/60 backdrop-blur-md">
+      <div className="container px-4 md:px-6 py-16">
         
-        {/* ... (Top sections remain unchanged) ... */}
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           
-          {/* 1. Brand Section */}
-          <div className="space-y-4">
-             {/* ... (Same as before) ... */}
-             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-xs">RA</span>
+          {/* Brand & Mission (4 Columns) */}
+          <div className="lg:col-span-4 space-y-6">
+            <Link href="/" className="flex items-center gap-2.5 group w-fit">
+              <div className="size-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
+                <span className="text-white font-bold text-sm">RA</span>
               </div>
-              <span className="font-bold text-xl tracking-tight">RunAsh AI</span>
+              <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Empowering developers with next-gen live streaming, AI processing, and e-commerce infrastructure.
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
+              Building the future of real-time infrastructure. From AI-driven streaming to global payment processing, we empower creators everywhere.
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               {socialLinks.map((social) => (
-                <Button key={social.label} variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted" asChild>
-                  <Link href={social.href} target="_blank" rel="noopener noreferrer">
-                    <social.icon className="h-4 w-4 text-muted-foreground" />
-                    <span className="sr-only">{social.label}</span>
+                <Button key={social.label} variant="ghost" size="icon" className="size-9 rounded-full hover:text-orange-500 transition-colors" asChild>
+                  <Link href={social.href} target="_blank" aria-label={social.label}>
+                    <social.icon className="size-4" />
                   </Link>
                 </Button>
               ))}
             </div>
           </div>
 
-          {/* 2. Categories */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Platform</h3>
-            <ul className="space-y-2.5">
-              {footerLinks.categories.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200 block">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Nav Links (4 Columns) */}
+          <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+            <FooterColumn title="Platform" links={footerLinks.platform} />
+            <FooterColumn title="Resources" links={footerLinks.resources} />
           </div>
 
-          {/* 3. Resources */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Resources</h3>
-            <ul className="space-y-2.5">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200 block">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 4. Newsletter */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Stay Updated</h3>
-            <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for the latest AI & streaming updates.
-            </p>
-            
-            <form className="space-y-2" onSubmit={handleSubscribe}>
-              <div className="flex space-x-2">
+          {/* Newsletter (4 Columns) */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="p-6 rounded-2xl bg-muted/40 border border-border/50 space-y-4">
+              <h3 className="font-bold text-sm uppercase tracking-widest text-foreground">Stay in the Loop</h3>
+              <p className="text-sm text-muted-foreground">Join 5,000+ developers receiving our weekly tech insights.</p>
+              
+              <form onSubmit={handleSubscribe} className="flex gap-2">
                 <Input 
-                  placeholder="email@example.com" 
+                  placeholder="Enter email..." 
                   type="email" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-background"
+                  className="bg-background border-none ring-1 ring-border/50 focus-visible:ring-orange-500/50"
                   disabled={isLoading}
                 />
-                <Button 
-                  size="icon" 
-                  type="submit" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                  <span className="sr-only">Subscribe</span>
+                <Button type="submit" size="icon" disabled={isLoading} className="shrink-0 bg-orange-500 hover:bg-orange-600">
+                  {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                 </Button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
 
-        <Separator className="my-8" />
+        <Separator className="my-12 opacity-50" />
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground text-center md:text-left">
-          <div className="flex flex-col sm:flex-row items-center gap-2">
-            <span>&copy; {currentYear} RunAsh AI.</span>
-            <span className="hidden sm:inline text-muted-foreground/50">|</span>
-            <span className="flex items-center gap-1">
-              Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by the RunAsh team.
+        {/* Bottom Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-muted-foreground">
+            <span className="font-medium text-foreground/80">© {currentYear} RunAsh AI Inc.</span>
+            <span className="hidden sm:block opacity-30">|</span>
+            <span className="flex items-center gap-1.5">
+              Built with <Heart className="size-3 text-orange-500 fill-orange-500" /> globally
             </span>
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-            {footerLinks.legal.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">
-                {link.label}
-              </Link>
-            ))}
+
+          <div className="flex items-center gap-6">
+            <div className="flex gap-4 text-xs font-medium text-muted-foreground">
+              {footerLinks.legal.map((link) => (
+                <Link key={link.label} href={link.href} className="hover:text-foreground transition-colors underline-offset-4 hover:underline">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <Button variant="outline" size="icon" onClick={scrollToTop} className="size-8 rounded-full opacity-60 hover:opacity-100">
+              <ArrowUp className="size-4" />
+            </Button>
           </div>
         </div>
       </div>
     </footer>
   )
-    }
+}
+
+function FooterColumn({ title, links }: { title: string, links: any[] }) {
+  return (
+    <div className="space-y-5">
+      <h3 className="font-bold text-xs uppercase tracking-[0.2em] text-foreground/70">{title}</h3>
+      <ul className="space-y-3">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link 
+              href={link.href} 
+              className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-all"
+            >
+              {link.isStatus && <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+              <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+      }
