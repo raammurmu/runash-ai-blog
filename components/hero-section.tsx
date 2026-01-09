@@ -100,4 +100,4 @@ export function HeroSection() {
       </div>
     </section>
   )
-        }
+    }
