@@ -6,45 +6,61 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
 export function HeroSection() {
+  const learningPoints = [
+    "Real-time video pipelines & QoS",
+    "AI-driven recommendations",
+    "Payments and webhooks",
+    "Production-grade API design",
+  ]
+
   return (
-    <section className="mb-8 rounded-2xl bg-gradient-to-br from-orange-400 to-yellow-500 p-8 text-white">
-      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div className="max-w-2xl">
-          <Badge className="bg-white/20 text-white">Editorial</Badge>
-          <h1 className="mt-3 text-3xl font-bold leading-tight md:text-4xl">
-            Practical guides for building real-time, AI-powered products
-          </h1>
-          <p className="mt-3 text-white/90">
-            Learn how to ship live streaming, AI inference, payments, and chat features with scalable APIs and a great
-            developer experience.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild size="sm" className="shadow-sm bg-white text-orange-600 hover:bg-white/90">
+    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-amber-500 p-8 text-white shadow-xl md:p-12">
+      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_320px] lg:items-center">
+        
+        {/* Left Content */}
+        <div className="space-y-6">
+          <Badge className="bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-md">
+            Editorial
+          </Badge>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
+              Build real-time, <br />
+              <span className="text-orange-100">AI-powered products</span>
+            </h1>
+            <p className="max-w-xl text-lg text-orange-50/90 leading-relaxed">
+              Master live streaming, AI inference, and scalable payments through 
+              practical, developer-focused guides.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-4">
+            <Button asChild size="lg" className="bg-white text-orange-600 hover:bg-orange-50 shadow-lg">
               <Link href="#latest">Read latest posts</Link>
             </Button>
-            <Button
-              asChild
-              size="sm"
-              variant="secondary"
-              className="shadow-sm bg-white/20 border-white/30 text-white hover:bg-white/30"
-            >
+            <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 hover:bg-white/20">
               <Link href="/category/ai">Explore AI</Link>
             </Button>
           </div>
         </div>
 
-        <div className="w-full md:w-80 rounded-xl bg-white/10 p-4">
-          <div className="rounded-lg bg-white p-4 text-black shadow-sm">
-            <h3 className="font-semibold">What you’ll learn</h3>
-            <Separator className="my-3" />
-            <ul className="space-y-2 text-sm">
-              <li>{"• Real-time video pipelines and QoS best practices"}</li>
-              <li>{"• AI-driven recommendations and moderation"}</li>
-              <li>{"• Payments, subscriptions, and webhooks"}</li>
-              <li>{"• Production-grade API design and testing"}</li>
+        {/* Right Card */}
+        <div className="group relative">
+          <div className="absolute -inset-1 rounded-2xl bg-white/20 blur transition duration-300 group-hover:bg-white/30" />
+          <div className="relative rounded-2xl bg-white p-6 text-slate-900 shadow-2xl">
+            <h3 className="text-lg font-bold">What you’ll learn</h3>
+            <Separator className="my-4 bg-slate-100" />
+            <ul className="space-y-3">
+              {learningPoints.map((point) => (
+                <li key={point} className="flex items-start gap-2 text-sm font-medium text-slate-600">
+                  <span className="text-orange-500">→</span>
+                  {point}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
+        
       </div>
     </section>
   )
