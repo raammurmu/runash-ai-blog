@@ -224,4 +224,4 @@ function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
       </DialogContent>
     </Dialog>
   )
-  }
+}
