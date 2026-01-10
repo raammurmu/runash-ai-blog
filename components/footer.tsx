@@ -14,30 +14,30 @@ import { useTheme } from "next-themes" // Assuming you use next-themes
 
 const footerLinks = {
   categories: [
-    { label: "Live Streaming", href: "/category/streaming" },
-    { label: "AI Platform", href: "/category/ai" },
-    { label: "Live Shopping", href: "/category/shopping" },
-    { label: "API Platform", href: "/category/api" },
-    { label: "Payment Systems", href: "/category/payments" },
+    { label: "Live Streaming", href: "https://runash.in/" },
+    { label: "AI Platform", href: "https://runash.in/ai" },
+    { label: "Live Shopping", href: "https://runash.in/live" },
+    { label: "API Platform", href: "https://runash.in/api" },
+    { label: "Payment Systems", href: "https:/runash.in/pay" },
   ],
   resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "Tutorials", href: "/tutorials" },
-    { label: "Community", href: "/community" },
-    { label: "Changelog", href: "/changelog" },
+    { label: "Documentation", href: "https:/docs.runash.in/docs" },
+    { label: "Tutorials", href: "https://runash.in/tutorials" },
+    { label: "Community", href: "https:/docs.runash.in/community" },
+    { label: "Changelog", href: "https://docs.runash.in/changelog" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
+    { label: "Privacy Policy", href: "https:/runash.in/privacy" },
+    { label: "Terms of Service", href: "https://runash.in/terms" },
+    { label: "Cookie Policy", href: "https://runash.in/cookies" },
   ],
 }
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "Github" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: Mail, href: "mailto:contact@runash.ai", label: "Email" },
+  { icon: Github, href: "https://github.com/runash-ai", label: "Github" },
+  { icon: Twitter, href: "https://twitter.com/runash_ai", label: "Twitter" },
+  { icon: Linkedin, href: "https://linkedin.com/runash_ai", label: "LinkedIn" },
+  { icon: Mail, href: "mailto:contact@runash.in", label: "Email" },
 ]
 
 export function Footer() {
@@ -76,7 +76,7 @@ export function Footer() {
               <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
             <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs">
-              Infrastructure for the future of streaming and AI. Seamlessly integrated, globally scaled.
+              Runash Digital Innovation Technologies Pvt Ltd.
             </p>
             <div className="mt-6 flex gap-2">
               {socialLinks.map((social) => (
