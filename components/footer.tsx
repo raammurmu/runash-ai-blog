@@ -11,29 +11,29 @@ import { toast } from "sonner"
 // --- Configuration ---
 const footerLinks = {
   platform: [
-    { label: "Live Streaming", href: "/category/streaming" },
-    { label: "AI Platform", href: "/category/ai" },
-    { label: "Live Shopping", href: "/category/shopping" },
-    { label: "API Platform", href: "/category/api" },
+    { label: "Live Streaming", href: "https://runash.in" },
+    { label: "AI Platform", href: "https://runash.in/ai" },
+    { label: "Live Shopping", href: "https://runash.in/live" },
+    { label: "API Platform", href: "https://runash.in/api" },
   ],
   resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "Tutorials", href: "/tutorials" },
-    { label: "Community", href: "/community" },
-    { label: "Status", href: "/status", isStatus: true },
+    { label: "Documentation", href: "https://doc.runash.in/docs" },
+    { label: "Tutorials", href: "https://runash.in/tutorials" },
+    { label: "Community", href: "https://runash.in/community" },
+    { label: "Status", href: "https://runash.in/status", isStatus: true },
   ],
   legal: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
-    { label: "Cookies", href: "/cookies" },
+    { label: "Privacy", href: "https://runash.in/privacy" },
+    { label: "Terms", href: "https://runash.in/terms" },
+    { label: "Cookies", href: "https://runash.in/cookies" },
   ],
 }
 
 const socialLinks = [
-  { icon: Github, href: "#", label: "Github" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Mail, href: "mailto:contact@runash.ai", label: "Email" },
+  { icon: Github, href: "https://github.com/runash-ai", label: "Github" },
+  { icon: Twitter, href: "https://x.com/runash_ai", label: "Twitter" },
+  { icon: Linkedin, href: "https://linkedin.com/runash-ai", label: "LinkedIn" },
+  { icon: Mail, href: "mailto:contact@runash.in", label: "Email" },
 ]
 
 export function Footer() {
@@ -70,12 +70,12 @@ export function Footer() {
           <div className="lg:col-span-4 space-y-6">
             <Link href="/" className="flex items-center gap-2.5 group w-fit">
               <div className="size-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
-                <span className="text-white font-bold text-sm">RA</span>
+                {/* <span className="text-white font-bold text-sm">R</span> */}
               </div>
               <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-              Building the future of real-time infrastructure. From AI-driven streaming to global payment processing, we empower creators everywhere.
+              Runash Digital Innovation Technologies Private Limited 
             </p>
             <div className="flex gap-1">
               {socialLinks.map((social) => (
