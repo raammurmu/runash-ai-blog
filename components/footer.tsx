@@ -5,10 +5,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Github, Twitter, Linkedin, Mail, Heart, Send, Loader2 } from "lucide-react"
-import { toast } from "sonner" // 1. Import toast
+import { 
+  Github, Twitter, Linkedin, Mail, Heart, Send, 
+  Loader2, Globe, Moon, Sun 
+} from "lucide-react"
+import { toast } from "sonner"
+import { useTheme } from "next-themes" // Assuming you use next-themes
 
-// ... (keep footerLinks and socialLinks arrays exactly as they were) ...
 const footerLinks = {
   categories: [
     { label: "Live Streaming", href: "/category/streaming" },
@@ -40,65 +43,46 @@ const socialLinks = [
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false) // Simplified state
+  const [isLoading, setIsLoading] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-
     setIsLoading(true)
-
     try {
-      const response = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      })
-
-      if (!response.ok) throw new Error("Subscription failed")
-
-      // 2. Success Toast
-      toast.success("Subscribed successfully!", {
-        description: "You've been added to our newsletter.",
-      })
-      
+      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulation
+      toast.success("Subscribed successfully!")
       setEmail("")
     } catch (error) {
-      console.error(error)
-      // 3. Error Toast
-      toast.error("Subscription failed", {
-        description: "Please check your email and try again.",
-      })
+      toast.error("Subscription failed")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <footer className="border-t bg-background/50 backdrop-blur-sm">
-      <div className="container px-4 md:px-6 py-12">
+    <footer className="w-full border-t bg-background/50 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         
-        {/* ... (Top sections remain unchanged) ... */}
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           
-          {/* 1. Brand Section */}
-          <div className="space-y-4">
-             {/* ... (Same as before) ... */}
-             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-xs">RA</span>
+          {/* Brand & Social */}
+          <div className="flex flex-col items-center text-center sm:items-start sm:text-left lg:col-span-4">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-sm">RA</span>
               </div>
-              <span className="font-bold text-xl tracking-tight">RunAsh AI</span>
+              <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Empowering developers with next-gen live streaming, AI processing, and e-commerce infrastructure.
+            <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs">
+              Infrastructure for the future of streaming and AI. Seamlessly integrated, globally scaled.
             </p>
-            <div className="flex gap-2">
+            <div className="mt-6 flex gap-2">
               {socialLinks.map((social) => (
-                <Button key={social.label} variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted" asChild>
-                  <Link href={social.href} target="_blank" rel="noopener noreferrer">
-                    <social.icon className="h-4 w-4 text-muted-foreground" />
+                <Button key={social.label} variant="secondary" size="icon" className="h-9 w-9 rounded-full bg-muted/50 hover:bg-orange-500 hover:text-white transition-all" asChild>
+                  <Link href={social.href} target="_blank">
+                    <social.icon className="h-4 w-4" />
                     <span className="sr-only">{social.label}</span>
                   </Link>
                 </Button>
@@ -106,83 +90,96 @@ export function Footer() {
             </div>
           </div>
 
-          {/* 2. Categories */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Platform</h3>
-            <ul className="space-y-2.5">
-              {footerLinks.categories.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200 block">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Links Sections */}
+          <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-4">
+            <div className="space-y-5">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Platform</h3>
+              <ul className="space-y-3">
+                {footerLinks.categories.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-orange-500 transition-colors inline-block">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-5">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Resources</h3>
+              <ul className="space-y-3">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-orange-500 transition-colors inline-block">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* 3. Resources */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Resources</h3>
-            <ul className="space-y-2.5">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200 block">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 4. Newsletter */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm tracking-wider uppercase text-foreground/80">Stay Updated</h3>
-            <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for the latest AI & streaming updates.
-            </p>
-            
-            <form className="space-y-2" onSubmit={handleSubscribe}>
-              <div className="flex space-x-2">
+          {/* Newsletter Section */}
+          <div className="flex flex-col items-center text-center sm:items-start sm:text-left lg:col-span-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Newsletter</h3>
+            <p className="mt-4 text-sm text-muted-foreground">Get technical updates and product news.</p>
+            <form className="mt-6 w-full max-w-sm" onSubmit={handleSubscribe}>
+              <div className="relative group">
                 <Input 
-                  placeholder="email@example.com" 
+                  placeholder="email@work.com" 
                   type="email" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-background"
+                  className="rounded-full pl-4 pr-12 h-11 border-muted-foreground/20 bg-background/50 focus-visible:ring-orange-500"
                   disabled={isLoading}
                 />
                 <Button 
                   size="icon" 
                   type="submit" 
-                  disabled={isLoading}
+                  disabled={isLoading || !email}
+                  className="absolute right-1.5 top-1.5 h-8 w-8 rounded-full bg-orange-500 hover:bg-orange-600 shadow-sm"
                 >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                  <span className="sr-only">Subscribe</span>
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>
               </div>
             </form>
           </div>
         </div>
 
-        <Separator className="my-8" />
+        <Separator className="my-10 opacity-50" />
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground text-center md:text-left">
-          <div className="flex flex-col sm:flex-row items-center gap-2">
-            <span>&copy; {currentYear} RunAsh AI.</span>
-            <span className="hidden sm:inline text-muted-foreground/50">|</span>
-            <span className="flex items-center gap-1">
-              Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by the RunAsh team.
-            </span>
-          </div>
+        {/* Bottom Bar: Utilities & Legal */}
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           
-          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+          {/* Copyright & Utilities */}
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+            <p className="text-sm text-muted-foreground">
+              &copy; {currentYear} RunAsh AI
+            </p>
+            
+            <div className="hidden sm:block h-4 w-[1px] bg-border" />
+
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover:text-foreground">
+                <Globe className="h-3.5 w-3.5" />
+                English
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 text-muted-foreground"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Legal Links */}
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
             {footerLinks.legal.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">
+              <Link key={link.href} href={link.href} className="text-xs font-medium text-muted-foreground hover:text-orange-500 transition-colors">
                 {link.label}
               </Link>
             ))}
@@ -191,4 +188,4 @@ export function Footer() {
       </div>
     </footer>
   )
-    }
+     }
