@@ -75,7 +75,7 @@ export function Footer() {
               <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-              Runash Digital Innovation Technologies Private Limited 
+              Runash Digital Innovation Technologies Pvt Ltd.
             </p>
             <div className="flex gap-1">
               {socialLinks.map((social) => (
@@ -98,7 +98,7 @@ export function Footer() {
           <div className="lg:col-span-4 space-y-6">
             <div className="p-6 rounded-2xl bg-muted/40 border border-border/50 space-y-4">
               <h3 className="font-bold text-sm uppercase tracking-widest text-foreground">Stay in the Loop</h3>
-              <p className="text-sm text-muted-foreground">Join 5,000+ developers receiving our weekly tech insights.</p>
+              <p className="text-sm text-muted-foreground">Join our weekly tech insights.</p>
               
               <form onSubmit={handleSubscribe} className="flex gap-2">
                 <Input 
@@ -123,10 +123,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground/80">© {currentYear} RunAsh AI Inc.</span>
+            <span className="font-medium text-foreground/80">© {currentYear} RunAsh AI.</span>
             <span className="hidden sm:block opacity-30">|</span>
             <span className="flex items-center gap-1.5">
-              Built with <Heart className="size-3 text-orange-500 fill-orange-500" /> globally
+              Built with <Heart className="size-3 text-orange-500 fill-orange-500" /> RunAsh
             </span>
           </div>
 
