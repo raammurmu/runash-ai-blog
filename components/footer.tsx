@@ -76,7 +76,7 @@ export function Footer() {
               <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
             </Link>
             <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs">
-              Runash Digital Innovation Technologies Pvt Ltd.
+              Runash Digital Innovation Technologies Private Limited.
             </p>
             <div className="mt-6 flex gap-2">
               {socialLinks.map((social) => (
