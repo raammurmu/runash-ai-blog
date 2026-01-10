@@ -5,39 +5,31 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { 
-  Github, Twitter, Linkedin, Mail, Heart, Send, 
-  Loader2, Globe, Moon, Sun 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Github, Twitter, Linkedin, Mail, Heart, Send,
+  Loader2, Globe, Moon, Sun, MapPin, Check
 } from "lucide-react"
 import { toast } from "sonner"
-import { useTheme } from "next-themes" // Assuming you use next-themes
+import { useTheme } from "next-themes"
 
-const footerLinks = {
-  categories: [
-    { label: "Live Streaming", href: "/category/streaming" },
-    { label: "AI Platform", href: "/category/ai" },
-    { label: "Live Shopping", href: "/category/shopping" },
-    { label: "API Platform", href: "/category/api" },
-    { label: "Payment Systems", href: "/category/payments" },
-  ],
-  resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "Tutorials", href: "/tutorials" },
-    { label: "Community", href: "/community" },
-    { label: "Changelog", href: "/changelog" },
-  ],
-  legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
-  ],
-}
+const countries = [
+  { name: "USA", code: "US" },
+  { name: "India", code: "IN" },
+  { name: "Singapore", code: "SG" },
+  { name: "China", code: "CN" },
+]
 
-const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "Github" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: Mail, href: "mailto:contact@runash.ai", label: "Email" },
+const languages = [
+  { name: "English", label: "English" },
+  { name: "Hindi", label: "हिन्दी" },
+  { name: "Chinese", label: "中文" },
+  { name: "Singapore", label: "English (SG)" },
 ]
 
 export function Footer() {
@@ -46,146 +38,154 @@ export function Footer() {
   const [isLoading, setIsLoading] = useState(false)
   const { theme, setTheme } = useTheme()
 
+  const [selectedCountry, setSelectedCountry] = useState(countries[0])
+  const [selectedLang, setSelectedLang] = useState(languages[0])
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
     setIsLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulation
-      toast.success("Subscribed successfully!")
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      toast.success("Subscription successful!")
       setEmail("")
     } catch (error) {
-      toast.error("Subscription failed")
+      toast.error("Something went wrong.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <footer className="w-full border-t bg-background/50 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <footer className="w-full border-t bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        {/* Main Sections */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 mb-12">
           
-          {/* Brand & Social */}
+          {/* Brand & Mission */}
           <div className="flex flex-col items-center text-center sm:items-start sm:text-left lg:col-span-4">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-sm">RA</span>
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-yellow-400 flex items-center justify-center shadow-lg">
+                <span className="text-white font-extrabold text-sm">RA</span>
               </div>
-              <span className="font-bold text-2xl tracking-tight">RunAsh AI</span>
+              <span className="text-2xl font-bold tracking-tight">RunAsh AI</span>
             </Link>
-            <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs">
-              Infrastructure for the future of streaming and AI. Seamlessly integrated, globally scaled.
+            <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs">
+              Scaling the next generation of AI-driven media and global commerce infrastructure.
             </p>
-            <div className="mt-6 flex gap-2">
-              {socialLinks.map((social) => (
-                <Button key={social.label} variant="secondary" size="icon" className="h-9 w-9 rounded-full bg-muted/50 hover:bg-orange-500 hover:text-white transition-all" asChild>
-                  <Link href={social.href} target="_blank">
-                    <social.icon className="h-4 w-4" />
-                    <span className="sr-only">{social.label}</span>
-                  </Link>
+            <div className="mt-6 flex gap-3">
+              {/* Replace with actual social links */}
+              {[Github, Twitter, Linkedin].map((Icon, i) => (
+                <Button key={i} variant="ghost" size="icon" className="h-9 w-9 rounded-full border hover:border-orange-500/50 hover:bg-orange-500/10">
+                  <Icon className="h-4 w-4" />
                 </Button>
               ))}
             </div>
           </div>
 
-          {/* Links Sections */}
+          {/* Quick Links */}
           <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-4">
-            <div className="space-y-5">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Platform</h3>
-              <ul className="space-y-3">
-                {footerLinks.categories.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-orange-500 transition-colors inline-block">
-                      {link.label}
-                    </Link>
-                  </li>
+            <div className="space-y-4">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Platform</h4>
+              <nav className="flex flex-col space-y-2">
+                {["AI Engine", "Streaming", "Payments"].map((item) => (
+                  <Link key={item} href="#" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
                 ))}
-              </ul>
+              </nav>
             </div>
-            <div className="space-y-5">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Resources</h3>
-              <ul className="space-y-3">
-                {footerLinks.resources.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-orange-500 transition-colors inline-block">
-                      {link.label}
-                    </Link>
-                  </li>
+            <div className="space-y-4">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Support</h4>
+              <nav className="flex flex-col space-y-2">
+                {["Documentation", "API Ref", "Status"].map((item) => (
+                  <Link key={item} href="#" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
                 ))}
-              </ul>
+              </nav>
             </div>
           </div>
 
-          {/* Newsletter Section */}
-          <div className="flex flex-col items-center text-center sm:items-start sm:text-left lg:col-span-4">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">Newsletter</h3>
-            <p className="mt-4 text-sm text-muted-foreground">Get technical updates and product news.</p>
-            <form className="mt-6 w-full max-w-sm" onSubmit={handleSubscribe}>
-              <div className="relative group">
-                <Input 
-                  placeholder="email@work.com" 
-                  type="email" 
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="rounded-full pl-4 pr-12 h-11 border-muted-foreground/20 bg-background/50 focus-visible:ring-orange-500"
-                  disabled={isLoading}
-                />
-                <Button 
-                  size="icon" 
-                  type="submit" 
-                  disabled={isLoading || !email}
-                  className="absolute right-1.5 top-1.5 h-8 w-8 rounded-full bg-orange-500 hover:bg-orange-600 shadow-sm"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                </Button>
-              </div>
+          {/* Newsletter */}
+          <div className="lg:col-span-4">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground mb-4 text-center sm:text-left">Subscribe to Updates</h4>
+            <form onSubmit={handleSubscribe} className="relative max-w-sm mx-auto sm:ml-0">
+              <Input 
+                placeholder="Enter work email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="rounded-full h-11 bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-orange-500" 
+              />
+              <Button size="icon" className="absolute right-1 top-1 h-9 w-9 rounded-full bg-orange-500 hover:bg-orange-600 transition-all">
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
             </form>
           </div>
         </div>
 
-        <Separator className="my-10 opacity-50" />
+        <Separator className="mb-8 opacity-60" />
 
-        {/* Bottom Bar: Utilities & Legal */}
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        {/* Bottom Utility Bar */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
           
-          {/* Copyright & Utilities */}
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-            <p className="text-sm text-muted-foreground">
-              &copy; {currentYear} RunAsh AI
-            </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
+            <span>&copy; {currentYear} RunAsh AI</span>
             
-            <div className="hidden sm:block h-4 w-[1px] bg-border" />
+            <Separator orientation="vertical" className="hidden sm:block h-4" />
 
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover:text-foreground">
-                <Globe className="h-3.5 w-3.5" />
-                English
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 text-muted-foreground"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </Button>
-            </div>
+            {/* Country Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs font-normal hover:bg-muted">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {selectedCountry.name}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-40">
+                {countries.map((c) => (
+                  <DropdownMenuItem key={c.code} onClick={() => setSelectedCountry(c)} className="flex justify-between items-center">
+                    {c.name} {selectedCountry.code === c.code && <Check className="h-3 w-3 text-orange-500" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs font-normal hover:bg-muted">
+                  <Globe className="h-3.5 w-3.5" />
+                  {selectedLang.label}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-40">
+                {languages.map((l) => (
+                  <DropdownMenuItem key={l.name} onClick={() => setSelectedLang(l)} className="flex justify-between items-center">
+                    {l.label} {selectedLang.name === l.name && <Check className="h-3 w-3 text-orange-500" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* Legal Links */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
-            {footerLinks.legal.map((link) => (
-              <Link key={link.href} href={link.href} className="text-xs font-medium text-muted-foreground hover:text-orange-500 transition-colors">
-                {link.label}
-              </Link>
-            ))}
+          {/* Theme & Socials */}
+          <div className="flex items-center gap-6">
+             <div className="flex gap-4">
+              {["Privacy", "Terms"].map((l) => (
+                <Link key={l} href="#" className="text-xs text-muted-foreground hover:text-foreground">{l}</Link>
+              ))}
+            </div>
+
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-9 w-9 rounded-full border-muted-foreground/20"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              <Sun className="h-4 w-4 scale-100 transition-all dark:scale-0" />
+              <Moon className="absolute h-4 w-4 scale-0 transition-all dark:scale-100" />
+            </Button>
           </div>
         </div>
       </div>
     </footer>
   )
-     }
+   }
