@@ -11,15 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ImageIcon, Video, Eye, Edit } from "lucide-react"
 
 const categories = [
-  "Live Streaming",
-  "Live Shopping",
-  "API Platform",
-  "Documentation",
-  "Payment Systems",
-  "Chat Platform",
-  "Grocery Store",
-  "AI Platform",
-  "AI Research",
+  "Company",
+  "Research",
+  "Community",
+  "Open Source",
+  "Guide",
+  "Partnershis",
+  "Tutorials",
+  "Product Updates",
+  "Release",
 ]
 
 const gradients = [

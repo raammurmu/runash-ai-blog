@@ -12,13 +12,13 @@ type SortKey = "newest" | "popular"
 
 const categories = [
   "All",
-  "Live Streaming",
-  "AI Platform",
-  "Live Shopping",
-  "API Platform",
-  "Payment Systems",
-  "Chat Platform",
-  "Grocery Store",
+  "Company",
+  "Research",
+  "Community",
+  "Open Source",
+  "Guide",
+  "Partnerships",
+  "Release",
 ]
 
 export function BlogGrid() {
