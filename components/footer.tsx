@@ -72,7 +72,7 @@ export function Footer() {
               <span className="text-2xl font-bold tracking-tight">RunAsh AI</span>
             </Link>
             <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs">
-              Scaling the next generation of AI-driven media and global commerce infrastructure.
+              Runash Digital Innovation Technologies Private Limited.
             </p>
             <div className="mt-6 flex gap-3">
               {/* Replace with actual social links */}
@@ -90,7 +90,7 @@ export function Footer() {
               <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Platform</h4>
               <nav className="flex flex-col space-y-2">
                 {["AI Engine", "Streaming", "Payments"].map((item) => (
-                  <Link key={item} href="#" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
+                  <Link key={item} href="https://runash.in" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
                 ))}
               </nav>
             </div>
@@ -98,7 +98,7 @@ export function Footer() {
               <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Support</h4>
               <nav className="flex flex-col space-y-2">
                 {["Documentation", "API Ref", "Status"].map((item) => (
-                  <Link key={item} href="#" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
+                  <Link key={item} href="https://api.runash.in" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
                 ))}
               </nav>
             </div>
@@ -170,7 +170,7 @@ export function Footer() {
           <div className="flex items-center gap-6">
              <div className="flex gap-4">
               {["Privacy", "Terms"].map((l) => (
-                <Link key={l} href="#" className="text-xs text-muted-foreground hover:text-foreground">{l}</Link>
+                <Link key={l} href="https://runash.in/privacy" className="text-xs text-muted-foreground hover:text-foreground">{l}</Link>
               ))}
             </div>
 
