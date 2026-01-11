@@ -134,7 +134,7 @@ export function Footer() {
             {/* Country Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs font-normal hover:bg-muted">
+                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover-text-foreground font-normal hover:bg-muted">
                   <MapPin className="h-3.5 w-3.5" />
                   {selectedCountry.name}
                 </Button>
@@ -151,7 +151,7 @@ export function Footer() {
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs font-normal hover:bg-muted">
+                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover-text-foreground font-normal hover:bg-muted">
                   <Globe className="h-3.5 w-3.5" />
                   {selectedLang.label}
                 </Button>
