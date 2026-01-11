@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 const TOPICS = [
-  "Real-time video pipelines & QoS",
-  "AI recommendations & moderation",
-  "Payments, subscriptions & webhooks",
-  "Production-grade API design",
+  "Documentation",
+  "Changelog",
+  "Tutorials",
+  "Community",
 ]
 
 export function HeroSection() {
@@ -23,8 +23,8 @@ export function HeroSection() {
           </Badge>
           
           <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
-            Build real-time, <br className="hidden md:block" />
-            Blog
+            Blog<br className="hidden md:block" />
+            
           </h1>
           
           <p className="max-w-lg text-lg text-orange-50/90 leading-relaxed">
@@ -36,7 +36,7 @@ export function HeroSection() {
               <Link href="#latest">Read latest posts</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
-              <Link href="/category/ai">Explore AI</Link>
+              <Link href="https://runash.in/ai">Explore AI</Link>
             </Button>
           </div>
         </div>
@@ -46,7 +46,7 @@ export function HeroSection() {
           <div className="rounded-2xl bg-white/10 p-1 backdrop-blur-md">
             <div className="rounded-[14px] bg-white p-6 text-slate-900 shadow-xl">
               <h3 className="text-sm font-bold uppercase tracking-wider text-orange-600">
-                What you’ll learn
+                Learn more 
               </h3>
               <div className="mt-4 h-px bg-slate-100" />
               <ul className="mt-4 space-y-3">
