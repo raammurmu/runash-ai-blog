@@ -42,7 +42,7 @@ export function HeroSection() {
         </div>
 
         {/* Right Feature Card */}
-        <div className="w-full lg:w-96">
+        {/* <div className="w-full lg:w-96">
           <div className="rounded-2xl bg-white/10 p-1 backdrop-blur-md">
             <div className="rounded-[14px] bg-white p-6 text-slate-900 shadow-xl">
               <h3 className="text-sm font-bold uppercase tracking-wider text-orange-600">
@@ -58,9 +58,9 @@ export function HeroSection() {
                 ))}
               </ul>
             </div>
-          </div>
+          </div> 
         </div>
-      </div>
+      </div> */}
     </section>
   )
   }
