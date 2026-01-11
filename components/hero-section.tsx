@@ -4,13 +4,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-const TOPICS = [
-  "Documentation",
-  "Changelog",
-  "Tutorials",
-  "Community",
-]
-
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-yellow-500 p-8 text-white md:p-12">
@@ -41,26 +34,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right Feature Card */}
-        {/* <div className="w-full lg:w-96">
-          <div className="rounded-2xl bg-white/10 p-1 backdrop-blur-md">
-            <div className="rounded-[14px] bg-white p-6 text-slate-900 shadow-xl">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-orange-600">
-                Learn more 
-              </h3>
-              <div className="mt-4 h-px bg-slate-100" />
-              <ul className="mt-4 space-y-3">
-                {TOPICS.map((topic) => (
-                  <li key={topic} className="flex items-start gap-3 text-sm font-medium text-slate-600">
-                    <span className="text-orange-500">→</span>
-                    {topic}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div> 
-        </div>
-      </div> */}
+        
     </section>
   )
   }
