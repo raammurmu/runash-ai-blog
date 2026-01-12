@@ -1,8 +1,29 @@
 "use client"
+
+import * as React from "react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+
+// UI Components
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { ScrollArea } from "@/components/ui/scroll-area" // Optional: for long lists
 import { Separator } from "@/components/ui/separator"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+// Icons
 import {
   Home,
   Video,
@@ -18,78 +39,21 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
+  LogOut,
+  Settings
 } from "lucide-react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
 
+// Data Config
 const categories = [
-  { name: "Home", icon: Home, href: "/", count: null, description: "Main dashboard and overview" },
-  {
-    name: "Live Streaming",
-    icon: Video,
-    href: "/category/streaming",
-    count: 42,
-    description: "Real-time video streaming solutions",
-  },
-  {
-    name: "Live Shopping",
-    icon: ShoppingCart,
-    href: "/category/shopping",
-    count: 28,
-    description: "E-commerce live streaming platforms",
-  },
-  {
-    name: "API Platform",
-    icon: Code,
-    href: "/category/api",
-    count: 156,
-    description: "Developer tools and integrations",
-  },
-  {
-    name: "Documentation",
-    icon: FileText,
-    href: "/category/docs",
-    count: 89,
-    description: "Technical guides and tutorials",
-  },
-  {
-    name: "Payment Systems",
-    icon: CreditCard,
-    href: "/category/payments",
-    count: 34,
-    description: "Payment processing solutions",
-  },
-  {
-    name: "Chat Platform",
-    icon: MessageCircle,
-    href: "/category/chat",
-    count: 67,
-    description: "Real-time messaging systems",
-  },
-  { name: "Grocery Store", icon: Store, href: "/category/grocery", count: 23, description: "Online grocery platforms" },
-  {
-    name: "AI Platform",
-    icon: Brain,
-    href: "/category/ai",
-    count: 198,
-    description: "Artificial intelligence solutions",
-  },
-  {
-    name: "AI Research",
-    icon: Beaker,
-    href: "/category/research",
-    count: 145,
-    description: "Latest AI research and developments",
-  },
+  { name: "Home", icon: Home, href: "/", count: null, description: "Dashboard" },
+  { name: "Live Streaming", icon: Video, href: "/streaming", count: 42, description: "Real-time video" },
+  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 28, description: "E-commerce streams" },
+  { name: "API Platform", icon: Code, href: "/api", count: 156, description: "Dev tools" },
+  { name: "AI Platform", icon: Brain, href: "/ai", count: 198, description: "AI solutions" },
+  { name: "Research", icon: Beaker, href: "/research", count: 145, description: "Latest findings" },
 ]
 
-const trending = [
-  "Real-time Video Processing",
-  "AI-Powered Shopping",
-  "Live Stream Analytics",
-  "Payment Integration",
-  "Voice Commerce",
-]
+const trending = ["Real-time Video", "AI Shopping", "Stream Analytics"]
 
 interface SidebarProps {
   isCollapsed: boolean
@@ -99,129 +63,165 @@ interface SidebarProps {
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   return (
     <aside
-      className={cn("border-r bg-background/50 transition-all duration-300 ease-in-out", isCollapsed ? "w-16" : "w-64")}
+      className={cn(
+        "relative flex flex-col border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 ease-in-out h-screen",
+        isCollapsed ? "w-16" : "w-64"
+      )}
     >
-      <div className="p-4">
-        <Button variant="ghost" size="sm" onClick={onToggle} className="mb-4 w-full justify-center">
+      {/* --- Toggle Button --- */}
+      <div className="flex h-14 items-center justify-between px-4 py-2 border-b">
+        {!isCollapsed && <span className="font-bold text-lg tracking-tight">RunAsh AI</span>}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className={cn("h-8 w-8", isCollapsed && "mx-auto")}
+        >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
+      </div>
 
-        <div className="space-y-6">
-          <div>
-            {!isCollapsed && (
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">Categories</h3>
-            )}
-            <nav className="space-y-1">
-              {categories.map((category) => (
-                <div key={category.name}>
-                  {isCollapsed ? (
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="ghost" className="w-full justify-center h-9 p-2">
-                          <category.icon className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent side="right" className="w-80">
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <category.icon className="h-4 w-4" />
-                            <span className="font-medium">{category.name}</span>
-                            {category.count && <Badge variant="secondary">{category.count}</Badge>}
-                          </div>
-                          <p className="text-sm text-muted-foreground">{category.description}</p>
-                          <Button asChild size="sm" className="w-full">
-                            <Link href={category.href}>View Category</Link>
-                          </Button>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  ) : (
-                    <Button variant="ghost" className="w-full justify-start h-9" asChild>
-                      <Link href={category.href}>
-                        <category.icon className="h-4 w-4 mr-3" />
-                        <span className="flex-1 text-left">{category.name}</span>
-                        {category.count && (
-                          <Badge variant="secondary" className="ml-auto">
-                            {category.count}
-                          </Badge>
-                        )}
-                      </Link>
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </nav>
-          </div>
-
-          {!isCollapsed && (
-            <>
-              <Separator />
-              <div>
-                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3 flex items-center">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Trending Topics
+      {/* --- Main Navigation --- */}
+      <ScrollArea className="flex-1 py-4">
+        <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+          {categories.map((category, index) => (
+            <SidebarItem 
+              key={index} 
+              item={category} 
+              isCollapsed={isCollapsed} 
+            />
+          ))}
+          
+          <Separator className="my-4" />
+          
+          {/* Trending Section */}
+          <div className="px-2">
+             {!isCollapsed ? (
+                <h3 className="mb-2 px-2 text-xs font-semibold uppercase text-muted-foreground">
+                  Trending
                 </h3>
-                <div className="space-y-2">
-                  {trending.map((topic) => (
-                    <Button key={topic} variant="ghost" size="sm" className="w-full justify-start text-xs h-8">
-                      #{topic.replace(/\s+/g, "").toLowerCase()}
-                    </Button>
-                  ))}
+             ) : (
+                <div className="flex justify-center mb-2">
+                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </div>
-              </div>
-
-              <Separator />
-              <div>
-                <Button className="w-full" size="sm">
-                  <Users className="h-4 w-4 mr-2" />
-                  Join Community
-                </Button>
-              </div>
-            </>
-          )}
-
-          {isCollapsed && (
-            <div className="space-y-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="w-full justify-center">
-                    <TrendingUp className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent side="right" className="w-60">
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Trending Topics</h4>
-                    {trending.map((topic) => (
-                      <Button key={topic} variant="ghost" size="sm" className="w-full justify-start text-xs">
-                        #{topic.replace(/\s+/g, "").toLowerCase()}
-                      </Button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="w-full justify-center">
-                    <Users className="h-4 w-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent side="right" className="w-60">
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Community</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Join our growing community of developers and creators.
-                    </p>
-                    <Button className="w-full" size="sm">
-                      Join Community
+             )}
+             
+             <div className="space-y-1">
+                {trending.map((topic) => (
+                   isCollapsed ? null : (
+                    <Button key={topic} variant="ghost" size="sm" className="w-full justify-start text-xs h-7">
+                      <TrendingUp className="mr-2 h-3 w-3 opacity-70" />
+                      {topic}
                     </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
-        </div>
+                   )
+                ))}
+             </div>
+          </div>
+        </nav>
+      </ScrollArea>
+
+      {/* --- Footer with Dialog --- */}
+      <div className="mt-auto p-2 border-t bg-muted/20">
+        <CommunityDialog isCollapsed={isCollapsed} />
       </div>
     </aside>
+  )
+}
+
+// ------------------------------------------------------------------
+// Sub-Components for cleanliness
+// ------------------------------------------------------------------
+
+function SidebarItem({ item, isCollapsed }: { item: any; isCollapsed: boolean }) {
+  // Collapsed View (Icon only + Popover)
+  if (isCollapsed) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-9 w-9 mx-auto">
+            <item.icon className="h-4 w-4" />
+            <span className="sr-only">{item.name}</span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent side="right" className="w-56 p-3">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none flex items-center gap-2">
+              <item.icon className="h-4 w-4" />
+              {item.name}
+            </h4>
+            <p className="text-xs text-muted-foreground">{item.description}</p>
+            {item.count && (
+              <Badge variant="secondary" className="mt-1">
+                {item.count} items
+              </Badge>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
+    )
+  }
+
+  // Expanded View
+  return (
+    <Button variant="ghost" className="w-full justify-start" asChild>
+      <Link href={item.href}>
+        <item.icon className="mr-2 h-4 w-4" />
+        <span className="flex-1">{item.name}</span>
+        {item.count && (
+          <Badge variant="secondary" className="ml-auto h-5 px-1.5 min-w-[2rem] justify-center">
+            {item.count}
+          </Badge>
+        )}
+      </Link>
+    </Button>
+  )
+}
+
+function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button 
+          variant={isCollapsed ? "ghost" : "default"} 
+          size={isCollapsed ? "icon" : "default"} 
+          className={cn("w-full", isCollapsed && "h-9 w-9")}
+        >
+          <Users className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
+          {!isCollapsed && "Join Community"}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Join the Community</DialogTitle>
+          <DialogDescription>
+            Connect with 10,000+ developers building the future of AI streaming.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+           {/* Placeholder for simple content */}
+           <div className="flex items-center gap-4 border p-4 rounded-md">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <MessageCircle className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Discord Server</p>
+                <p className="text-xs text-muted-foreground">Chat with the team live</p>
+              </div>
+              <Button size="sm" variant="outline">Join</Button>
+           </div>
+           
+           <div className="flex items-center gap-4 border p-4 rounded-md">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <Code className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">GitHub Discussions</p>
+                <p className="text-xs text-muted-foreground">Report bugs & request features</p>
+              </div>
+              <Button size="sm" variant="outline">View</Button>
+           </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
