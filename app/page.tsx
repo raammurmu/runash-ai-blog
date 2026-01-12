@@ -14,7 +14,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <div className="flex flex-1">
-        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+        {/* <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} /> */}
         <main className="flex-1 p-6">
           <HeroSection />
           <Suspense fallback={<div>Loading posts...</div>}>
