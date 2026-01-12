@@ -29,6 +29,42 @@ export function AIAssistant() {
     setInput("")
     setIsTyping(true)
 
+    // Inside your AIAssistant component...
+
+const handleSend = async () => {
+  if (!input.trim() || isTyping) return
+
+  const userMessage = { role: "user" as const, content: input }
+  const updatedMessages = [...messages, userMessage]
+  
+  setMessages(updatedMessages)
+  setInput("")
+  setIsTyping(true)
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: updatedMessages }),
+    })
+
+    if (!response.ok) throw new Error("Network response was not ok")
+
+    const data = await response.json()
+    
+    setMessages((prev) => [
+      ...prev, 
+      { role: "assistant", content: data.content }
+    ])
+  } catch (error) {
+    toast.error("AI Assistant is offline. Please try again later.")
+    console.error(error)
+  } finally {
+    setIsTyping(false)
+  }
+}
+
+                     
     // Simulate AI response
     setTimeout(() => {
       setMessages((prev) => [...prev, { 
