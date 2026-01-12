@@ -23,11 +23,11 @@ import {
 
 const categories = [
   { name: "Home", icon: Home, href: "/", description: "Dashboard" },
-  { name: "Live Streaming", icon: Video, href: "/streaming", count: 42, description: "Real-time video" },
-  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 28, description: "E-commerce" },
-  { name: "API Platform", icon: Code, href: "/api", count: 156, description: "Dev tools" },
-  { name: "AI Platform", icon: Brain, href: "/ai", count: 198, description: "AI solutions" },
-  { name: "Research", icon: Beaker, href: "/research", count: 145, description: "Findings" },
+  { name: "Live Streaming", icon: Video, href: "/streaming", count: 0, description: "Real-time video" },
+  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
+  { name: "API Platform", icon: Code, href: "/api", count: 0, description: "Dev tools" },
+  { name: "AI Platform", icon: Brain, href: "/ai", count: 0, description: "AI solutions" },
+  { name: "Research", icon: Beaker, href: "/research", count: 0, description: "Findings" },
 ]
 
 interface SidebarProps {
@@ -55,10 +55,10 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 exit={{ opacity: 0 }}
                 className="flex items-center gap-2 flex-1"
               >
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-orange flex items-center justify-center">
                   <span className="text-primary-foreground font-bold">R</span>
                 </div>
-                <span className="font-bold tracking-tight text-xl">RunAsh</span>
+                <span className="font-bold text-orange tracking-tight text-xl">RunAsh</span>
               </motion.div>
             )}
           </AnimatePresence>
