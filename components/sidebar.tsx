@@ -2,58 +2,33 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 // UI Components
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area" // Optional: for long lists
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 // Icons
 import {
-  Home,
-  Video,
-  ShoppingCart,
-  Code,
-  FileText,
-  CreditCard,
-  MessageCircle,
-  Store,
-  Brain,
-  Beaker,
-  TrendingUp,
-  Users,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Settings
+  Home, Video, ShoppingCart, Code, Brain, Beaker,
+  TrendingUp, Users, ChevronLeft, ChevronRight,
+  MessageCircle, Settings, LogOut, Search
 } from "lucide-react"
 
-// Data Config
 const categories = [
-  { name: "Home", icon: Home, href: "/", count: null, description: "Dashboard" },
+  { name: "Home", icon: Home, href: "/", description: "Dashboard" },
   { name: "Live Streaming", icon: Video, href: "/streaming", count: 42, description: "Real-time video" },
-  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 28, description: "E-commerce streams" },
+  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 28, description: "E-commerce" },
   { name: "API Platform", icon: Code, href: "/api", count: 156, description: "Dev tools" },
   { name: "AI Platform", icon: Brain, href: "/ai", count: 198, description: "AI solutions" },
-  { name: "Research", icon: Beaker, href: "/research", count: 145, description: "Latest findings" },
+  { name: "Research", icon: Beaker, href: "/research", count: 145, description: "Findings" },
 ]
-
-const trending = ["Real-time Video", "AI Shopping", "Stream Analytics"]
 
 interface SidebarProps {
   isCollapsed: boolean
@@ -61,120 +36,144 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
-  return (
-    <aside
-      className={cn(
-        "relative flex flex-col border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 ease-in-out h-screen",
-        isCollapsed ? "w-16" : "w-64"
-      )}
-    >
-      {/* --- Toggle Button --- */}
-      <div className="flex h-14 items-center justify-between px-4 py-2 border-b">
-        {!isCollapsed && <span className="font-bold text-lg tracking-tight">RunAsh AI</span>}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onToggle}
-          className={cn("h-8 w-8", isCollapsed && "mx-auto")}
-        >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-      </div>
+  const pathname = usePathname()
 
-      {/* --- Main Navigation --- */}
-      <ScrollArea className="flex-1 py-4">
-        <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-          {categories.map((category, index) => (
-            <SidebarItem 
-              key={index} 
-              item={category} 
-              isCollapsed={isCollapsed} 
-            />
-          ))}
-          
-          <Separator className="my-4" />
-          
-          {/* Trending Section */}
-          <div className="px-2">
-             {!isCollapsed ? (
-                <h3 className="mb-2 px-2 text-xs font-semibold uppercase text-muted-foreground">
-                  Trending
-                </h3>
-             ) : (
-                <div className="flex justify-center mb-2">
-                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
+  return (
+    <TooltipProvider delayDuration={0}>
+      <motion.aside
+        animate={{ width: isCollapsed ? 64 : 256 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="relative flex flex-col border-r bg-card h-screen shadow-sm z-40 overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex h-16 items-center px-4 mb-2">
+          <AnimatePresence mode="wait">
+            {!isCollapsed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-2 flex-1"
+              >
+                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                  <span className="text-primary-foreground font-bold">R</span>
+                </div>
+                <span className="font-bold tracking-tight text-xl">RunAsh</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggle}
+            className={cn("h-8 w-8", isCollapsed && "mx-auto")}
+          >
+            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        </div>
+
+        {/* Search Mockup (Better UX) */}
+        {!isCollapsed && (
+          <div className="px-4 mb-4">
+             <Button variant="outline" className="w-full h-9 justify-start text-muted-foreground px-3 font-normal bg-muted/50">
+                <Search className="mr-2 h-4 w-4" />
+                <span className="text-xs">Quick search...</span>
+                <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                  <span className="text-xs">⌘</span>K
+                </kbd>
+             </Button>
+          </div>
+        )}
+
+        <ScrollArea className="flex-1">
+          <nav className="flex flex-col gap-1 px-3">
+            {categories.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <SidebarNavItem 
+                  key={item.href} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                  isActive={isActive}
+                />
+              )
+            })}
+            
+            <Separator className="my-4 opacity-50" />
+            
+            <div className="flex flex-col gap-1">
+               {!isCollapsed && (
+                  <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+                    Community
+                  </h3>
+               )}
+               <CommunityDialog isCollapsed={isCollapsed} />
+            </div>
+          </nav>
+        </ScrollArea>
+
+        {/* Footer User Section */}
+        <div className="p-3 border-t bg-muted/10">
+          <div className={cn("flex items-center gap-3 rounded-lg", !isCollapsed && "p-2 hover:bg-muted/50 transition-colors")}>
+             <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0" />
+             {!isCollapsed && (
+                <div className="flex-1 overflow-hidden">
+                   <p className="text-xs font-semibold truncate">Ashish Kumar</p>
+                   <p className="text-[10px] text-muted-foreground truncate">ash@runash.ai</p>
                 </div>
              )}
-             
-             <div className="space-y-1">
-                {trending.map((topic) => (
-                   isCollapsed ? null : (
-                    <Button key={topic} variant="ghost" size="sm" className="w-full justify-start text-xs h-7">
-                      <TrendingUp className="mr-2 h-3 w-3 opacity-70" />
-                      {topic}
-                    </Button>
-                   )
-                ))}
-             </div>
+             {!isCollapsed && <Settings className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />}
           </div>
-        </nav>
-      </ScrollArea>
-
-      {/* --- Footer with Dialog --- */}
-      <div className="mt-auto p-2 border-t bg-muted/20">
-        <CommunityDialog isCollapsed={isCollapsed} />
-      </div>
-    </aside>
+        </div>
+      </motion.aside>
+    </TooltipProvider>
   )
 }
 
-// ------------------------------------------------------------------
-// Sub-Components for cleanliness
-// ------------------------------------------------------------------
-
-function SidebarItem({ item, isCollapsed }: { item: any; isCollapsed: boolean }) {
-  // Collapsed View (Icon only + Popover)
-  if (isCollapsed) {
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-9 w-9 mx-auto">
-            <item.icon className="h-4 w-4" />
-            <span className="sr-only">{item.name}</span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent side="right" className="w-56 p-3">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none flex items-center gap-2">
-              <item.icon className="h-4 w-4" />
-              {item.name}
-            </h4>
-            <p className="text-xs text-muted-foreground">{item.description}</p>
-            {item.count && (
-              <Badge variant="secondary" className="mt-1">
-                {item.count} items
-              </Badge>
-            )}
-          </div>
-        </PopoverContent>
-      </Popover>
-    )
-  }
-
-  // Expanded View
-  return (
-    <Button variant="ghost" className="w-full justify-start" asChild>
+function SidebarNavItem({ item, isCollapsed, isActive }: { item: any; isCollapsed: boolean; isActive: boolean }) {
+  const content = (
+    <Button
+      variant={isActive ? "secondary" : "ghost"}
+      className={cn(
+        "w-full transition-all group relative",
+        isCollapsed ? "justify-center p-0 h-10 w-10 mx-auto" : "justify-start h-10 px-3",
+        isActive && "bg-secondary font-medium text-primary shadow-sm"
+      )}
+      asChild
+    >
       <Link href={item.href}>
-        <item.icon className="mr-2 h-4 w-4" />
-        <span className="flex-1">{item.name}</span>
-        {item.count && (
-          <Badge variant="secondary" className="ml-auto h-5 px-1.5 min-w-[2rem] justify-center">
+        <item.icon className={cn("h-4 w-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+        {!isCollapsed && (
+          <motion.span 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="ml-3 text-sm flex-1 truncate"
+          >
+            {item.name}
+          </motion.span>
+        )}
+        {!isCollapsed && item.count && (
+          <Badge variant="outline" className="ml-auto text-[10px] py-0 h-5 bg-background shadow-none border-muted-foreground/20 text-muted-foreground">
             {item.count}
           </Badge>
         )}
       </Link>
     </Button>
   )
+
+  if (isCollapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{content}</TooltipTrigger>
+        <TooltipContent side="right" sideOffset={10} className="flex items-center gap-2">
+          {item.name}
+          {item.count && <Badge variant="secondary" className="h-4 text-[9px] px-1">{item.count}</Badge>}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return content
 }
 
 function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
@@ -182,46 +181,39 @@ function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button 
-          variant={isCollapsed ? "ghost" : "default"} 
-          size={isCollapsed ? "icon" : "default"} 
-          className={cn("w-full", isCollapsed && "h-9 w-9")}
+          variant="ghost" 
+          size={isCollapsed ? "icon" : "sm"} 
+          className={cn("w-full h-10", isCollapsed ? "justify-center" : "justify-start px-3 text-muted-foreground hover:text-foreground")}
         >
-          <Users className={cn("h-4 w-4", !isCollapsed && "mr-2")} />
-          {!isCollapsed && "Join Community"}
+          <Users className="h-4 w-4 shrink-0" />
+          {!isCollapsed && <span className="ml-3 text-sm">Join Community</span>}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Join the Community</DialogTitle>
-          <DialogDescription>
-            Connect with 10,000+ developers building the future of AI streaming.
-          </DialogDescription>
+          <DialogTitle>Join our Global Developer ecosystem</DialogTitle>
+          <DialogDescription>Participate in shaping the future of AI streaming.</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-           {/* Placeholder for simple content */}
-           <div className="flex items-center gap-4 border p-4 rounded-md">
-              <div className="bg-primary/10 p-2 rounded-full">
-                <MessageCircle className="h-6 w-6 text-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Discord Server</p>
-                <p className="text-xs text-muted-foreground">Chat with the team live</p>
-              </div>
-              <Button size="sm" variant="outline">Join</Button>
-           </div>
-           
-           <div className="flex items-center gap-4 border p-4 rounded-md">
-              <div className="bg-primary/10 p-2 rounded-full">
-                <Code className="h-6 w-6 text-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">GitHub Discussions</p>
-                <p className="text-xs text-muted-foreground">Report bugs & request features</p>
-              </div>
-              <Button size="sm" variant="outline">View</Button>
-           </div>
+        <div className="grid gap-3 pt-4">
+           {[
+             { label: "Discord", desc: "Real-time support", icon: MessageCircle, color: "bg-indigo-500" },
+             { label: "GitHub", desc: "Open source contributions", icon: Code, color: "bg-slate-800" }
+           ].map((platform) => (
+             <div key={platform.label} className="flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/50 transition-colors group cursor-pointer">
+               <div className="flex items-center gap-3">
+                 <div className={cn("p-2 rounded-lg text-white", platform.color)}>
+                   <platform.icon className="h-5 w-5" />
+                 </div>
+                 <div>
+                   <p className="text-sm font-medium">{platform.label}</p>
+                   <p className="text-xs text-muted-foreground">{platform.desc}</p>
+                 </div>
+               </div>
+               <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+             </div>
+           ))}
         </div>
       </DialogContent>
     </Dialog>
   )
-}
+  }
