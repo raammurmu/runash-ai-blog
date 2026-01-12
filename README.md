@@ -2,6 +2,9 @@
 
 Welcome to the official **RunAsh Blog** repository. This project is a high-performance blog platform powered by [v0.dev](https://v0.dev) and [Vercel](https://vercel.com), designed for real-time AI content.
 
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/raam-murmus-projects/v0-runash-ai-blog-app)
+[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/0aaDbYrebuD)
+
 ---
 
 ## 🛠️ Tech Stack & Workflow
