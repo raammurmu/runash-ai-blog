@@ -55,9 +55,9 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 exit={{ opacity: 0 }}
                 className="flex items-center gap-2 flex-1"
               >
-                {/* <div className="h-8 w-8 rounded-lg bg-orange flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-orange flex items-center justify-center">
                   <span className="text-primary-foreground font-bold">R</span>
-                </div> */}
+                </div> 
                 <span className="font-bold tracking-tight text-xl">Blog</span>
               </motion.div>
             )}
@@ -113,7 +113,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         </ScrollArea>
 
         {/* Footer User Section */}
-              {/*  <div className="p-3 border-t bg-muted/10">
+          <div className="p-3 border-t bg-muted/10">
           <div className={cn("flex items-center gap-3 rounded-lg", !isCollapsed && "p-2 hover:bg-muted/50 transition-colors")}>
              <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0" />
              {!isCollapsed && (
@@ -124,7 +124,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
              )}
              {!isCollapsed && <Settings className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />}
           </div>
-        </div> */}
+        </div> 
       </motion.aside>
     </TooltipProvider>
   )
