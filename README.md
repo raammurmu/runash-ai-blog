@@ -1,4 +1,4 @@
-# Runash ai blog app
+# RunAsh AI Blog
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
