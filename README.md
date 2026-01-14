@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-# RunAsh AI Blog
-=======
 # 🚀 RunAsh AI Blog
->>>>>>> refs/remotes/origin/main
+
 
 Welcome to the official **RunAsh Blog** repository. This project is a high-performance blog platform powered by [v0.dev](https://v0.dev) and [Vercel](https://vercel.com), designed for real-time AI content.
 
