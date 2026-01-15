@@ -218,13 +218,13 @@ function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
           )}
         >
           <Users className="size-5 md:size-4 shrink-0" />
-          {!isCollapsed && <span className="ml-3 text-base md:text-sm font-bold md:font-medium">Join Community</span>}
+          {!isCollapsed && <span className="ml-3 text-base md:text-sm font-bold md:font-medium">Community</span>}
         </Button>
       </DialogTrigger>
       <DialogContent className="rounded-[30px] md:rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-black italic text-orange-600">Global Ecosystem</DialogTitle>
-          <DialogDescription>Shape the future of AI streaming with our developers.</DialogDescription>
+          <DialogTitle className="text-xl font-black italic text-orange-600">Join Community</DialogTitle>
+          <DialogDescription>Shape the future of AI Live streaming.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 pt-4">
            {[
