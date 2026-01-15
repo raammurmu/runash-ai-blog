@@ -112,6 +112,10 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
         )}>
            <div className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800" />
            {!isCollapsed && (
+            <div className="flex-1 overflow-hidden">
+                 <p className="text-sm md:text-xs font-bold truncate">User</p>
+                 <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">user@runash.in</p>
+              </div>
               
            )}
            {!isCollapsed && (
