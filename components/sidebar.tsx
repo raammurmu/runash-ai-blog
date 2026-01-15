@@ -23,12 +23,12 @@ import {
 } from "lucide-react"
 
 const categories = [
-  { name: "", icon: Home, href: "/", description: "Dashboard" },
-  { name: "", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
-  { name: "", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
-  { name: "", icon: Code, href: "/api", count: 0, description: "Dev tools" },
-  { name: "", icon: Brain, href: "/ai", count: 5, description: "AI solutions" },
-  { name: "", icon: Beaker, href: "/research", count: 0, description: "Findings" },
+  { name: "Home", icon: Home, href: "/", description: "Dashboard" },
+  { name: "LiveStream", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
+  { name: "LiveShop", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
+  { name: "API", icon: Code, href: "/api", count: 0, description: "Dev tools" },
+  { name: "AI", icon: Brain, href: "/ai", count: 5, description: "AI solutions" },
+  { name: "Research", icon: Beaker, href: "/research", count: 0, description: "Findings" },
 ]
 
 interface SidebarProps {
@@ -54,10 +54,6 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
               exit={{ opacity: 0 }}
               className="flex items-center gap-2 flex-1"
             >
-              <div className="size-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
-                <Zap className="size-4 text-white fill-current" />
-              </div>
-              <span className="font-black text-orange-600 dark:text-orange-500 tracking-tighter text-xl italic">RunAsh</span>
             </motion.div>
           )}
         </AnimatePresence>
