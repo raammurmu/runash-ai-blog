@@ -1,21 +1,14 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { blogPosts } from "@/lib/blog-data"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle, 
-  SheetTrigger,
-  SheetFooter,
-  SheetClose
-} from "@/components/ui/sheet"
-import { List, LayoutGrid, Filter, Flame, Clock, Check } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from "@/components/ui/sheet"
+import { Input } from "@/components/ui/input"
+import { List, LayoutGrid, Filter, Flame, Clock, Check, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 type SortKey = "newest" | "popular"
@@ -26,131 +19,198 @@ export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
   const [sort, setSort] = useState<SortKey>("newest")
   const [view, setView] = useState<"grid" | "list">("grid")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  const posts = useMemo(() => {
-    let p = [...blogPosts]
-    if (activeCategory !== "All") {
-      p = p.filter((post) => post.category === activeCategory)
-    }
-    sort === "newest" 
-      ? p.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-      : p.sort((a, b) => b.likes - a.likes) // Simplified for example
-    return p
-  }, [activeCategory, sort])
+  // Fix hydration mismatch errors by ensuring component is mounted
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const filteredPosts = useMemo(() => {
+    if (!blogPosts) return []
+
+    return blogPosts
+      .filter((post) => {
+        const matchesCategory = activeCategory === "All" || post.category === activeCategory
+        const matchesSearch = 
+          !searchQuery || 
+          post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        
+        return matchesCategory && matchesSearch
+      })
+      .sort((a, b) => {
+        if (sort === "newest") {
+          return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
+        }
+        // Popularity: Likes + Upvotes (with safety check)
+        const scoreA = (a.likes || 0) + (a.upvotes || 0)
+        const scoreB = (b.likes || 0) + (b.upvotes || 0)
+        return scoreB - scoreA
+      })
+  }, [activeCategory, sort, searchQuery])
+
+  if (!mounted) return null // Prevent hydration flash
 
   return (
-    <section className="space-y-6 px-1">
-      {/* Header Area */}
+    <section className="space-y-6 px-2 md:px-4 max-w-7xl mx-auto">
+      {/* Header & Search Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Resources</h2>
-          <p className="text-sm text-muted-foreground">Insights from the Findley team.</p>
+        <div className={cn("transition-all duration-300", isSearchExpanded ? "hidden sm:block" : "block")}>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
+            Explore Findley
+          </h2>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Desktop/Tablet View Switcher */}
-          <div className="hidden sm:flex rounded-md border p-1 bg-muted/50">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          {/* Animated Search Bar */}
+          <div className={cn(
+            "relative flex items-center transition-all duration-500 ease-in-out h-10 overflow-hidden",
+            isSearchExpanded ? "w-full sm:w-64" : "w-10 sm:w-64"
+          )}>
+            <Input
+              placeholder="Search articles..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={cn(
+                "pl-10 pr-10 border-orange-200 focus-visible:ring-orange-500 transition-all duration-300",
+                !isSearchExpanded && "sm:opacity-100 opacity-0 pointer-events-none sm:pointer-events-auto"
+              )}
+            />
+            <Search 
+              className="absolute left-3 h-4 w-4 text-orange-500 cursor-pointer" 
+              onClick={() => setIsSearchExpanded(true)}
+            />
+            {isSearchExpanded && (
+              <X 
+                className="absolute right-3 h-4 w-4 text-muted-foreground cursor-pointer hover:text-orange-500" 
+                onClick={() => { setIsSearchExpanded(false); setSearchQuery(""); }}
+              />
+            )}
+          </div>
+
+          {/* Desktop View Switcher */}
+          <div className="hidden md:flex rounded-lg border border-orange-100 p-1 bg-orange-50/30">
             <Button 
-              variant={view === "grid" ? "background" : "ghost"} 
-              size="icon" 
-              className="h-8 w-8" 
+              variant="ghost" 
+              size="sm" 
               onClick={() => setView("grid")}
+              className={cn("h-8 w-8 p-0", view === "grid" && "bg-white shadow-sm text-orange-600")}
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
             <Button 
-              variant={view === "list" ? "background" : "ghost"} 
-              size="icon" 
-              className="h-8 w-8" 
+              variant="ghost" 
+              size="sm" 
               onClick={() => setView("list")}
+              className={cn("h-8 w-8 p-0", view === "list" && "bg-white shadow-sm text-orange-600")}
             >
               <List className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Mobile Filter Drawer */}
+          {/* Mobile Filter Sheet */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                <Filter className="mr-2 h-4 w-4" />
+              <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
+                <Filter className="h-4 w-4 mr-2 text-orange-500" />
                 Filters
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-[20px] px-6 pb-10">
+            <SheetContent side="bottom" className="rounded-t-[30px] border-orange-100">
               <SheetHeader className="mb-6">
-                <SheetTitle className="text-left">Filter Posts</SheetTitle>
+                <SheetTitle className="text-xl">Customize Feed</SheetTitle>
               </SheetHeader>
               
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Sort By</h3>
-                  <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-8 pb-8">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Sort By</h4>
+                  <div className="grid grid-cols-2 gap-3">
                     <Button 
-                      variant={sort === "newest" ? "default" : "outline"} 
+                      variant={sort === "newest" ? "default" : "outline"}
                       onClick={() => setSort("newest")}
-                      className="justify-start"
+                      className={cn(sort === "newest" && "bg-gradient-to-r from-orange-500 to-amber-500 border-none")}
                     >
                       <Clock className="mr-2 h-4 w-4" /> Newest
                     </Button>
                     <Button 
-                      variant={sort === "popular" ? "default" : "outline"} 
+                      variant={sort === "popular" ? "default" : "outline"}
                       onClick={() => setSort("popular")}
-                      className="justify-start"
+                      className={cn(sort === "popular" && "bg-gradient-to-r from-orange-500 to-amber-500 border-none")}
                     >
                       <Flame className="mr-2 h-4 w-4" /> Popular
                     </Button>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Categories</h3>
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Categories</h4>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((c) => (
                       <Badge
                         key={c}
-                        variant={activeCategory === c ? "default" : "outline"}
-                        className="py-2 px-4 cursor-pointer text-sm"
                         onClick={() => setActiveCategory(c)}
+                        className={cn(
+                          "px-4 py-2 cursor-pointer transition-all border-orange-100",
+                          activeCategory === c 
+                            ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white" 
+                            : "bg-white text-orange-900 hover:bg-orange-50"
+                        )}
                       >
                         {c}
-                        {activeCategory === c && <Check className="ml-1 h-3 w-3" />}
                       </Badge>
                     ))}
                   </div>
                 </div>
               </div>
-              <SheetFooter className="mt-8">
-                <SheetClose asChild>
-                  <Button className="w-full h-12 text-lg">Show {posts.length} Results</Button>
-                </SheetClose>
-              </SheetFooter>
+
+              <SheetClose asChild>
+                <Button className="w-full bg-gradient-to-r from-orange-600 to-amber-500 h-12 rounded-xl text-lg shadow-lg shadow-orange-200">
+                  View {filteredPosts.length} Results
+                </Button>
+              </SheetClose>
             </SheetContent>
           </Sheet>
         </div>
       </div>
 
-      {/* Desktop Category Bar (Scrollable) */}
-      <div className="flex items-center overflow-x-auto no-scrollbar gap-2 pb-2">
-        {categories.map((c) => (
-          <Badge
-            key={c}
-            variant={activeCategory === c ? "default" : "outline"}
-            className="cursor-pointer whitespace-nowrap transition-all hover:bg-primary hover:text-primary-foreground"
-            onClick={() => setActiveCategory(c)}
+      {/* Horizontal Category Scroller */}
+      <div className="flex items-center overflow-x-auto gap-2 pb-4 no-scrollbar -mx-2 px-2">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all",
+              activeCategory === cat
+                ? "bg-orange-100 text-orange-700 ring-1 ring-orange-300"
+                : "text-muted-foreground hover:text-orange-600"
+            )}
           >
-            {c}
-          </Badge>
+            {cat}
+          </button>
         ))}
       </div>
 
-      {/* Responsive Grid */}
+      {/* Results Grid */}
       <div className={cn(
-        "grid gap-6",
-        view === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+        "grid gap-6 transition-all duration-500",
+        view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
       )}>
-        {posts.map((post) => (
-          <BlogCard key={post.id} post={post} viewMode={view} />
-        ))}
+        {filteredPosts.length > 0 ? (
+          filteredPosts.map((post) => (
+            <BlogCard key={post.id} post={post} viewMode={view} />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-20 bg-orange-50/50 rounded-3xl border-2 border-dashed border-orange-200">
+            <p className="text-orange-900/60 font-medium">No matches found for your search.</p>
+            <Button variant="link" className="text-orange-600" onClick={() => {setSearchQuery(""); setActiveCategory("All")}}>
+              Clear all filters
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )
