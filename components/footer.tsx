@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion"
 import {
   Github, Twitter, Linkedin, Mail, Heart, Send,
-  Loader2, Globe, Moon, Sun, MapPin, Check, ChevronRight
+  Loader2, Globe, Moon, Sun, MapPin, Check, Monitor, ChevronRight
 } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
