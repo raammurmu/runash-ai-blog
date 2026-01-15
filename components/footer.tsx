@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -12,11 +13,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
   Github, Twitter, Linkedin, Mail, Heart, Send,
-  Loader2, Globe, Moon, Sun, MapPin, Check
+  Loader2, Globe, Moon, Sun, MapPin, Check, Monitor, ChevronRight
 } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
+import { cn } from "@/lib/utils"
 
 const countries = [
   { name: "USA", code: "US" },
@@ -30,6 +38,28 @@ const languages = [
   { name: "Hindi", label: "हिन्दी" },
   { name: "Chinese", label: "中文" },
   { name: "Singapore", label: "English (SG)" },
+]
+
+const footerLinks = [
+  {
+    title: "Platform",
+    links: [
+      { name: "AI", href: "https://runash.in" },
+      { name: "LiveStream", href: "https://runash.in" },
+      { name: "LiveShop", href: "https://runash.in" },
+      { name: "RunAshChat", href: "https://runash.in" },
+      { name: "Studio", href: "https://runash.in" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { name: "Documentation", href: "https://api.runash.in" },
+      { name: "API Ref", href: "https://api.runash.in" },
+      { name: "Changelog", href: "https://runash.in" },
+      { name: "Status", href: "https://api.runash.in" },
+    ],
+  },
 ]
 
 export function Footer() {
@@ -57,135 +87,182 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full border-t bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="w-full border-t bg-background/95 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         
-        {/* Main Sections */}
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 mb-12">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 mb-16">
           
-          {/* Brand & Mission */}
-          <div className="flex flex-col items-center text-center sm:items-start sm:text-left lg:col-span-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-yellow-400 flex items-center justify-center shadow-lg">
-                <span className="text-white font-extrabold text-sm">RA</span>
+          {/* Brand Identity */}
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:col-span-4">
+            <Link href="/" className="group flex items-center space-x-2">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
+                <span className="text-white font-black text-sm">RA</span>
               </div>
-              <span className="text-2xl font-bold tracking-tight">RunAsh AI</span>
+              <span className="text-2xl font-black tracking-tighter">RunAsh AI</span>
             </Link>
-            <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs">
+            <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs px-4 lg:px-0">
               Runash Digital Innovation Technologies Private Limited.
             </p>
-            <div className="mt-6 flex gap-3">
-              {/* Replace with actual social links */}
-              {[Github, Twitter, Linkedin].map((Icon, i) => (
-                <Button key={i} variant="ghost" size="icon" className="h-9 w-9 rounded-full border hover:border-orange-500/50 hover:bg-orange-500/10">
+            <div className="mt-6 flex gap-2">
+              {[Github, Twitter, Linkedin, Mail].map((Icon, i) => (
+                <Button key={i} variant="outline" size="icon" className="h-10 w-10 rounded-full border-orange-500/10 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all active:scale-90">
                   <Icon className="h-4 w-4" />
                 </Button>
               ))}
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="grid grid-cols-2 gap-8 sm:col-span-2 lg:col-span-4">
-            <div className="space-y-4">
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Platform</h4>
-              <nav className="flex flex-col space-y-2">
-                {["AI Engine", "Streaming", "Payments"].map((item) => (
-                  <Link key={item} href="https://runash.in" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
-                ))}
-              </nav>
+          {/* Navigation Links: Accordion on Mobile, Grid on Desktop */}
+          <div className="lg:col-span-4">
+            <div className="hidden md:grid grid-cols-2 gap-8">
+              {footerLinks.map((section) => (
+                <div key={section.title} className="space-y-5">
+                  <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">
+                    {section.title}
+                  </h4>
+                  <nav className="flex flex-col space-y-3">
+                    {section.links.map((link) => (
+                      <Link 
+                        key={link.name} 
+                        href={link.href} 
+                        className="text-sm text-muted-foreground hover:text-orange-500 transition-colors w-fit"
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              ))}
             </div>
-            <div className="space-y-4">
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">Support</h4>
-              <nav className="flex flex-col space-y-2">
-                {["Documentation", "API Ref", "Status"].map((item) => (
-                  <Link key={item} href="https://api.runash.in" className="text-sm text-muted-foreground hover:text-orange-500 transition-colors">{item}</Link>
+            
+            {/* Mobile Accordion */}
+            <div className="md:hidden w-full max-w-sm mx-auto">
+              <Accordion type="single" collapsible className="w-full">
+                {footerLinks.map((section, i) => (
+                  <AccordionItem key={i} value={`item-${i}`} className="border-orange-500/10">
+                    <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:no-underline py-4">
+                      {section.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="flex flex-col space-y-4 pb-6">
+                      {section.links.map((link) => (
+                        <Link key={link.name} href={link.href} className="text-muted-foreground active:text-orange-500 flex justify-between items-center">
+                          {link.name}
+                          <ChevronRight className="h-4 w-4 opacity-50" />
+                        </Link>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
                 ))}
-              </nav>
+              </Accordion>
             </div>
           </div>
 
-          {/* Newsletter */}
-          <div className="lg:col-span-4">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground mb-4 text-center sm:text-left">Subscribe to Updates</h4>
-            <form onSubmit={handleSubscribe} className="relative max-w-sm mx-auto sm:ml-0">
+          {/* Newsletter Section */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70 mb-5">
+              Stay in the Loop
+            </h4>
+            <form onSubmit={handleSubscribe} className="relative w-full max-w-sm">
               <Input 
                 placeholder="Enter work email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="rounded-full h-11 bg-muted/50 border-none focus-visible:ring-1 focus-visible:ring-orange-500" 
+                className="rounded-2xl h-12 bg-muted/40 border-orange-500/10 focus-visible:ring-orange-500 pl-4 pr-12" 
               />
-              <Button size="icon" className="absolute right-1 top-1 h-9 w-9 rounded-full bg-orange-500 hover:bg-orange-600 transition-all">
+              <Button 
+                size="icon" 
+                type="submit"
+                className="absolute right-1.5 top-1.5 h-9 w-9 rounded-xl bg-orange-600 hover:bg-orange-700 shadow-orange-500/20 shadow-md active:scale-95 transition-all"
+              >
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </form>
+            <p className="mt-3 text-[10px] text-muted-foreground/60">
+              By subscribing, you agree to our Privacy Policy.
+            </p>
           </div>
         </div>
 
-        <Separator className="mb-8 opacity-60" />
+        <Separator className="mb-10 opacity-30 bg-orange-500/20" />
 
         {/* Bottom Utility Bar */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-            <span>&copy; {currentYear} RunAsh AI</span>
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <span className="text-sm font-medium text-muted-foreground/80">&copy; {currentYear} RunAsh AI</span>
             
-            <Separator orientation="vertical" className="hidden sm:block h-4" />
+            <div className="flex items-center gap-3">
+              {/* Country Selector */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-9 px-4 gap-2 text-xs rounded-full border bg-muted/20 hover:bg-muted transition-colors">
+                    <MapPin className="h-3.5 w-3.5 text-orange-500" />
+                    {selectedCountry.name}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 rounded-2xl">
+                  {countries.map((c) => (
+                    <DropdownMenuItem key={c.code} onClick={() => setSelectedCountry(c)} className="rounded-xl h-10">
+                      {c.name} {selectedCountry.code === c.code && <Check className="ml-auto h-3 w-3 text-orange-500" />}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Country Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover-text-foreground font-normal hover:bg-muted">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {selectedCountry.name}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-40">
-                {countries.map((c) => (
-                  <DropdownMenuItem key={c.code} onClick={() => setSelectedCountry(c)} className="flex justify-between items-center">
-                    {c.name} {selectedCountry.code === c.code && <Check className="h-3 w-3 text-orange-500" />}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2 text-xs text-muted-foreground hover-text-foreground font-normal hover:bg-muted">
-                  <Globe className="h-3.5 w-3.5" />
-                  {selectedLang.label}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-40">
-                {languages.map((l) => (
-                  <DropdownMenuItem key={l.name} onClick={() => setSelectedLang(l)} className="flex justify-between items-center">
-                    {l.label} {selectedLang.name === l.name && <Check className="h-3 w-3 text-orange-500" />}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              {/* Language Selector */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-9 px-4 gap-2 text-xs rounded-full border bg-muted/20 hover:bg-muted transition-colors">
+                    <Globe className="h-3.5 w-3.5 text-orange-500" />
+                    {selectedLang.label}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 rounded-2xl">
+                  {languages.map((l) => (
+                    <DropdownMenuItem key={l.name} onClick={() => setSelectedLang(l)} className="rounded-xl h-10">
+                      {l.label} {selectedLang.name === l.name && <Check className="ml-auto h-3 w-3 text-orange-500" />}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
-          {/* Theme & Socials */}
-          <div className="flex items-center gap-6">
-             <div className="flex gap-4">
-              {["Privacy", "Terms"].map((l) => (
-                <Link key={l} href="https://runash.in/privacy" className="text-xs text-muted-foreground hover:text-foreground">{l}</Link>
+          {/* Legal & Theme */}
+          <div className="flex items-center gap-8">
+            <nav className="flex gap-6">
+              {["Privacy", "Terms", "Cookies"].map((l) => (
+                <Link key={l} href="https://runash.in/privacy" className="text-xs font-semibold text-muted-foreground hover:text-orange-500 transition-colors">
+                  {l}
+                </Link>
               ))}
-            </div>
+            </nav>
 
             <Button 
               variant="outline" 
               size="icon" 
-              className="h-9 w-9 rounded-full border-muted-foreground/20"
+              className="h-10 w-10 rounded-2xl border-orange-500/10 bg-muted/30 hover:bg-orange-500/5 transition-all group"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              <Sun className="h-4 w-4 scale-100 transition-all dark:scale-0" />
-              <Moon className="absolute h-4 w-4 scale-0 transition-all dark:scale-100" />
+              <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 group-hover:text-orange-500" />
+              <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 group-hover:text-orange-400" />
             </Button>
+          {/* Theme Selector Column */}
+          <div className="lg:col-span-1">
+            <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-10 px-4 gap-3 rounded-full border-zinc-200 dark:border-zinc-800 font-medium text-zinc-600 dark:text-zinc-400"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              <Monitor className="size-4" />
+              System theme
+            </Button>
+          </div>
           </div>
         </div>
       </div>
     </footer>
   )
-   }
+  }
