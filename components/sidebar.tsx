@@ -24,8 +24,8 @@ import {
 
 const categories = [
   { name: "Home", icon: Home, href: "/", description: "Dashboard" },
-  { name: "LiveStream", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
-  { name: "LiveShop", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
+  { name: "Stream", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
+  { name: "Shop", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
   { name: "API", icon: Code, href: "/api", count: 0, description: "Dev tools" },
   { name: "AI", icon: Brain, href: "/ai", count: 5, description: "AI solutions" },
   { name: "Research", icon: Beaker, href: "/research", count: 0, description: "Findings" },
@@ -112,10 +112,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
         )}>
            <div className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800" />
            {!isCollapsed && (
-              <div className="flex-1 overflow-hidden">
-                 <p className="text-sm md:text-xs font-bold truncate">User</p>
-                 <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">user@runash.in</p>
-              </div>
+              
            )}
            {!isCollapsed && (
              <Button variant="ghost" size="icon" className="size-8">
