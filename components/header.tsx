@@ -4,152 +4,195 @@ import * as React from "react"
 import Link from "next/link"
 import { 
   Search, Bell, Plus, User, Settings, LogOut, 
-  Share2, Heart, Menu, Loader2, Command, BookOpen 
+  Share2, Heart, Menu, Loader2, BookOpen, X, ChevronLeft 
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { 
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
   DropdownMenuSeparator, DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
 
 export function Header() {
   const [query, setQuery] = React.useState("")
   const [results, setResults] = React.useState([])
   const [isPending, setIsPending] = React.useState(false)
-  const [isSearchFocused, setIsSearchFocused] = React.useState(false)
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false)
 
-  // 1. REAL-TIME DEBOUNCED SEARCH
+  // Debounced Search Logic
   React.useEffect(() => {
-    if (!query.trim()) {
-      setResults([])
-      return
-    }
-
+    if (!query.trim()) { setResults([]); return }
     const delayDebounceFn = setTimeout(async () => {
       setIsPending(true)
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
         const data = await res.json()
         setResults(data)
-      } catch (error) {
-        console.error("Search Error:", error)
-      } finally {
-        setIsPending(false)
-      }
+      } catch (error) { console.error(error) } finally { setIsPending(false) }
     }, 300)
-
     return () => clearTimeout(delayDebounceFn)
   }, [query])
 
-  // 2. KEYBOARD SHORTCUT (CMD+K)
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        document.getElementById("main-search")?.focus()
-      }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 gap-4">
+    <header className="sticky top-0 z-[60] w-full border-b bg-background/80 backdrop-blur-xl">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 gap-2">
         
-        {/* LOGO SECTION */}
-        <div className="flex items-center gap-8 flex-1">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="size-8 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-400 flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-xs">RA</span>
+        {/* LOGO */}
+        <div className="flex items-center gap-4 shrink-0">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="size-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/20">
+              <span className="text-white font-black text-sm tracking-tighter">RA</span>
             </div>
-            <span className="hidden font-bold text-xl lg:inline-block tracking-tighter">RunAsh AI</span>
+            <span className="hidden font-black text-xl lg:inline-block tracking-tight text-orange-600 dark:text-orange-500">RunAsh</span>
           </Link>
-
-          {/* DYNAMIC SEARCH BAR */}
-          <div className="relative hidden md:block w-full max-w-sm lg:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
-            <Input 
-              id="main-search"
-              placeholder="Search (Ctrl + K)" 
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-              className="pl-9 pr-12 bg-muted/40 border-none focus-visible:ring-2 focus-visible:ring-orange-500/50 transition-all"
-            />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {isPending ? (
-                <Loader2 className="size-3 animate-spin text-muted-foreground" />
-              ) : (
-                <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-                  <span className="text-xs">⌘</span>K
-                </kbd>
-              )}
-            </div>
-
-            {/* SEARCH RESULTS DROPDOWN */}
-            {isSearchFocused && query.length > 0 && (
-              <div className="absolute top-full mt-2 w-full bg-popover border rounded-xl shadow-2xl overflow-hidden p-1 z-50 animate-in fade-in slide-in-from-top-1">
-                {results.length > 0 ? (
-                  results.map((item: any) => (
-                    <Link key={item.id} href={`/search/${item.id}`} className="flex items-center gap-3 p-2 hover:bg-muted rounded-lg transition-colors group">
-                      <div className="size-8 rounded bg-muted flex items-center justify-center group-hover:bg-background">
-                        {item.type === 'post' ? <BookOpen className="size-4" /> : <User className="size-4" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{item.title}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase">{item.category || item.username}</p>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="p-4 text-center text-sm text-muted-foreground italic">
-                    {isPending ? "Searching..." : "No results found."}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Button variant="outline" size="sm" className="hidden md:flex gap-2 rounded-full px-4 border-orange-200 hover:bg-orange-50 hover:text-orange-600 transition-colors" asChild>
-            <Link href="/create"><Plus className="size-4" /> New Post</Link>
+        {/* SEARCH - DESKTOP */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
+          <Input 
+            placeholder="Search resources... (⌘K)" 
+            className="pl-10 bg-muted/50 border-orange-100 dark:border-orange-900/50 rounded-full focus-visible:ring-orange-500"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex items-center gap-1 sm:gap-3">
+          {/* Mobile Search Trigger */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden rounded-full h-10 w-10"
+            onClick={() => setIsSearchOpen(true)}
+          >
+            <Search className="size-5" />
+          </Button>
+
+          <Button variant="outline" size="sm" className="hidden sm:flex gap-2 rounded-full border-orange-200" asChild>
+            <Link href="/create"><Plus className="size-4 text-orange-500" /> New</Link>
           </Button>
 
           <NotificationCenter />
-          <ThemeToggle />
+          <div className="hidden sm:block"><ThemeToggle /></div>
           <UserMenu />
-
-          {/* MOBILE NAV */}
           <MobileNav />
         </div>
       </div>
+
+      {/* FULLSCREEN MOBILE SEARCH OVERLAY */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[70] bg-background animate-in fade-in zoom-in-95 duration-200 md:hidden">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center gap-2 p-4 border-b">
+              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
+                <ChevronLeft className="size-6" />
+              </Button>
+              <div className="flex-1 relative">
+                <Input 
+                  autoFocus
+                  placeholder="Search Findley..."
+                  className="w-full pl-10 h-11 bg-muted/50 rounded-xl border-none text-base"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              </div>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              {isPending ? (
+                <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
+                  <Loader2 className="size-8 animate-spin mb-2 text-orange-500" />
+                  <p className="text-sm">Fetching results...</p>
+                </div>
+              ) : results.length > 0 ? (
+                <div className="space-y-4">
+                  {results.map((item: any) => (
+                    <Link 
+                      key={item.id} 
+                      href={`/search/${item.id}`} 
+                      onClick={() => setIsSearchOpen(false)}
+                      className="flex items-center gap-4 p-3 rounded-2xl bg-muted/30 active:scale-95 transition-transform"
+                    >
+                      <div className="size-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+                        {item.type === 'post' ? <BookOpen className="size-6" /> : <User className="size-6" />}
+                      </div>
+                      <div>
+                        <p className="font-bold text-base">{item.title}</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-widest">{item.category}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : query.length > 0 ? (
+                <p className="text-center text-muted-foreground py-10 italic">No results found for "{query}"</p>
+              ) : (
+                <div className="text-center py-20">
+                  <Search className="size-12 mx-auto text-muted/50 mb-4" />
+                  <p className="text-muted-foreground">Search for posts, authors, or guides</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
 
-/* --- HELPER SUB-COMPONENTS --- */
+function MobileNav() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden rounded-full h-10 w-10 bg-orange-50 dark:bg-orange-950/20 text-orange-600">
+          <Menu className="size-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[85%] rounded-l-[30px] p-0 overflow-hidden border-none">
+        <SheetHeader className="p-6 text-left bg-gradient-to-br from-orange-500 to-amber-500">
+          <SheetTitle className="text-white text-2xl font-black">Findley Menu</SheetTitle>
+        </SheetHeader>
+        <div className="p-6 space-y-2">
+           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4">Account & Tools</p>
+           <MobileNavItem href="/create" icon={<Plus />} label="Create Post" />
+           <MobileNavItem href="/favorites" icon={<Heart />} label="My Favorites" />
+           <MobileNavItem href="/settings" icon={<Settings />} label="App Settings" />
+           <div className="pt-4 mt-4 border-t border-orange-100">
+             <ThemeToggle />
+             <span className="ml-3 text-sm font-medium">Switch Appearance</span>
+           </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+function MobileNavItem({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+  return (
+    <Button variant="ghost" className="w-full justify-start gap-4 rounded-2xl h-14 text-lg font-bold hover:bg-orange-50 active:scale-95 transition-all" asChild>
+      <Link href={href}>
+        <span className="text-orange-500">{React.cloneElement(icon as React.ReactElement, { size: 24 })}</span>
+        {label}
+      </Link>
+    </Button>
+  )
+}
 
 function NotificationCenter() {
-  // Using real Date objects
-  const [notifications] = React.useState([
-    { id: 1, text: "New comment on your post", date: new Date(), unread: true },
-    { id: 2, text: "System update scheduled", date: new Date(Date.now() - 3600000), unread: false }
-  ])
-
   return (
-    <Button variant="ghost" size="icon" className="relative hover:bg-muted rounded-full">
-      <Bell className="size-5 text-foreground/80" />
-      <Badge className="absolute top-1.5 right-1.5 size-2 p-0 bg-orange-600 border-2 border-background" />
+    <Button variant="ghost" size="icon" className="rounded-full h-10 w-10">
+      <div className="relative">
+        <Bell className="size-5" />
+        <span className="absolute -top-1 -right-1 size-3 bg-red-500 rounded-full border-2 border-background" />
+      </div>
     </Button>
   )
 }
@@ -158,45 +201,19 @@ function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative size-9 rounded-full ring-offset-2 hover:ring-2 ring-orange-500/20 transition-all p-0">
-          <Avatar className="size-9">
+        <Button variant="ghost" className="size-10 rounded-full p-0 ring-offset-background transition-all hover:ring-2 hover:ring-orange-500/20">
+          <Avatar className="size-10 border border-orange-100">
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>RA</AvatarFallback>
+            <AvatarFallback className="bg-orange-100 text-orange-600 font-bold">RA</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 rounded-xl p-2">
-        <DropdownMenuItem className="rounded-lg py-2 cursor-pointer"><User className="mr-3 size-4" /> Profile</DropdownMenuItem>
-        <DropdownMenuItem className="rounded-lg py-2 cursor-pointer"><Settings className="mr-3 size-4" /> Settings</DropdownMenuItem>
-        <DropdownMenuItem className="rounded-lg py-2 cursor-pointer"><Heart className="mr-3 size-4" /> Favorites</DropdownMenuItem>
+      <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
+        <DropdownMenuItem className="rounded-xl h-11 font-bold cursor-pointer">Profile</DropdownMenuItem>
+        <DropdownMenuItem className="rounded-xl h-11 font-bold cursor-pointer">Favorites</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-destructive focus:bg-destructive/10"><LogOut className="mr-3 size-4" /> Logout</DropdownMenuItem>
+        <DropdownMenuItem className="rounded-xl h-11 font-bold cursor-pointer text-red-500">Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
-
-function MobileNav() {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden rounded-full">
-          <Menu className="size-5" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] border-l-0 bg-background">
-        <div className="flex flex-col gap-6 py-8">
-          <div className="space-y-1 px-2">
-             <p className="text-xs font-semibold text-muted-foreground uppercase px-2 mb-2">Navigation</p>
-             <Button variant="ghost" className="w-full justify-start gap-4 rounded-xl text-lg h-12" asChild>
-               <Link href="/create"><Plus className="size-5" /> Create Post</Link>
-             </Button>
-             <Button variant="ghost" className="w-full justify-start gap-4 rounded-xl text-lg h-12">
-               <Share2 className="size-5" /> Share App
-             </Button>
-          </div>
-        </div>
-      </SheetContent>
-    </Sheet>
-  )
-  }
