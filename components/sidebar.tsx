@@ -23,12 +23,12 @@ import {
 } from "lucide-react"
 
 const categories = [
-  { name: "", icon: Home, href: "/", description: "Dashboard" },
-  { name: "", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
-  { name: "", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
-  { name: "", icon: Code, href: "/api", count: 0, description: "Dev tools" },
-  { name: "", icon: Brain, href: "/ai", count: 5, description: "AI solutions" },
-  { name: "", icon: Beaker, href: "/research", count: 0, description: "Findings" },
+  { name: "Home", icon: Home, href: "/", description: "Dashboard" },
+  { name: "Stream", icon: Video, href: "https://runash.in", count: 0, description: "Real-time video" },
+  { name: "Shop", icon: ShoppingCart, href: "https://runash.in", count: 0, description: "E-commerce" },
+  { name: "API", icon: Code, href: "https://api.runash.in", count: 0, description: "Dev tools" },
+  { name: "AI", icon: Brain, href: "https://runash.in/ai", count: 0, description: "AI solutions" },
+  { name: "Research", icon: Beaker, href: "https://runash.in/research", count: 0, description: "Findings" },
 ]
 
 interface SidebarProps {
@@ -54,10 +54,6 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
               exit={{ opacity: 0 }}
               className="flex items-center gap-2 flex-1"
             >
-              <div className="size-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
-                <Zap className="size-4 text-white fill-current" />
-              </div>
-              <span className="font-black text-orange-600 dark:text-orange-500 tracking-tighter text-xl italic">RunAsh</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -116,10 +112,11 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
         )}>
            <div className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800" />
            {!isCollapsed && (
-              <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden">
                  <p className="text-sm md:text-xs font-bold truncate">User</p>
                  <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">user@runash.in</p>
               </div>
+              
            )}
            {!isCollapsed && (
              <Button variant="ghost" size="icon" className="size-8">
@@ -221,13 +218,13 @@ function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
           )}
         >
           <Users className="size-5 md:size-4 shrink-0" />
-          {!isCollapsed && <span className="ml-3 text-base md:text-sm font-bold md:font-medium">Join Community</span>}
+          {!isCollapsed && <span className="ml-3 text-base md:text-sm font-bold md:font-medium">Community</span>}
         </Button>
       </DialogTrigger>
       <DialogContent className="rounded-[30px] md:rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-black italic text-orange-600">Global Ecosystem</DialogTitle>
-          <DialogDescription>Shape the future of AI streaming with our developers.</DialogDescription>
+          <DialogTitle className="text-xl font-black italic text-orange-600">Join Community</DialogTitle>
+          <DialogDescription>Shape the future of AI Live streaming.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 pt-4">
            {[
