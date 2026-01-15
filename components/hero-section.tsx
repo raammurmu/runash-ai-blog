@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge"
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-yellow-500 p-8 text-white md:p-12">
-      <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+    <section className="relative overflow-hidden mb-8 rounded-3xl bg-gradient-to-br from-orange-500 to-yellow-500 p-8 text-white md:p-12">
+      <div className="relative z-10 flex flex-col mb-4 gap-10 lg:flex-row lg:items-center lg:justify-between">
         
         {/* Left Content */}
         <div className="max-w-2xl space-y-6">
@@ -16,7 +16,7 @@ export function HeroSection() {
           </Badge>
           
           <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
-            Blog<br className="hidden md:block" />
+            Blogs<br className="hidden md:block" />
             
           </h1>
           
