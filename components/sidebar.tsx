@@ -24,11 +24,11 @@ import {
 
 const categories = [
   { name: "Home", icon: Home, href: "/", description: "Dashboard" },
-  { name: "Stream", icon: Video, href: "/streaming", count: 2, description: "Real-time video" },
-  { name: "Shop", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
-  { name: "API", icon: Code, href: "/api", count: 0, description: "Dev tools" },
-  { name: "AI", icon: Brain, href: "/ai", count: 5, description: "AI solutions" },
-  { name: "Research", icon: Beaker, href: "/research", count: 0, description: "Findings" },
+  { name: "Stream", icon: Video, href: "https://runash.in", count: 0, description: "Real-time video" },
+  { name: "Shop", icon: ShoppingCart, href: "https://runash.in", count: 0, description: "E-commerce" },
+  { name: "API", icon: Code, href: "https://api.runash.in", count: 0, description: "Dev tools" },
+  { name: "AI", icon: Brain, href: "https://runash.in/ai", count: 0, description: "AI solutions" },
+  { name: "Research", icon: Beaker, href: "https://runash.in/research", count: 0, description: "Findings" },
 ]
 
 interface SidebarProps {
