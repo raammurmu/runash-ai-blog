@@ -3,6 +3,7 @@ import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
+import { MobileBottomNav } from "@/components/mobile-bottom-nav"
 
 export const metadata: Metadata = {
   title: "RunAsh AI Blog",
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="min-h-svh bg-background text-foreground antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <MobileBottomNav />
           <Toaster />
         </ThemeProvider>
       </body>
