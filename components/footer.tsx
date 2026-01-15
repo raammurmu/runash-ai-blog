@@ -99,7 +99,7 @@ export function Footer() {
               <span className="text-2xl font-black tracking-tighter">RunAsh AI</span>
             </Link>
             <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs px-4 lg:px-0">
-              Runash Digital Innovation Technologies Private Limited. Pioneering AI streaming and payments.
+              Runash Digital Innovation Technologies Private Limited.
             </p>
             <div className="mt-6 flex gap-2">
               {[Github, Twitter, Linkedin, Mail].map((Icon, i) => (
