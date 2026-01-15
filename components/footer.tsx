@@ -97,7 +97,7 @@ export function Footer() {
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:col-span-4">
             <Link href="/" className="group flex items-center space-x-2">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
-                <span className="text-white font-black text-sm">RA</span>
+                <span className="text-white font-black text-sm">R</span>
               </div>
               <span className="text-2xl font-black tracking-tighter">RunAsh AI</span>
             </Link>
@@ -114,7 +114,7 @@ export function Footer() {
           </div>
 
           {/* Navigation Links: Accordion on Mobile, Grid on Desktop */}
-          <div className="lg:col-span-4">
+          <div className="sm:col-span-2">
             <div className="hidden md:grid grid-cols-2 gap-8">
               {footerLinks.map((section) => (
                 <div key={section.title} className="space-y-5">
