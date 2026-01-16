@@ -3,14 +3,13 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, Calendar, Clock, Search, User } from "lucide-react"
+import { ArrowRight, Calendar, Clock, Search, User, Loader2 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
-import type { BlogPost } from "@/lib/types"
-import { cn } from "@/lib/utils"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const BlogPost = ({
+// Sub-component for individual blog cards
+const BlogCard = ({
   title,
   excerpt,
   author,
@@ -19,344 +18,202 @@ const BlogPost = ({
   category,
   image,
   featured = false,
-}: {
-  title: string
-  excerpt: string
-  author: string
-  date: string
-  readTime: string
-  category: string
-  image: string
-  featured?: boolean
-}) => {
+}: any) => {
   return (
-    <Card
-      className={`overflow-hidden ${featured ? "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20" : "border-orange-200/50 dark:border-orange-900/30"}`}
-    >
-      <div className="aspect-video overflow-hidden">
+    <Card className="group overflow-hidden border-orange-200/50 dark:border-orange-900/30 hover:shadow-xl transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+      <div className="relative aspect-video overflow-hidden">
         <img
           src={image || "/placeholder.svg"}
           alt={title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-      </div>
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-xs font-medium rounded-full">
+        <div className="absolute top-3 left-3 flex gap-2">
+          <span className="px-2 py-1 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider rounded">
             {category}
           </span>
-          {featured && (
-            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 text-xs font-medium rounded-full">
-              Featured
-            </span>
-          )}
         </div>
-        <h3 className="text-xl font-bold mb-3 line-clamp-2">{title}</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{excerpt}</p>
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              <span>{author}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>{date}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>{readTime}</span>
-            </div>
+      </div>
+      <CardContent className="p-5">
+        <div className="flex items-center gap-3 text-[12px] text-gray-500 dark:text-gray-400 mb-3">
+          <div className="flex items-center gap-1">
+            <Calendar className="h-3 w-3 text-orange-500" />
+            {date}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300"
-          >
-            Read More <ArrowRight className="ml-1 h-3 w-3" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Clock className="h-3 w-3 text-orange-500" />
+            {readTime}
+          </div>
         </div>
+        <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          {excerpt}
+        </p>
+        <Button
+          variant="link"
+          className="p-0 h-auto text-orange-600 dark:text-orange-400 font-semibold hover:no-underline group/btn"
+        >
+          Read More 
+          <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+        </Button>
       </CardContent>
     </Card>
   )
 }
 
 export default function BlogPage() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [visiblePosts, setVisiblePosts] = useState(6)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Mock function for loading more posts
+  const handleLoadMore = () => {
+    setIsLoading(true)
+    setTimeout(() => {
+      setVisiblePosts((prev) => prev + 3)
+      setIsLoading(false)
+    }, 800)
+  }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
-      {/* Hero Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50/30 to-white dark:from-gray-950 dark:via-orange-950/30 dark:to-gray-950"></div>
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center opacity-5 dark:opacity-10"></div>
+    <div className="min-h-screen bg-[#fafafa] dark:bg-gray-950 text-gray-900 dark:text-white transition-colors duration-300">
+      
+      {/* Abstract Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-20">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-orange-500/20 blur-[120px]" />
+        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[50%] rounded-full bg-blue-600/10 blur-[100px]" />
+      </div>
 
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="flex justify-end mb-4">
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex justify-between items-center mb-12">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-gradient-to-tr from-orange-600 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">R</div>
+              <span className="text-xl font-black tracking-tighter italic">RUNASH AI</span>
+            </div>
             <ThemeToggle />
           </div>
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block mb-6 px-6 py-2 border border-orange-500/30 rounded-full bg-orange-500/10 backdrop-blur-sm">
-              <span className="text-orange-600 dark:text-orange-400">RunAsh Blog</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300 text-transparent bg-clip-text">
-              Insights & Updates
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 mb-8">
-              Stay up to date with the latest news, tutorials, and insights from the RunAsh AI team.
-            </p>
 
-            {/* Search */}
-            <div className="max-w-md mx-auto relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white/50 dark:bg-gray-900/50 border-orange-200 dark:border-orange-800/30 focus:border-orange-500/70"
+          <div className="text-center space-y-6">
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight italic uppercase italic">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-blue-600">Pulse</span> of AI
+            </h1>
+            <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
+              Your daily dose of AI research, product updates, and streaming tutorials.
+            </p>
+            <div className="relative max-w-xl mx-auto">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input 
+                placeholder="Search for articles..." 
+                className="pl-12 h-14 rounded-full border-orange-200 dark:border-orange-900/50 bg-white/80 dark:bg-gray-900/80 shadow-lg focus:ring-orange-500"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Blog Content */}
-      <section className="py-16 bg-white dark:bg-gray-950">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <Tabs defaultValue="all" className="mb-8">
-              <TabsList className="bg-orange-100/50 dark:bg-orange-900/20">
-                <TabsTrigger value="all">All Posts</TabsTrigger>
-                <TabsTrigger value="tutorials">Tutorials</TabsTrigger>
-                <TabsTrigger value="product">Product Updates</TabsTrigger>
-                <TabsTrigger value="ai">AI Research</TabsTrigger>
-                <TabsTrigger value="community">Community</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="all" className="mt-8">
-                {/* Featured Post */}
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Featured Article</h2>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <div className="aspect-video overflow-hidden rounded-xl">
-                      <img
-                        src="/placeholder.svg?height=400&width=600"
-                        alt="Featured article"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-sm font-medium rounded-full">
-                          AI Research
-                        </span>
-                        <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 text-sm font-medium rounded-full">
-                          Featured
-                        </span>
-                      </div>
-                      <h3 className="text-3xl font-bold mb-4">The Future of AI-Powered Live Streaming</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-6 text-lg">
-                        Explore how artificial intelligence is revolutionizing the live streaming industry and what it
-                        means for content creators worldwide.
-                      </p>
-                      <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                        <div className="flex items-center gap-1">
-                          <User className="h-4 w-4" />
-                          <span>Ram Murmu</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          <span>Jun 06 2025</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          <span>8 min read</span>
-                        </div>
-                      </div>
-                      <Button className="bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600 text-white">
-                        Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
+      {/* Featured Section with Orange/Blue Gradient Image */}
+      <section className="container mx-auto max-w-6xl px-4 mb-20">
+        <div className="relative rounded-3xl overflow-hidden bg-slate-900 group">
+          {/* Abstract Image Layer */}
+          <div className="absolute inset-0 opacity-60">
+             <div className="absolute inset-0 bg-gradient-to-r from-orange-600/80 via-blue-900/40 to-black" />
+             <img 
+               src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000" // Abstract Blue/Orange 
+               className="w-full h-full object-cover"
+               alt="Abstract AI"
+             />
+          </div>
+          
+          <div className="relative z-10 p-8 md:p-16 flex flex-col justify-end min-h-[500px] text-white">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase">Featured</span>
+              <span className="text-sm font-medium">June 06, 2025</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 max-w-3xl leading-tight">
+              The Science Behind Real-Time <br/><span className="text-orange-400">Video Processing</span>
+            </h2>
+            <p className="text-gray-200 text-lg mb-8 max-w-2xl">
+              Discover how RunAsh uses neural networks to upscale live video in under 12ms of latency.
+            </p>
+            <div className="flex flex-wrap gap-4 items-center">
+               <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 h-12 rounded-full font-bold transition-all transform hover:scale-105">
+                 Read Full Article <ArrowRight className="ml-2 h-5 w-5" />
+               </Button>
+               <div className="flex items-center gap-3 pl-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-500 border-2 border-orange-500 overflow-hidden">
+                    <img src="https://github.com/shadcn.png" alt="author" />
                   </div>
-                </div>
-
-                {/* Recent Posts */}
-                <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Recent Posts</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <BlogPost
-                      title="Getting Started with AI Video Enhancement"
-                      excerpt="Learn how to use RunAsh's AI video enhancement features to improve your stream quality automatically."
-                      author="Ram Murmu"
-                      date="Jun 06, 2025"
-                      readTime="5 min read"
-                      category="Tutorial"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                    <BlogPost
-                      title="Multi-Platform Streaming Best Practices"
-                      excerpt="Discover the best strategies for streaming to multiple platforms simultaneously while maintaining quality."
-                      author="Ram Murmu"
-                      date="Jun 06, 2025"
-                      readTime="7 min read"
-                      category="Tips"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                    <BlogPost
-                      title="RunAsh 2.1 Release Notes"
-                      excerpt="Explore the latest features and improvements in RunAsh AI 2.1, including enhanced chat moderation and new analytics."
-                      author="Product Team"
-                      date="Jun 04, 2025"
-                      readTime="4 min read"
-                      category="Product Updates"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                    <BlogPost
-                      title="Building Your Streaming Brand with AI"
-                      excerpt="How to leverage AI tools to create consistent branding and grow your streaming audience."
-                      author="Community Team"
-                      date="May  06, 2025"
-                      readTime="6 min read"
-                      category="Community"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                    <BlogPost
-                      title="The Science Behind Real-Time Video Processing"
-                      excerpt="A deep dive into the technical challenges and solutions for processing video streams in real-time."
-                      author="Ram Murmu"
-                      date="Feb 01, 2025"
-                      readTime="10 min read"
-                      category="AI Research"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                    <BlogPost
-                      title="Community Spotlight: Top Streamers Using RunAsh"
-                      excerpt="Meet some of the amazing content creators who are using RunAsh AI to elevate their streaming experience."
-                      author="Community Team"
-                      date="Jun 06, 2025"
-                      readTime="8 min read"
-                      category="Community"
-                      image="/placeholder.svg?height=300&width=400"
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="tutorials" className="mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <BlogPost
-                    title="Getting Started with AI Video Enhancement"
-                    excerpt="Learn how to use RunAsh's AI video enhancement features to improve your stream quality automatically."
-                    author="Vaibhav Murmu"
-                    date="Jun 06, 2025"
-                    readTime="5 min read"
-                    category="Tutorial"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                  <BlogPost
-                    title="Setting Up Multi-Platform Streaming"
-                    excerpt="Step-by-step guide to configure streaming to multiple platforms simultaneously."
-                    author="Tech Team"
-                    date="Jun 06, 2025"
-                    readTime="12 min read"
-                    category="Tutorial"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="product" className="mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <BlogPost
-                    title="RunAsh 2.1 Release Notes"
-                    excerpt="Explore the latest features and improvements in RunAsh AI 2.1, including enhanced chat moderation and new analytics."
-                    author="Product Team"
-                    date="Jun 04, 2025"
-                    readTime="4 min read"
-                    category="Product Updates"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="ai" className="mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <BlogPost
-                    title="The Future of AI-Powered Live Streaming"
-                    excerpt="Explore how artificial intelligence is revolutionizing the live streaming industry."
-                    author="Vaibhav Murmu"
-                    date="Jun 06, 2025"
-                    readTime="8 min read"
-                    category="AI Research"
-                    image="/placeholder.svg?height=300&width=400"
-                    featured={true}
-                  />
-                  <BlogPost
-                    title="The Science Behind Real-Time Video Processing"
-                    excerpt="A deep dive into the technical challenges and solutions for processing video streams in real-time."
-                    author="Vaibhav Murmu"
-                    date="Jun 06, 2025"
-                    readTime="10 min read"
-                    category="AI Research"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="community" className="mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <BlogPost
-                    title="Building Your Streaming Brand with AI"
-                    excerpt="How to leverage AI tools to create consistent branding and grow your streaming audience."
-                    author="Community Team"
-                    date="Jun 06, 2025"
-                    readTime="6 min read"
-                    category="Community"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                  <BlogPost
-                    title="Community Spotlight: Top Streamers Using RunAsh"
-                    excerpt="Meet some of the amazing content creators who are using RunAsh AI to elevate their streaming experience."
-                    author="Community Team"
-                    date="Jun 06, 2025"
-                    readTime="8 min read"
-                    category="Community"
-                    image="/placeholder.svg?height=300&width=400"
-                  />
-                </div>
-              </TabsContent>
-            </Tabs>
-
-            {/* Newsletter Signup */}
-            <div className="mt-16 p-8 rounded-xl bg-gradient-to-br from-orange-100 to-yellow-100 dark:from-orange-900/30 dark:to-yellow-900/30 border border-orange-200 dark:border-orange-800/30">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2 text-orange-800 dark:text-orange-300">Stay Updated</h3>
-                <p className="text-gray-700 dark:text-gray-300">
-                  Subscribe to our newsletter for the latest updates, tutorials, and insights.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <Input
-                  placeholder="Enter your email"
-                  className="bg-white dark:bg-gray-900 border-orange-200 dark:border-orange-800/30"
-                />
-                <Button className="bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600 text-white">
-                  Subscribe
-                </Button>
-              </div>
+                  <span className="font-medium">Vaibhav Murmu</span>
+               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 bg-white dark:bg-gray-950 border-t border-orange-200/50 dark:border-orange-900/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-gray-500">
-            <p>© {new Date().getFullYear()} RunAsh AI. All rights reserved.</p>
+      {/* Content Tabs */}
+      <section className="container mx-auto max-w-6xl px-4 pb-24">
+        <Tabs defaultValue="all" className="w-full">
+          <div className="flex items-center justify-between mb-8 overflow-x-auto">
+            <TabsList className="bg-transparent gap-2">
+              {["all", "tutorials", "product", "research"].map((tab) => (
+                <TabsTrigger 
+                  key={tab}
+                  value={tab} 
+                  className="capitalize rounded-full px-6 data-[state=active]:bg-orange-600 data-[state=active]:text-white border border-gray-200 dark:border-gray-800"
+                >
+                  {tab}
+                </TabsTrigger>
+              ))}
+            </TabsList>
           </div>
-        </div>
+
+          <TabsContent value="all" className="space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Mapping mock data - limited by visiblePosts state */}
+              {[...Array(9)].slice(0, visiblePosts).map((_, i) => (
+                <BlogCard
+                  key={i}
+                  title={i % 2 === 0 ? "Getting Started with AI Enhancement" : "Multi-Platform Streaming Tips"}
+                  excerpt="How to leverage AI tools to create consistent branding and grow your streaming audience."
+                  author="Ram Murmu"
+                  date="Jun 06, 2025"
+                  readTime="5 min read"
+                  category={i % 2 === 0 ? "Tutorial" : "Strategy"}
+                  image={`https://picsum.photos/seed/${i+40}/800/450`}
+                />
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {visiblePosts < 9 && (
+              <div className="flex justify-center mt-12">
+                <Button 
+                  onClick={handleLoadMore}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="px-10 h-14 rounded-full border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-bold dark:hover:bg-orange-950"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    "Load More Articles"
+                  )}
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </section>
+
+      {/* Footer (Simplified) */}
+      <footer className="border-t border-gray-200 dark:border-gray-900 py-12 px-4 text-center">
+        <p className="text-sm text-gray-500">© 2026 RunAsh AI • Powered by Innovation</p>
       </footer>
     </div>
   )
-}
+        }
