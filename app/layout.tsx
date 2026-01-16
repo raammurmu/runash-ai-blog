@@ -6,22 +6,22 @@ import type { Metadata } from "next"
 import { MobileBottomNav } from "@/components/mobile-bottom-nav"
 
 export const metadata: Metadata = {
-  title: "RunAsh AI Blog",
+  title: "RunAsh Blog",
   description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more — by RunAsh AI.",
-  metadataBase: new URL("https://runash.example.com"),
+  metadataBase: new URL("https://blog.runash.in"),
   openGraph: {
-    title: "RunAsh AI Blog",
+    title: "RunAsh Blog",
     description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more.",
-    url: "https://runash.example.com",
-    siteName: "RunAsh AI Blog",
+    url: "https://blog.runash.in",
+    siteName: "RunAsh Blog",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RunAsh AI Blog",
+    title: "RunAsh Blog",
     description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more.",
   },
-    generator: 'v0.app'
+    generator: 'runash.app'
 }
 
 export default function RootLayout({
@@ -41,3 +41,4 @@ export default function RootLayout({
     </html>
   )
 }
+
