@@ -7,9 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, Heart, Bookmark, Eye, MessageCircle, Clock, User, Calendar } from "lucide-react"
-import { ShareButton } from "@/components/blog/share-button"
-import { CommentSection } from "@/components/blog/comment-section"
-import { BlogPostCard } from "@/components/blog/blog-post-card"
+import { ShareButton } from "@/components/share-button"
+import { CommentSection } from "@/components/comment-section"
+import { BlogPostCard } from "@/components/blog-post-card"
 
 interface BlogPost {
   id: string
