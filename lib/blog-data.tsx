@@ -61,18 +61,6 @@ export const blogPosts: BlogPost[] = [
   },
 ]
 
-// Comments (demo; in-memory)
-let commentsStore: Comment[] = [
-  {
-    id: "c1",
-    postId: "1",
-    author: authorRef("rammurmu"),
-    content: "Great initiative.",
-    createdAt: "2026-01-09PT09:46:00Z",
-    likes: 0,
-  },
-  
-]
 
 export function getAllPosts(): BlogPost[] {
   return [...blogPosts]
