@@ -62,6 +62,19 @@ export const blogPosts: BlogPost[] = [
 ]
 
 
+// Comments (demo; in-memory)
+let commentsStore: Comment[] = [
+  {
+    id: "c1",
+    postId: "1",
+    author: authorRef("rammurmu"),
+    content: "Great initiative.",
+    createdAt: "2026-01-09PT09:46:00Z",
+    likes: 0,
+  },
+
+]
+
 export function getAllPosts(): BlogPost[] {
   return [...blogPosts]
 }
@@ -73,13 +86,13 @@ export function getBlogPost(slug: string): BlogPost | undefined {
 export function getAllCategories() {
   const unique = new Map<string, { name: string; slug: string; description: string }>()
   const descriptions: Record<string, string> = {
-    "Company": "Protocols, QoS, encoding, and global delivery.",
-    "Research": "Inference, embeddings, moderation, and personalization.",
-    "Community": "Commerce meets livestreaming with real-time UX.",
-    "Open Source Collab": "Contracts, gateways, testing, and observability.",
-    "Guid": "Billing, fraud prevention, and compliance.",
-    "Partnerships": "Messaging, presence, and scale.",
-    "Release": "Logistics, routing, and forecasting for delivery.",
+    "All Posts": "Protocols, QoS, encoding, and global delivery.",
+    "Tutorials": "Inference, embeddings, moderation, and personalization.",
+    "Product Updates": "Commerce meets livestreaming with real-time UX.",
+    "AI Research": "Contracts, gateways, testing, and observability.",
+    "Community": "Billing, fraud prevention, and compliance.",
+   // "Company": "Messaging, presence, and scale.",
+   // "Release": "Logistics, routing, and forecasting for delivery.",
   }
   for (const p of blogPosts) {
     if (!unique.has(p.category)) {
