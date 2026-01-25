@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 
 type SortKey = "newest" | "popular"
 
-const categories = ["All", "Company", "Research", "Community", "Open Source", "Guide", "Partnerships", "Release"]
+const categories = ["All Posts", "Tutorials", "Product Updates", "AI Research", "Community"]
 
 export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
