@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden mb-8 rounded-3xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white md:p-12">
+    <section className="relative  py-24 overflow-hidden mb-8 rounded-3xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white md:p-12">
       <div className="relative z-10 flex flex-col mb-4 gap-10 lg:flex-row lg:items-center lg:justify-between">   
         <div className="max-w-3xl mx-auto text-center">
         <div className="max-w-3xl mx-auto text-center">
