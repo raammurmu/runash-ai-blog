@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
 
 export function Header() {
   const [query, setQuery] = React.useState("")
