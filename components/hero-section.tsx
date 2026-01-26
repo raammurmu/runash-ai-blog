@@ -29,18 +29,18 @@ export function HeroSection() {
           
           <div className="space-y-4">
             <h1 className="text-5xl font-black tracking-tight text-white md:text-6xl lg:text-7xl leading-[0.95]">
-              Insights that <br />
+              Blogs<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-orange-100">
-                fuel your build.
+                
               </span>
             </h1>
             
             <p className="max-w-md text-lg md:text-xl text-orange-50/80 leading-relaxed font-medium">
-              Dive into the latest updates, deep-dive articles, and engineering tutorials curated by the RunAsh team.
+              Dive into the latest updates, deep-dive articles, and tutorials curated by the RunAsh team.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-4 pt-4">
+          {/*    <div className="flex flex-wrap gap-4 pt-4">
             <Button 
               asChild 
               size="lg" 
@@ -63,7 +63,7 @@ export function HeroSection() {
                 Explore AI
               </Link>
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Decorative Right Side (Optional: Visual Element) */}
