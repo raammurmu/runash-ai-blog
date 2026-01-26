@@ -21,7 +21,7 @@ export function HeroSection() {
             </p>
         </div>
         </div>
-    
+      </div>
     </section>
   )
 }
