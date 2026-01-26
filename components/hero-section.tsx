@@ -21,7 +21,7 @@ export function HeroSection() {
               Stay up to date with the latest news, tutorials, and insights from the RunAsh AI team.
             </p>
         </div>
-      </div>   
+      
     
     </section>
   )
