@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 export function HeroSection() {
   return (
     <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50/30 to-white dark:from-gray-950 dark:via-orange-950/30 dark:to-gray-950"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-500/30 to-white dark:from-gray-950 dark:via-orange-950/30 dark:to-gray-950"></div>
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center opacity-5 dark:opacity-10"></div>
       
         <div className="max-w-3xl mx-auto text-center">
