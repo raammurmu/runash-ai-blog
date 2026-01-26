@@ -40,7 +40,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
   const Thumbnail = () => (
     <div className={cn(
       "relative flex items-center justify-center transition-transform duration-500 group-hover:scale-105",
-      post.gradient || "bg-gradient-to-br from-orange-400 to-amber-500",
+      post.gradient || "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20" : "border-orange-200/50 dark:border-orange-900/30",
       viewMode === "list" ? "w-full md:w-56 h-40 md:h-auto" : "h-48"
     )}>
       <span className="text-6xl transform group-hover:rotate-12 transition-transform duration-300 drop-shadow-xl">
