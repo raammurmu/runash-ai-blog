@@ -1,3 +1,5 @@
+import { ReadingProgress } from "@/components/reading-progress"
+
 const PostDetail = ({ 
   post, 
   allPosts, 
@@ -16,6 +18,8 @@ const PostDetail = ({
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      {/* The Bar */}
+      <ReadingProgress />
       <div className="max-w-4xl mx-auto py-12 px-4">
         {/* Navigation */}
         <Button variant="ghost" onClick={onBack} className="mb-8 group">
