@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState,  useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowRight, Calendar, Clock, Search, User } from "lucide-react"
@@ -9,7 +9,7 @@ import type { BlogPost } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
-import { useState, useMemo } from "react"
+
 
 // 1. Move data to a constant
 const BLOG_POSTS = [
@@ -27,25 +27,7 @@ const BLOG_POSTS = [
   // ... add your other posts here
 ];
 
-const BlogPost = ({
-  title,
-  excerpt,
-  author,
-  date,
-  readTime,
-  category,
-  image,
-  featured = false,
-}: {
-  title: string
-  excerpt: string
-  author: string
-  date: string
-  readTime: string
-  category: string
-  image: string
-  featured?: boolean
-}) => {
+
   return (
     <Card
       className={`overflow-hidden ${featured ? "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20" : "border-orange-200/50 dark:border-orange-900/30"}`}
