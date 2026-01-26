@@ -9,6 +9,23 @@ import type { BlogPost } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
+import { useState, useMemo } from "react"
+
+// 1. Move data to a constant
+const BLOG_POSTS = [
+  {
+    id: 1,
+    title: "The Future of AI-Powered Live Streaming",
+    excerpt: "Explore how artificial intelligence is revolutionizing the live streaming industry.",
+    author: "Ram Murmu",
+    date: "Jun 06, 2025",
+    readTime: "8 min read",
+    category: "AI Research",
+    image: "/placeholder.svg?height=300&width=400",
+    featured: true,
+  },
+  // ... add your other posts here
+];
 
 const BlogPost = ({
   title,
