@@ -135,14 +135,28 @@ export default function BlogPage() {
       <section className="py-16 bg-white dark:bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <Tabs defaultValue="all" className="mb-8">
-              <TabsList className="bg-orange-100/50 dark:bg-orange-900/20">
-                <TabsTrigger value="all">All Posts</TabsTrigger>
-                <TabsTrigger value="tutorials">Tutorials</TabsTrigger>
-                <TabsTrigger value="product">Product Updates</TabsTrigger>
-                <TabsTrigger value="ai">AI Research</TabsTrigger>
-                <TabsTrigger value="community">Community</TabsTrigger>
-              </TabsList>
+            <Tabs defaultValue="all" onValueChange={setActiveTab} className="mb-8">
+            <TabsList className="bg-orange-100/50 dark:bg-orange-900/20">
+              {["all", "tutorials", "product", "ai", "community"].map((tab) => (
+                <TabsTrigger key={tab} value={tab} className="capitalize">
+                  {tab}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) => (
+                  <BlogPost key={post.id} {...post} />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12 text-gray-500">
+                  No articles found matching your criteria.
+                </div>
+              )}
+            </div>
+          </Tabs>
+              
 
               <TabsContent value="all" className="mt-8">
                 {/* Featured Post */}
