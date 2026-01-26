@@ -1,21 +1,21 @@
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
-import { blogPosts } from "@/lib/blog-data"
+import { blogPosts, BlogPost } from "@/lib/blog-data"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
-import { List, LayoutGrid, Filter, Flame, Clock, Check, Search, X } from "lucide-react"
+import { List, LayoutGrid, Filter, Flame, Clock, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { motion, AnimatePresence } from "framer-motion"
 
 type SortKey = "newest" | "popular"
 
-const categories = ["All Posts", "Tutorials", "Product Updates", "AI Research", "Community"]
+const categories = ["All", "Tutorials", "Product Updates", "AI Research", "Community"]
 
-export function BlogGrid() {
+export function BlogGrid({ onPostSelect }: { onPostSelect: (post: BlogPost) => void }) {
   const [activeCategory, setActiveCategory] = useState("All")
   const [sort, setSort] = useState<SortKey>("newest")
   const [view, setView] = useState<"grid" | "list">("grid")
@@ -23,7 +23,6 @@ export function BlogGrid() {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  // Fix hydration mismatch errors by ensuring component is mounted
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -37,156 +36,146 @@ export function BlogGrid() {
         const matchesSearch = 
           !searchQuery || 
           post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.description?.toLowerCase().includes(searchQuery.toLowerCase())
+          post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase())
         
         return matchesCategory && matchesSearch
       })
       .sort((a, b) => {
         if (sort === "newest") {
-          return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
+          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
         }
-        // Popularity: Likes + Upvotes (with safety check)
         const scoreA = (a.likes || 0) + (a.upvotes || 0)
         const scoreB = (b.likes || 0) + (b.upvotes || 0)
         return scoreB - scoreA
       })
   }, [activeCategory, sort, searchQuery])
 
-  if (!mounted) return null // Prevent hydration flash
+  if (!mounted) return null
 
   return (
-    <section className="space-y-6 px-2 md:px-4 max-w-7xl mx-auto">
-      {/* Header & Search Bar */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className={cn("transition-all duration-300", isSearchExpanded ? "hidden sm:block" : "block")}>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
-            Explore Findley
+    <section className="space-y-8 py-12">
+      {/* Search & Layout Controls */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-b border-orange-100 pb-8">
+        <div>
+          <h2 className="text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
+            Explore Insights
           </h2>
+          <p className="text-muted-foreground text-sm mt-1">Discover the latest in AI-powered streaming.</p>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Animated Search Bar */}
+        <div className="flex items-center gap-3">
+          {/* Animated Search */}
           <div className={cn(
-            "relative flex items-center transition-all duration-500 ease-in-out h-10 overflow-hidden",
-            isSearchExpanded ? "w-full sm:w-64" : "w-10 sm:w-64"
+            "relative flex items-center transition-all duration-500 h-11",
+            isSearchExpanded ? "w-full sm:w-72" : "w-11 sm:w-72"
           )}>
             <Input
               placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "pl-10 pr-10 border-orange-200 focus-visible:ring-orange-500 transition-all duration-300",
-                !isSearchExpanded && "sm:opacity-100 opacity-0 pointer-events-none sm:pointer-events-auto"
+                "pl-11 pr-10 rounded-2xl border-orange-100 bg-orange-50/30 focus-visible:ring-orange-500 transition-all",
+                !isSearchExpanded && "sm:opacity-100 opacity-0"
               )}
             />
-            <Search 
-              className="absolute left-3 h-4 w-4 text-orange-500 cursor-pointer" 
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute left-0.5 rounded-2xl hover:bg-transparent"
               onClick={() => setIsSearchExpanded(true)}
-            />
+            >
+              <Search className="h-5 w-5 text-orange-500" />
+            </Button>
             {isSearchExpanded && (
-              <X 
-                className="absolute right-3 h-4 w-4 text-muted-foreground cursor-pointer hover:text-orange-500" 
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-0.5 rounded-2xl"
                 onClick={() => { setIsSearchExpanded(false); setSearchQuery(""); }}
-              />
+              >
+                <X className="h-4 w-4" />
+              </Button>
             )}
           </div>
 
-          {/* Desktop View Switcher */}
-          <div className="hidden md:flex rounded-lg border border-orange-100 p-1 bg-orange-50/30">
+          {/* Grid/List Toggle */}
+          <div className="hidden md:flex bg-orange-50/50 p-1 rounded-2xl border border-orange-100">
             <Button 
               variant="ghost" 
-              size="sm" 
+              size="icon" 
               onClick={() => setView("grid")}
-              className={cn("h-8 w-8 p-0", view === "grid" && "bg-white shadow-sm text-orange-600")}
+              className={cn("rounded-xl h-9 w-9", view === "grid" && "bg-white shadow-sm text-orange-600")}
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
             <Button 
               variant="ghost" 
-              size="sm" 
+              size="icon" 
               onClick={() => setView("list")}
-              className={cn("h-8 w-8 p-0", view === "list" && "bg-white shadow-sm text-orange-600")}
+              className={cn("rounded-xl h-9 w-9", view === "list" && "bg-white shadow-sm text-orange-600")}
             >
               <List className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Mobile Filter Sheet */}
+          {/* Filter Sheet */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
-                <Filter className="h-4 w-4 mr-2 text-orange-500" />
-                Filters
+              <Button variant="outline" className="rounded-2xl border-orange-200 gap-2 font-bold h-11">
+                <Filter className="h-4 w-4 text-orange-500" />
+                Sort
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-[30px] border-orange-100">
-              <SheetHeader className="mb-6">
-                <SheetTitle className="text-xl">Customize Feed</SheetTitle>
-              </SheetHeader>
-              
-              <div className="space-y-8 pb-8">
-                <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Sort By</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button 
-                      variant={sort === "newest" ? "default" : "outline"}
-                      onClick={() => setSort("newest")}
-                      className={cn(sort === "newest" && "bg-gradient-to-r from-orange-500 to-amber-500 border-none")}
-                    >
-                      <Clock className="mr-2 h-4 w-4" /> Newest
-                    </Button>
-                    <Button 
-                      variant={sort === "popular" ? "default" : "outline"}
-                      onClick={() => setSort("popular")}
-                      className={cn(sort === "popular" && "bg-gradient-to-r from-orange-500 to-amber-500 border-none")}
-                    >
-                      <Flame className="mr-2 h-4 w-4" /> Popular
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Categories</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((c) => (
-                      <Badge
-                        key={c}
-                        onClick={() => setActiveCategory(c)}
-                        className={cn(
-                          "px-4 py-2 cursor-pointer transition-all border-orange-100",
-                          activeCategory === c 
-                            ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white" 
-                            : "bg-white text-orange-900 hover:bg-orange-50"
-                        )}
+            <SheetContent side="bottom" className="rounded-t-[40px] border-orange-100 h-[60vh]">
+              <div className="max-w-md mx-auto pt-4 space-y-10">
+                <SheetHeader>
+                  <SheetTitle className="text-2xl font-black">Refine Results</SheetTitle>
+                </SheetHeader>
+                
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-black text-orange-900/40 uppercase tracking-[0.2em]">Rank By</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button 
+                        variant={sort === "newest" ? "default" : "outline"}
+                        onClick={() => setSort("newest")}
+                        className={cn("h-14 rounded-2xl", sort === "newest" && "bg-orange-600 hover:bg-orange-700")}
                       >
-                        {c}
-                      </Badge>
-                    ))}
+                        <Clock className="mr-2 h-4 w-4" /> Newest
+                      </Button>
+                      <Button 
+                        variant={sort === "popular" ? "default" : "outline"}
+                        onClick={() => setSort("popular")}
+                        className={cn("h-14 rounded-2xl", sort === "popular" && "bg-orange-600 hover:bg-orange-700")}
+                      >
+                        <Flame className="mr-2 h-4 w-4" /> Popular
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <SheetClose asChild>
-                <Button className="w-full bg-gradient-to-r from-orange-600 to-amber-500 h-12 rounded-xl text-lg shadow-lg shadow-orange-200">
-                  View {filteredPosts.length} Results
-                </Button>
-              </SheetClose>
+                <SheetClose asChild>
+                  <Button className="w-full bg-orange-600 h-14 rounded-2xl text-lg font-bold">
+                    Show {filteredPosts.length} Articles
+                  </Button>
+                </SheetClose>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
 
-      {/* Horizontal Category Scroller */}
-      <div className="flex items-center overflow-x-auto gap-2 pb-4 no-scrollbar -mx-2 px-2">
+      {/* Category Scroller */}
+      <div className="flex items-center overflow-x-auto gap-3 pb-2 no-scrollbar">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             className={cn(
-              "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all",
+              "px-6 py-2 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border",
               activeCategory === cat
-                ? "bg-orange-100 text-orange-700 ring-1 ring-orange-300"
-                : "text-muted-foreground hover:text-orange-600"
+                ? "bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-500/20 scale-105"
+                : "bg-white border-orange-100 text-muted-foreground hover:border-orange-300"
             )}
           >
             {cat}
@@ -194,24 +183,43 @@ export function BlogGrid() {
         ))}
       </div>
 
-      {/* Results Grid */}
+      {/* Grid Display */}
       <div className={cn(
-        "grid gap-6 transition-all duration-500",
-        view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+        "grid gap-8 transition-all duration-700",
+        view === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
       )}>
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
-            <BlogCard key={post.id} post={post} viewMode={view} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-20 bg-orange-50/50 rounded-3xl border-2 border-dashed border-orange-200">
-            <p className="text-orange-900/60 font-medium">No matches found for your search.</p>
-            <Button variant="link" className="text-orange-600" onClick={() => {setSearchQuery(""); setActiveCategory("All")}}>
-              Clear all filters
-            </Button>
-          </div>
-        )}
+        <AnimatePresence mode="popLayout">
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post) => (
+              <BlogCard 
+                key={post.id} 
+                post={post} 
+                viewMode={view} 
+                onClick={() => onPostSelect(post)}
+              />
+            ))
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="col-span-full py-24 text-center bg-orange-50/30 rounded-[3rem] border-2 border-dashed border-orange-200"
+            >
+              <div className="size-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="size-8 text-orange-400" />
+              </div>
+              <h3 className="text-xl font-bold text-orange-900">No matching articles</h3>
+              <p className="text-muted-foreground mt-2">Try adjusting your search or category filters.</p>
+              <Button 
+                variant="link" 
+                className="mt-4 text-orange-600 font-bold" 
+                onClick={() => {setSearchQuery(""); setActiveCategory("All")}}
+              >
+                Reset all filters
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   )
-}
+        }
