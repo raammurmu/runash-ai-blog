@@ -83,6 +83,18 @@ const BlogPost = ({
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [activeTab, setActiveTab] = useState("all")
+
+  // 2. Compute filtered posts dynamically
+  const filteredPosts = useMemo(() => {
+    return BLOG_POSTS.filter((post) => {
+      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesTab = activeTab === "all" || post.category.toLowerCase() === activeTab.toLowerCase();
+      
+      return matchesSearch && matchesTab;
+    });
+  }, [searchQuery, activeTab]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
