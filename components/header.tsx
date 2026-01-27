@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationCenter} from "@/componemts/notification-center"
 import { cn } from "@/lib/utils"
 
 export function Header() {
@@ -65,7 +66,7 @@ export function Header() {
           <div className="flex items-center bg-muted/30 p-1.5 rounded-2xl gap-1">
             <ThemeToggle />
             <NotificationCenter />
-            <UserMenu />
+  {/* <UserMenu /> */}
           </div>
         </div>
       </div>
