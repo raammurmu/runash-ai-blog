@@ -18,9 +18,9 @@ export function Footer() {
           
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-6">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="https://runash.in" className="flex items-center gap-2">
               <div className="size-8 rounded-lg bg-orange-600" />
-              <span className="text-2xl font-black">RunAsh AI</span>
+              <span className="text-1xl font-black">RunAsh AI</span>
             </Link>
             <p className="text-muted-foreground leading-relaxed max-w-sm">
               Runash Digital Innovation Technologies Private Limited.
@@ -37,20 +37,20 @@ export function Footer() {
           {/* Detailed Navigation */}
           <div className="lg:col-span-4 grid grid-cols-2 gap-8">
             <div className="space-y-6">
-              <h4 className="text-sm font-bold uppercase tracking-widest text-orange-500">Ecosystem</h4>
+              <h4 className="text-sm font uppercase tracking-widest text-orange-500">Ecosystem</h4>
               <nav className="flex flex-col gap-4 text-muted-foreground font-medium">
                 {["AI Tools", "Studio", "Cloud", "API"].map((l) => (
-                  <Link key={l} href="#" className="hover:text-foreground transition-colors inline-flex items-center gap-1 group">
+                  <Link key={l} href="https://runash.in" className="hover:text-foreground transition-colors inline-flex items-center gap-1 group">
                     {l} <ChevronRight className="size-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 ))}
               </nav>
             </div>
             <div className="space-y-6">
-              <h4 className="text-sm font-bold uppercase tracking-widest text-orange-500">Legal</h4>
+              <h4 className="text-sm font uppercase tracking-widest text-orange-500">Legal</h4>
               <nav className="flex flex-col gap-4 text-muted-foreground font-medium">
                 {["Privacy", "Terms", "Cookies", "Ethics"].map((l) => (
-                  <Link key={l} href="#" className="hover:text-foreground transition-colors">{l}</Link>
+                  <Link key={l} href="https://runash.in/policy" className="hover:text-foreground transition-colors">{l}</Link>
                 ))}
               </nav>
             </div>
