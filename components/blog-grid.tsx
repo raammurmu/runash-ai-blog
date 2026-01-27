@@ -59,8 +59,8 @@ export function BlogGrid() {
       {/* Header & Search Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className={cn("transition-all duration-300", isSearchExpanded ? "hidden sm:block" : "block")}>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
-            Explore Findley
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300 text-transparent bg-clip-text">
+            Explore
           </h2>
         </div>
 
