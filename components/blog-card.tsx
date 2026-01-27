@@ -47,13 +47,13 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
         {post.emoji}
       </span>
       <div className="absolute top-3 left-3">
-        <Badge className="bg-white/90 text-orange-600 border-none backdrop-blur-md shadow-sm">
+        <Badge className="bg-white/90 text-orange-600 border-sm backdrop-blur-md shadow-sm">
           {post.category}
         </Badge>
       </div>
       {post.featured && (
         <div className="absolute top-3 right-3">
-          <Badge className="bg-amber-400 text-amber-900 border-none">
+          <Badge className="bg-amber-400 text-amber-900 border-sm">
             <Zap className="h-3 w-3 mr-1 fill-current" /> Featured
           </Badge>
         </div>
@@ -129,7 +129,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
 
             <div className="flex items-center bg-white/50 rounded-full px-1 border border-orange-100 shadow-sm">
               <Button
-                variant="ghost"
+                
                 size="sm"
                 onClick={(e) => { e.preventDefault(); setUpvoted(!upvoted); }}
                 className={cn(
@@ -144,7 +144,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
               <div className="w-[1px] h-4 bg-orange-200 mx-0.5" />
 
               <Button
-                variant="ghost"
+                
                 size="sm"
                 onClick={(e) => { e.preventDefault(); setLiked(!liked); }}
                 className={cn(
@@ -157,7 +157,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
 
               <div className="w-[1px] h-4 bg-orange-200 mx-0.5" />
 
-              <Button variant="ghost" size="sm" className="h-8 px-2 rounded-full text-muted-foreground hover:text-orange-500" asChild>
+              <Button  size="sm" className="h-8 px-2 rounded-full text-muted-foreground hover:text-orange-500" asChild>
                 <Link href={`/post/${post.slug}`}>
                   <MessageCircle className="h-4 w-4" />
                   <span className="ml-1 text-xs font-bold">{post.comments}</span>
