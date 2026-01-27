@@ -40,7 +40,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
   const Thumbnail = () => (
     <div className={cn(
       "relative flex items-center justify-center transition-transform duration-500 group-hover:scale-105",
-      post.gradient || "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20" : "border-orange-200/50 dark:border-orange-900/30",
+      post.gradient || "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20 border-orange-200/50 dark:border-orange-900/30",
       viewMode === "list" ? "w-full md:w-56 h-40 md:h-auto" : "h-48"
     )}>
       <span className="text-6xl transform group-hover:rotate-12 transition-transform duration-300 drop-shadow-xl">
@@ -63,7 +63,7 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
 
   return (
     <Card className={cn(
-      "group overflow-hidden border-orange-100/50 hover:border-orange-200 transition-all duration-300",
+      "group overflow-hidden border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20 border-orange-200/50 dark:border-orange-900/30",
       "hover:shadow-[0_8px_30px_rgb(255,237,213,0.5)] bg-card",
       viewMode === "list" ? "flex flex-col md:flex-row min-h-[220px]" : "flex flex-col"
     )}>
