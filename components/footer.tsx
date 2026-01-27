@@ -23,7 +23,7 @@ export function Footer() {
               <span className="text-2xl font-black">RunAsh AI</span>
             </Link>
             <p className="text-muted-foreground leading-relaxed max-w-sm">
-              The command center for modern digital innovation. Building ethical AI systems for the next generation of web explorers.
+              Runash Digital Innovation Technologies Private Limited.
             </p>
             <div className="flex gap-4">
               {[Github, Twitter, Linkedin].map((Icon, idx) => (
@@ -74,8 +74,8 @@ export function Footer() {
         <Separator className="mb-10 opacity-30" />
         
         {/* Utility Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm font-bold text-muted-foreground">
-          <p>&copy; 2026 RunAsh AI Hub.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm font text-muted-foreground">
+          <p>&copy; 2026 RunAsh AI.</p>
           <div className="flex items-center gap-8">
             <span className="inline-flex items-center gap-2"><MapPin className="size-4" /> Silicon Valley, CA</span>
             <span className="inline-flex items-center gap-2"><Globe className="size-4" /> English (Global)</span>
