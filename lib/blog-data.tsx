@@ -30,7 +30,7 @@ function authorRef(username: string) {
 // Posts
 export const blogPosts: BlogPost[] = [
   {
-    id: "2",
+    id: "1",
     title: "The Wait is Almost Over: RunAsh Pre-Release",
     slug: "runash-pre-release-announcement",
     excerpt: "We are opening the doors to a limited group of early adopters. See how RunAsh is turning live streams into interactive storefronts.",
@@ -154,43 +154,6 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["streaming", "ai", "video", "real-time"],
-  },
-  {
-    id: "2",
-    title: "The Wait is Almost Over: RunAsh Pre-Release",
-    slug: "runash-pre-release-announcement",
-    excerpt: "We are opening the doors to a limited group of early adopters. See how RunAsh is turning live streams into interactive storefronts.",
-    content: `
-      <h2>The New Era of Social Selling</h2>
-      <p>For too long, online shopping has been a static experience. We're building RunAsh to bring the human touch back to digital commerce through AI-enhanced live video.</p>
-      
-      <h3>What to Expect in the Beta</h3>
-      <p>Our pre-release version focuses on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure demonstrations are as smooth as they are smart.</p>
-      
-      <pre><code>// Current Beta Build: v0.8.4-alpha
-{
-  "status": "Pre-Release",
-  "features": ["Ultra-Low Latency", "AI Chat Moderation", "Dynamic Product Cards"],
-  "access": "Invite-Only"
-}</code></pre>
-
-      <h3>Join the Inner Circle</h3>
-      <ul>
-        <li><strong>Early Access:</strong> Be among the first to set up your shop and start streaming.</li>
-        <li><strong>Founding Member Status:</strong> Special badges and lower transaction fees for early adopters.</li>
-        <li><strong>Direct Feedback Loop:</strong> Talk directly to our dev team to request the features you need most.</li>
-      </ul>
-    `,
-    category: "Announcement",
-    gradient: "bg-gradient-to-br from-purple-500 to-indigo-600",
-    emoji: "🚀",
-    author: authorRef("rammurmu"),
-    publishedAt: "2021-04-06",
-    readTime: "3 min read",
-    likes: 0,
-    comments: 0,
-    upvotes: 0,
-    tags: ["PreRelease", "Beta", "Startups", "Waitlist"],
   },
   {
     id: "4",
