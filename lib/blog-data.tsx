@@ -39,7 +39,7 @@ export const blogPosts: BlogPost[] = [
       <p>For too long, online shopping has been a static, 2D experience. You look at a photo, you read a review, and you hope for the best. We're building RunAsh to change that—bringing the human touch back to digital commerce through AI-enhanced live video.</p>
       
       <h3>What to Expect in the Beta</h3>
-      <p>Our pre-release version focus on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure that your product demonstrations are as smooth as they are smart.</p>
+      <p>Our pre-release version focuses on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure that your product demonstrations are as smooth as they are smart.</p>
       
       <pre><code>// Current Beta Build: v0.8.4-alpha
 {
@@ -209,7 +209,7 @@ let commentsStore: Comment[] = [
     postId: "1",
     author: authorRef("rammurmu"),
     content: "Great initiative.",
-    createdAt: "2026-01-09PT09:46:00Z",
+    createdAt: "2026-01-09T09:46:00Z",
     likes: 0,
   },
 
