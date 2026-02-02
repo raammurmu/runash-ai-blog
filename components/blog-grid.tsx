@@ -2,21 +2,21 @@
 
 import { useMemo, useState, useEffect } from "react"
 import { blogPosts } from "@/lib/blog-data"
+import type { BlogPost } from "@/lib/types"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { List, LayoutGrid, Filter, Flame, Clock, Check, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 type SortKey = "newest" | "popular"
 
-const categories = ["All Posts", "Tutorials", "Product Updates", "AI Research", "Community"]
-
 export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
+  const [posts, setPosts] = useState<BlogPost[]>(blogPosts)
   const [sort, setSort] = useState<SortKey>("newest")
   const [view, setView] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
@@ -28,16 +28,37 @@ export function BlogGrid() {
     setMounted(true)
   }, [])
 
-  const filteredPosts = useMemo(() => {
-    if (!blogPosts) return []
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("/api/posts")
+        if (!response.ok) return
+        const data = await response.json()
+        setPosts(Array.isArray(data) ? data : blogPosts)
+      } catch {
+        setPosts(blogPosts)
+      }
+    }
+    fetchPosts()
+  }, [])
 
-    return blogPosts
+  const categories = useMemo(() => {
+    const categorySet = new Set(posts.filter((post) => post.status !== "draft").map((post) => post.category))
+    return ["All", ...Array.from(categorySet)]
+  }, [posts])
+
+  const filteredPosts = useMemo(() => {
+    if (!posts) return []
+
+    return posts
+      .filter((post) => post.status !== "draft")
       .filter((post) => {
         const matchesCategory = activeCategory === "All" || post.category === activeCategory
         const matchesSearch = 
           !searchQuery || 
           post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.description?.toLowerCase().includes(searchQuery.toLowerCase())
+          post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.content?.toLowerCase().includes(searchQuery.toLowerCase())
         
         return matchesCategory && matchesSearch
       })
@@ -50,7 +71,7 @@ export function BlogGrid() {
         const scoreB = (b.likes || 0) + (b.upvotes || 0)
         return scoreB - scoreA
       })
-  }, [activeCategory, sort, searchQuery])
+  }, [activeCategory, sort, searchQuery, posts])
 
   if (!mounted) return null // Prevent hydration flash
 
