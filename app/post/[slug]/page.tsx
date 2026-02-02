@@ -8,14 +8,16 @@ import { ReadingProgress } from "@/components/reading-progress"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { MobilePostActions } from "@/components/mobile-post-actions"
 import { RelatedPosts } from "@/components/related-posts"
+import { PostActions } from "@/components/post-actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { Clock, Calendar, ChevronLeft } from "lucide-react"
+import { Clock, Calendar, ChevronLeft, ImageIcon } from "lucide-react"
 import Link from "next/link"
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await getBlogPost(params.slug)
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = await getBlogPost(slug)
   if (!post) notFound()
 
   return (
@@ -26,9 +28,16 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
       {/* Hero Section */}
       <section className={cn(
-        "relative w-full py-20 md:py-32 flex flex-col items-center justify-center text-center px-6",
+        "relative w-full py-20 md:py-32 flex flex-col items-center justify-center text-center px-6 overflow-hidden",
         post.gradient || "bg-gradient-to-br from-orange-500 via-orange-600 to-amber-500"
       )}>
+        <div className="absolute inset-0 opacity-20">
+          <img
+            src={post.image ?? "/images/blog-cover-gradient.svg"}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
         <div className="relative z-10 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
           <Link href="/blog" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8 text-sm font-medium transition-colors">
             <ChevronLeft className="h-4 w-4" /> Back to Resources
@@ -55,11 +64,36 @@ export default async function PostPage({ params }: { params: { slug: string } })
       {/* Article Content Area */}
       <main className="container max-w-4xl mx-auto px-4 md:px-6 -mt-16 relative z-20">
         <div className="bg-card rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-16 shadow-2xl border border-border/50">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                {new Date(post.publishedAt).toLocaleDateString()}
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                {post.readTime}
+              </div>
+            </div>
+            <PostActions post={post} />
+          </div>
+
           <article className="prose prose-orange dark:prose-invert prose-lg md:prose-xl max-w-none">
             <div className="not-prose mb-10">
               <p className="text-xl md:text-2xl leading-relaxed text-orange-600 dark:text-orange-400 font-medium italic border-l-4 border-primary pl-6 py-2">
                 {post.excerpt}
               </p>
+            </div>
+            <div className="not-prose mb-10 overflow-hidden rounded-3xl border border-orange-100/60 bg-orange-50/30">
+              <div className="flex items-center gap-2 px-6 py-4 text-sm font-semibold text-orange-700">
+                <ImageIcon className="h-4 w-4" />
+                Cover image
+              </div>
+              <img
+                src={post.image ?? "/images/blog-cover-gradient.svg"}
+                alt={post.title}
+                className="h-64 w-full object-cover"
+              />
             </div>
             <PostContent post={post} />
           </article>

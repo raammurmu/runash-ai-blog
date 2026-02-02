@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,38 +8,31 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ImageIcon, Video, Eye, Edit } from "lucide-react"
-
-const categories = [
-  "Company",
-  "Research",
-  "Community",
-  "Open Source",
-  "Guide",
-  "Partnershis",
-  "Tutorials",
-  "Product Updates",
-  "Release",
-]
-
-const gradients = [
-  "bg-gradient-to-r from-orange-400 to-yellow-400",
-  "bg-gradient-to-r from-blue-400 to-purple-400",
-  "bg-gradient-to-r from-green-400 to-blue-400",
-  "bg-gradient-to-r from-pink-400 to-red-400",
-  "bg-gradient-to-r from-purple-400 to-pink-400",
-]
+import { ImageIcon, Eye, Edit, Loader2 } from "lucide-react"
+import { blogPosts, authors, getAllCategories } from "@/lib/blog-data"
+import { toast } from "sonner"
 
 export default function CreatePostPage() {
+  const categories = useMemo(() => getAllCategories().map((category) => category.name), [])
+  const gradients = useMemo(
+    () => Array.from(new Set(blogPosts.map((post) => post.gradient))).filter(Boolean),
+    [],
+  )
+  const currentAuthor = authors[0]
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [title, setTitle] = useState("")
   const [excerpt, setExcerpt] = useState("")
   const [content, setContent] = useState("")
   const [category, setCategory] = useState("")
-  const [selectedGradient, setSelectedGradient] = useState(gradients[0])
+  const [selectedGradient, setSelectedGradient] = useState(gradients[0] ?? "bg-gradient-to-r from-orange-400 to-yellow-400")
   const [emoji, setEmoji] = useState("🚀")
   const [isPreview, setIsPreview] = useState(false)
   const [tags, setTags] = useState<string[]>([])
   const [newTag, setNewTag] = useState("")
+  const [coverImage, setCoverImage] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [status, setStatus] = useState<"published" | "draft">("published")
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -52,17 +45,79 @@ export default function CreatePostPage() {
     setTags(tags.filter((tag) => tag !== tagToRemove))
   }
 
-  const handleSubmit = () => {
-    // Handle post creation
-    console.log({
-      title,
-      excerpt,
-      content,
-      category,
-      gradient: selectedGradient,
-      emoji,
-      tags,
-    })
+  const handleUpload = async (file: File) => {
+    setIsUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+      if (!response.ok) {
+        throw new Error("Upload failed")
+      }
+      const data = await response.json()
+      setCoverImage(data.url)
+      toast.success("Image uploaded")
+    } catch (error) {
+      toast.error("Failed to upload image")
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleSubmit = async (nextStatus: "published" | "draft") => {
+    if (!currentAuthor) {
+      toast.error("No author profile available.")
+      return
+    }
+    if (!title || !excerpt || !content || !category) {
+      toast.error("Please fill in title, excerpt, content, and category.")
+      return
+    }
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          excerpt,
+          content,
+          category,
+          gradient: selectedGradient,
+          emoji,
+          tags,
+          image: coverImage,
+          status: nextStatus,
+          author: currentAuthor,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to create post")
+      }
+
+      const created = await response.json()
+      toast.success(nextStatus === "draft" ? "Draft saved" : "Post created")
+      setTitle("")
+      setExcerpt("")
+      setContent("")
+      setCategory("")
+      setTags([])
+      setCoverImage(null)
+      setEmoji("🚀")
+      setSelectedGradient(gradients[0] ?? "bg-gradient-to-r from-orange-400 to-yellow-400")
+      setIsPreview(false)
+      if (nextStatus === "published") {
+        window.location.href = `/post/${created.slug}`
+      }
+    } catch (error) {
+      toast.error("Unable to publish post right now.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -124,15 +179,33 @@ export default function CreatePostPage() {
                         />
                       </div>
 
-                      <div className="flex gap-4">
-                        <Button variant="outline" className="flex-1 bg-transparent">
-                          <ImageIcon className="h-4 w-4 mr-2" />
-                          Upload Image
+                      <div className="flex flex-col gap-3">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0]
+                            if (file) {
+                              handleUpload(file)
+                            }
+                          }}
+                        />
+                        <Button
+                          variant="outline"
+                          className="bg-transparent justify-start"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading}
+                        >
+                          {isUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <ImageIcon className="h-4 w-4 mr-2" />}
+                          {coverImage ? "Replace cover image" : "Upload cover image"}
                         </Button>
-                        <Button variant="outline" className="flex-1 bg-transparent">
-                          <Video className="h-4 w-4 mr-2" />
-                          Upload Video
-                        </Button>
+                        {coverImage && (
+                          <div className="overflow-hidden rounded-xl border">
+                            <img src={coverImage} alt="Cover preview" className="h-40 w-full object-cover" />
+                          </div>
+                        )}
                       </div>
                     </>
                   ) : (
@@ -146,12 +219,20 @@ export default function CreatePostPage() {
                           <Badge variant="secondary" className="mb-2">
                             {category || "Category"}
                           </Badge>
+                          <Badge variant="outline" className="mb-2 ml-2">
+                            {status === "draft" ? "Draft" : "Published"}
+                          </Badge>
                           <h3 className="font-semibold text-lg mb-2">{title || "Your Post Title"}</h3>
                           <p className="text-sm text-muted-foreground">
                             {excerpt || "Your post excerpt will appear here..."}
                           </p>
                         </div>
                       </div>
+                      {coverImage && (
+                        <div className="overflow-hidden rounded-xl border">
+                          <img src={coverImage} alt="Cover preview" className="h-48 w-full object-cover" />
+                        </div>
+                      )}
 
                       {/* Content Preview */}
                       <div className="prose dark:prose-invert max-w-none">
@@ -212,13 +293,31 @@ export default function CreatePostPage() {
                   </div>
 
                   <div>
+                    <label className="text-sm font-medium mb-2 block">Status</label>
+                    <Select value={status} onValueChange={(value) => setStatus(value as "published" | "draft")}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="published">Published</SelectItem>
+                        <SelectItem value="draft">Draft</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
                     <label className="text-sm font-medium mb-2 block">Tags</label>
                     <div className="flex gap-2 mb-2">
                       <Input
                         placeholder="Add tag..."
                         value={newTag}
                         onChange={(e) => setNewTag(e.target.value)}
-                        onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            handleAddTag()
+                          }
+                        }}
                       />
                       <Button onClick={handleAddTag} size="sm">
                         Add
@@ -241,11 +340,11 @@ export default function CreatePostPage() {
               </Card>
 
               <div className="space-y-2">
-                <Button onClick={handleSubmit} className="w-full" size="lg">
-                  Publish Post
+                <Button onClick={() => handleSubmit(status)} className="w-full" size="lg" disabled={isSubmitting}>
+                  {isSubmitting ? "Publishing..." : status === "draft" ? "Save Draft" : "Publish Post"}
                 </Button>
-                <Button variant="outline" className="w-full bg-transparent">
-                  Save Draft
+                <Button variant="outline" className="w-full bg-transparent" onClick={() => setIsPreview(true)}>
+                  Preview Draft
                 </Button>
               </div>
             </div>

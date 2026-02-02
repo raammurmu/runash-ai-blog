@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getBlogPosts } from "@/lib/blog-data"
+import { addBlogPost, getAllPosts } from "@/lib/blog-data"
+import type { BlogPost } from "@/lib/types"
 
 export async function GET(request: NextRequest) {
   try {
-    const posts = await getBlogPosts()
+    const posts = getAllPosts()
     return NextResponse.json(posts)
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 })
@@ -15,24 +16,37 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     // Validate required fields
-    const { title, content, category, author } = body
-    if (!title || !content || !category || !author) {
+    const { title, content, category, author, excerpt, tags, gradient, emoji, image, status } = body 
+    if (!title || !content || !category || !author || !excerpt) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // In production, save to database
-    const newPost = {
+    const newPost: BlogPost = {
       id: Date.now().toString(),
       slug: title
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^\w-]/g, ""),
-      ...body,
+      title,
+      content,
+      category,
+      excerpt,
+      author,
+      tags: Array.isArray(tags) ? tags : [],
+      gradient: gradient ?? "bg-gradient-to-br from-orange-500 to-amber-500",
+      emoji: emoji ?? "🚀",
+      image,
+      status: status === "draft" ? "draft" : "published",
       publishedAt: new Date().toISOString(),
+      readTime: "5 min read",
       likes: 0,
       comments: 0,
       upvotes: 0,
+      shares: 0,
+      bookmarks: 0,
     }
+
+    addBlogPost(newPost)
 
     return NextResponse.json(newPost, { status: 201 })
   } catch (error) {

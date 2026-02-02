@@ -5,6 +5,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { authors, blogPosts } from "@/lib/blog-data"
+import type { BlogPost } from "@/lib/types"
 
 // UI Components
 import { Button } from "@/components/ui/button"
@@ -12,23 +14,17 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 // Icons
 import {
-  Home, Video, ShoppingCart, Code, Brain, Beaker,
-  TrendingUp, Users, ChevronLeft, ChevronRight,
-  MessageCircle, Settings, LogOut, Search, Zap
+  Home, ChevronLeft, ChevronRight,
+  Settings, Search, LayoutGrid, Tag
 } from "lucide-react"
 
-const categories = [
+const primaryNav = [
   { name: "Home", icon: Home, href: "/", description: "Dashboard" },
-  { name: "Stream", icon: Video, href: "https://runash.in", count: 0, description: "Real-time video" },
-  { name: "Shop", icon: ShoppingCart, href: "https://runash.in", count: 0, description: "E-commerce" },
-  { name: "API", icon: Code, href: "https://api.runash.in", count: 0, description: "Dev tools" },
-  { name: "AI", icon: Brain, href: "https://runash.in/ai", count: 0, description: "AI solutions" },
-  { name: "Research", icon: Beaker, href: "https://runash.in/research", count: 0, description: "Findings" },
+  { name: "All Posts", icon: LayoutGrid, href: "/blog", description: "Latest articles" },
 ]
 
 interface SidebarProps {
@@ -40,6 +36,37 @@ interface SidebarProps {
 
 export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname()
+  const [posts, setPosts] = React.useState<BlogPost[]>(blogPosts)
+  const categoryItems = React.useMemo(() => {
+    const categories = posts
+      .filter((post) => post.status !== "draft")
+      .reduce<Record<string, number>>((acc, post) => {
+        acc[post.category] = (acc[post.category] ?? 0) + 1
+        return acc
+      }, {})
+
+    return Object.keys(categories).map((name) => ({
+      name,
+      href: `/category/${name.toLowerCase().replace(/\s+/g, "-")}`,
+      description: "",
+      count: categories[name],
+    }))
+  }, [posts])
+  const primaryAuthor = authors[0]
+
+  React.useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("/api/posts")
+        if (!response.ok) return
+        const data = await response.json()
+        setPosts(Array.isArray(data) ? data : blogPosts)
+      } catch {
+        setPosts(blogPosts)
+      }
+    }
+    fetchPosts()
+  }, [])
 
   // Sidebar Inner Content (Shared between Mobile and Desktop)
   const SidebarContent = (
@@ -80,11 +107,11 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
 
       <ScrollArea className="flex-1">
         <nav className="flex flex-col gap-1.5 px-3">
-          {categories.map((item) => (
-            <SidebarNavItem 
-              key={item.href} 
-              item={item} 
-              isCollapsed={isCollapsed} 
+          {primaryNav.map((item) => (
+            <SidebarNavItem
+              key={item.href}
+              item={item}
+              isCollapsed={isCollapsed}
               isActive={pathname === item.href}
               onSelect={() => setMobileOpen?.(false)}
             />
@@ -97,9 +124,17 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
                "mb-2 px-2 text-[10px] font-black uppercase tracking-[0.2em] text-orange-600/60 dark:text-orange-400/60",
                isCollapsed && "md:hidden"
              )}>
-               Community
+               Categories
              </h3>
-             <CommunityDialog isCollapsed={isCollapsed} />
+             {categoryItems.map((item) => (
+               <SidebarNavItem
+                 key={item.href}
+                 item={{ ...item, icon: Tag }}
+                 isCollapsed={isCollapsed}
+                 isActive={pathname === item.href}
+                 onSelect={() => setMobileOpen?.(false)}
+               />
+             ))}
           </div>
         </nav>
       </ScrollArea>
@@ -110,11 +145,14 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
           "flex items-center gap-3 rounded-2xl", 
           !isCollapsed && "p-2 hover:bg-orange-100/50 dark:hover:bg-orange-900/20 transition-colors"
         )}>
-           <div className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800" />
+           <div
+             className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800"
+             aria-hidden
+           />
            {!isCollapsed && (
             <div className="flex-1 overflow-hidden">
-                 <p className="text-sm md:text-xs font-bold truncate">User</p>
-                 <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">user@runash.in</p>
+                 <p className="text-sm md:text-xs font-bold truncate">{primaryAuthor?.name ?? "RunAsh Team"}</p>
+                 <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">{primaryAuthor?.email ?? "team@runash.in"}</p>
               </div>
               
            )}
@@ -154,7 +192,16 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
 }
 
 function SidebarNavItem({ item, isCollapsed, isActive, onSelect }: { 
-  item: any; isCollapsed: boolean; isActive: boolean; onSelect?: () => void 
+  item: {
+    name: string
+    href: string
+    description?: string
+    count?: number
+    icon: React.ComponentType<{ className?: string }>
+  }
+  isCollapsed: boolean
+  isActive: boolean
+  onSelect?: () => void 
 }) {
   const content = (
     <Button
@@ -183,7 +230,7 @@ function SidebarNavItem({ item, isCollapsed, isActive, onSelect }: {
             {item.name}
           </span>
         )}
-        {!isCollapsed && item.count > 0 && (
+        {!isCollapsed && item.count && item.count > 0 && (
           <Badge className="ml-auto text-[10px] px-1.5 py-0.5 bg-orange-500 text-white border-none shadow-orange-500/20 shadow-md">
             {item.count}
           </Badge>
@@ -205,47 +252,3 @@ function SidebarNavItem({ item, isCollapsed, isActive, onSelect }: {
 
   return content
 }
-
-function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button 
-          variant="ghost" 
-          className={cn(
-            "w-full rounded-xl md:rounded-lg", 
-            isCollapsed ? "h-10 w-10 p-0 justify-center mx-auto" : "h-12 md:h-10 justify-start px-3 text-muted-foreground hover:text-orange-600 hover:bg-orange-50/50"
-          )}
-        >
-          <Users className="size-5 md:size-4 shrink-0" />
-          {!isCollapsed && <span className="ml-3 text-base md:text-sm font-bold md:font-medium">Community</span>}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="rounded-[30px] md:rounded-xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-black italic text-orange-600">Join Community</DialogTitle>
-          <DialogDescription>Shape the future of AI Live streaming.</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 pt-4">
-           {[
-             { label: "Discord", desc: "Real-time support", icon: MessageCircle, color: "bg-indigo-500" },
-             { label: "GitHub", desc: "Open source", icon: Code, color: "bg-zinc-800" }
-           ].map((platform) => (
-             <div key={platform.label} className="flex items-center justify-between p-4 rounded-2xl border border-orange-100 hover:border-orange-500 transition-all group cursor-pointer hover:bg-orange-50/50">
-               <div className="flex items-center gap-4">
-                 <div className={cn("p-2.5 rounded-xl text-white shadow-lg", platform.color)}>
-                   <platform.icon className="size-6" />
-                 </div>
-                 <div>
-                   <p className="text-sm font-black">{platform.label}</p>
-                   <p className="text-xs text-muted-foreground">{platform.desc}</p>
-                 </div>
-               </div>
-               <ChevronRight className="size-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-             </div>
-           ))}
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-  }
