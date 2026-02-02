@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { blogPosts } from "@/lib/blog-data";
 
 export const runtime = 'edge';
-export const alt = 'Findley Blog Post';
+export const alt = 'RunAsh Blog Post';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -11,7 +11,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
   return new ImageResponse(
     (
-      // The "Findley Card" Design
+      // The RunAsh Card Design
       <div
         style={{
           height: '100%',
@@ -58,7 +58,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               </div>
               <span style={{ fontSize: '28px', color: '#4b5563', fontWeight: '500' }}>{post?.author.name}</span>
             </div>
-            <div style={{ fontSize: '28px', color: '#f97316', fontWeight: '800' }}>Findley.io</div>
+            <div style={{ fontSize: '28px', color: '#f97316', fontWeight: '800' }}>RunAsh AI</div>
           </div>
         </div>
       </div>

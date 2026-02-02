@@ -1,0 +1,5 @@
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" rx="40" fill="#F97316"/>
+  <circle cx="150" cy="150" r="120" fill="#FFF7ED"/>
+  <text x="150" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="96" font-weight="700" fill="#F97316">RM</text>
+</svg>
