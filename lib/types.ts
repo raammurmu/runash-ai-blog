@@ -9,9 +9,12 @@ export interface BlogPost {
   emoji: string
   image?: string
   featured?: boolean
+ 
   status?: "published" | "draft"
   shares?: number
   bookmarks?: number
+
+
   author: {
     name: string
     avatar: string

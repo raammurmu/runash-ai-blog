@@ -8,13 +8,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
+ 
 import { blogPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
+
+import { getAllCategories } from "@/lib/blog-data"
+
 
 export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [query, setQuery] = React.useState("")
   const router = useRouter()
+ 
   const [posts, setPosts] = React.useState<BlogPost[]>(blogPosts)
   const categories = React.useMemo(() => {
     const categorySet = new Set(posts.filter((post) => post.status !== "draft").map((post) => post.category))
@@ -24,12 +29,16 @@ export function Header() {
     }))
   }, [posts])
 
+  const categories = React.useMemo(() => getAllCategories().slice(0, 4), [])
+
+
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+ 
   React.useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -43,6 +52,7 @@ export function Header() {
     }
     fetchPosts()
   }, [])
+
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault()

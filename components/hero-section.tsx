@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+ 
 import { useEffect, useState } from "react"
 import { blogPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
@@ -33,6 +34,21 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-background text-foreground mb-8">
+
+import { blogPosts } from "@/lib/blog-data"
+import { Button } from "@/components/ui/button"
+
+export function HeroSection() {
+  const featuredPost = [...blogPosts].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  )[0]
+
+  const totalPosts = blogPosts.length
+  const totalCategories = new Set(blogPosts.map((post) => post.category)).size
+
+  return (
+    <section className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white mb-8">
+
       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-yellow-400/10" />
       <div className="relative z-10 flex flex-col gap-10 px-6 py-20 md:px-12 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-2xl text-left">
@@ -42,7 +58,11 @@ export function HeroSection() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300 text-transparent bg-clip-text">
             Insights & Updates
           </h1>
+ 
           <p className="text-lg md:text-xl text-muted-foreground mb-6">
+
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-6">
+
             Stay up to date with the latest news, tutorials, and insights from the RunAsh AI team.
           </p>
           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -55,7 +75,11 @@ export function HeroSection() {
         </div>
 
         {featuredPost && (
+ 
           <div className="w-full max-w-lg rounded-3xl border border-orange-200/60 bg-background/80 p-6 shadow-lg shadow-orange-200/40 dark:border-orange-900/40">
+
+          <div className="w-full max-w-lg rounded-3xl border border-orange-200/60 bg-white/70 p-6 shadow-lg shadow-orange-200/40 dark:border-orange-900/40 dark:bg-gray-900/70">
+
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500 mb-3">
               Featured
             </p>

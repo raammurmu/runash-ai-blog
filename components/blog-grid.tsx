@@ -1,8 +1,12 @@
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
+ 
 import { blogPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
+
+import { blogPosts, getAllCategories } from "@/lib/blog-data"
+
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -28,6 +32,7 @@ export function BlogGrid() {
     setMounted(true)
   }, [])
 
+ 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -46,6 +51,11 @@ export function BlogGrid() {
     const categorySet = new Set(posts.filter((post) => post.status !== "draft").map((post) => post.category))
     return ["All", ...Array.from(categorySet)]
   }, [posts])
+
+  const categories = useMemo(() => {
+    return ["All", ...getAllCategories().map((category) => category.name)]
+  }, [])
+
 
   const filteredPosts = useMemo(() => {
     if (!posts) return []
