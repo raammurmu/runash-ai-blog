@@ -1,19 +1,17 @@
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
-import { blogPosts } from "@/lib/blog-data"
+import { blogPosts, getAllCategories } from "@/lib/blog-data"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { List, LayoutGrid, Filter, Flame, Clock, Check, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 type SortKey = "newest" | "popular"
-
-const categories = ["All Posts", "Tutorials", "Product Updates", "AI Research", "Community"]
 
 export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
@@ -28,6 +26,10 @@ export function BlogGrid() {
     setMounted(true)
   }, [])
 
+  const categories = useMemo(() => {
+    return ["All", ...getAllCategories().map((category) => category.name)]
+  }, [])
+
   const filteredPosts = useMemo(() => {
     if (!blogPosts) return []
 
@@ -37,7 +39,8 @@ export function BlogGrid() {
         const matchesSearch = 
           !searchQuery || 
           post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.description?.toLowerCase().includes(searchQuery.toLowerCase())
+          post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.content?.toLowerCase().includes(searchQuery.toLowerCase())
         
         return matchesCategory && matchesSearch
       })

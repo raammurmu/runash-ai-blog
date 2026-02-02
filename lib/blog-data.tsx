@@ -30,7 +30,7 @@ function authorRef(username: string) {
 // Posts
 export const blogPosts: BlogPost[] = [
   {
-    id: "2",
+    id: "1",
     title: "The Wait is Almost Over: RunAsh Pre-Release",
     slug: "runash-pre-release-announcement",
     excerpt: "We are opening the doors to a limited group of early adopters. See how RunAsh is turning live streams into interactive storefronts.",
@@ -39,7 +39,7 @@ export const blogPosts: BlogPost[] = [
       <p>For too long, online shopping has been a static, 2D experience. You look at a photo, you read a review, and you hope for the best. We're building RunAsh to change that—bringing the human touch back to digital commerce through AI-enhanced live video.</p>
       
       <h3>What to Expect in the Beta</h3>
-      <p>Our pre-release version focus on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure that your product demonstrations are as smooth as they are smart.</p>
+      <p>Our pre-release version focuses on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure that your product demonstrations are as smooth as they are smart.</p>
       
       <pre><code>// Current Beta Build: v0.8.4-alpha
 {
@@ -156,43 +156,6 @@ export const blogPosts: BlogPost[] = [
     tags: ["streaming", "ai", "video", "real-time"],
   },
   {
-    id: "2",
-    title: "The Wait is Almost Over: RunAsh Pre-Release",
-    slug: "runash-pre-release-announcement",
-    excerpt: "We are opening the doors to a limited group of early adopters. See how RunAsh is turning live streams into interactive storefronts.",
-    content: `
-      <h2>The New Era of Social Selling</h2>
-      <p>For too long, online shopping has been a static experience. We're building RunAsh to bring the human touch back to digital commerce through AI-enhanced live video.</p>
-      
-      <h3>What to Expect in the Beta</h3>
-      <p>Our pre-release version focuses on stability and the core seller experience. We've integrated low-latency streaming with our proprietary AI layer to ensure demonstrations are as smooth as they are smart.</p>
-      
-      <pre><code>// Current Beta Build: v0.8.4-alpha
-{
-  "status": "Pre-Release",
-  "features": ["Ultra-Low Latency", "AI Chat Moderation", "Dynamic Product Cards"],
-  "access": "Invite-Only"
-}</code></pre>
-
-      <h3>Join the Inner Circle</h3>
-      <ul>
-        <li><strong>Early Access:</strong> Be among the first to set up your shop and start streaming.</li>
-        <li><strong>Founding Member Status:</strong> Special badges and lower transaction fees for early adopters.</li>
-        <li><strong>Direct Feedback Loop:</strong> Talk directly to our dev team to request the features you need most.</li>
-      </ul>
-    `,
-    category: "Announcement",
-    gradient: "bg-gradient-to-br from-purple-500 to-indigo-600",
-    emoji: "🚀",
-    author: authorRef("rammurmu"),
-    publishedAt: "2021-04-06",
-    readTime: "3 min read",
-    likes: 0,
-    comments: 0,
-    upvotes: 0,
-    tags: ["PreRelease", "Beta", "Startups", "Waitlist"],
-  },
-  {
     id: "4",
     title: "RunAsh is Live: The Future of Live Shopping Starts Today",
     slug: "runash-official-launch-is-here",
@@ -237,6 +200,7 @@ export const blogPosts: BlogPost[] = [
 
 ]
 
+let postsStore: BlogPost[] = [...blogPosts]
 
 
 // Comments (demo; in-memory)
@@ -246,18 +210,18 @@ let commentsStore: Comment[] = [
     postId: "1",
     author: authorRef("rammurmu"),
     content: "Great initiative.",
-    createdAt: "2026-01-09PT09:46:00Z",
+    createdAt: "2026-01-09T09:46:00Z",
     likes: 0,
   },
 
 ]
 
 export function getAllPosts(): BlogPost[] {
-  return [...blogPosts]
+  return [...postsStore]
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug)
+  return postsStore.find((p) => p.slug === slug)
 }
 
 export function getAllCategories() {
@@ -271,7 +235,7 @@ export function getAllCategories() {
    // "Company": "Messaging, presence, and scale.",
    // "Release": "Logistics, routing, and forecasting for delivery.",
   }
-  for (const p of blogPosts) {
+  for (const p of postsStore) {
     if (!unique.has(p.category)) {
       unique.set(p.category, {
         name: p.category,
@@ -285,7 +249,7 @@ export function getAllCategories() {
 
 export function getAllTags() {
   const tagSet = new Set<string>()
-  for (const p of blogPosts) p.tags.forEach((t) => tagSet.add(t))
+  for (const p of postsStore) p.tags.forEach((t) => tagSet.add(t))
   return Array.from(tagSet).map((t) => ({
     name: t,
     slug: t.toLowerCase().replace(/\s+/g, "-"),
@@ -294,11 +258,11 @@ export function getAllTags() {
 }
 
 export function getPostsByCategory(categoryName: string): BlogPost[] {
-  return blogPosts.filter((p) => p.category === categoryName)
+  return postsStore.filter((p) => p.category === categoryName)
 }
 
 export function getPostsByTag(tag: string): BlogPost[] {
-  return blogPosts.filter((p) => p.tags.includes(tag))
+  return postsStore.filter((p) => p.tags.includes(tag))
 }
 
 export function getAuthorByUsername(username: string): User | undefined {
@@ -306,12 +270,12 @@ export function getAuthorByUsername(username: string): User | undefined {
 }
 
 export function getPostsByAuthor(username: string): BlogPost[] {
-  return blogPosts.filter((p) => p.author.username === username)
+  return postsStore.filter((p) => p.author.username === username)
 }
 
 export function searchPosts(query: string): BlogPost[] {
   const q = query.toLowerCase()
-  return blogPosts.filter((p) => {
+  return postsStore.filter((p) => {
     return (
       p.title.toLowerCase().includes(q) ||
       p.excerpt.toLowerCase().includes(q) ||
@@ -329,6 +293,28 @@ export function getCommentsByPostId(postId: string): Comment[] {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
+export function getBlogPosts(): BlogPost[] {
+  return getAllPosts()
+}
+
+export function addBlogPost(post: BlogPost) {
+  postsStore = [post, ...postsStore]
+}
+
+export function updateBlogPost(slug: string, next: Partial<BlogPost>): BlogPost | undefined {
+  const index = postsStore.findIndex((post) => post.slug === slug)
+  if (index === -1) return undefined
+  const updated = { ...postsStore[index], ...next }
+  postsStore = postsStore.map((post, idx) => (idx === index ? updated : post))
+  return updated
+}
+
+export function deleteBlogPost(slug: string): boolean {
+  const next = postsStore.filter((post) => post.slug !== slug)
+  if (next.length === postsStore.length) return false
+  postsStore = next
+  return true
+}
 export function addComment(
   postId: string,
   author: { name: string; username: string; avatar: string },
