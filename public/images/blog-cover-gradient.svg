@@ -1,0 +1,15 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDBA74" />
+      <stop offset="0.5" stop-color="#FB923C" />
+      <stop offset="1" stop-color="#F97316" />
+    </linearGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="60" />
+    </filter>
+  </defs>
+  <rect width="1200" height="600" rx="48" fill="url(#gradient)" />
+  <circle cx="220" cy="180" r="140" fill="#FFEDD5" filter="url(#blur)" opacity="0.6" />
+  <circle cx="920" cy="420" r="200" fill="#FDBA74" filter="url(#blur)" opacity="0.5" />
+</svg>

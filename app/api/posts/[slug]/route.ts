@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getBlogPost } from "@/lib/blog-data"
+import { deleteBlogPost, getBlogPost, updateBlogPost } from "@/lib/blog-data"
 
 export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
   try {
@@ -19,10 +19,10 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
   try {
     const body = await request.json()
 
-    // In production, update in database
-    const updatedPost = {
-      ...body,
-      updatedAt: new Date().toISOString(),
+    const updatedPost = updateBlogPost(params.slug, body)
+
+    if (!updatedPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 })
     }
 
     return NextResponse.json(updatedPost)
@@ -33,7 +33,10 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
 
 export async function DELETE(request: NextRequest, { params }: { params: { slug: string } }) {
   try {
-    // In production, delete from database
+    const removed = deleteBlogPost(params.slug)
+    if (!removed) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 })
+    }
     return NextResponse.json({ message: "Post deleted successfully" })
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete post" }, { status: 500 })

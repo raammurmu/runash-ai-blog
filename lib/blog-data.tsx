@@ -200,6 +200,7 @@ export const blogPosts: BlogPost[] = [
 
 ]
 
+let postsStore: BlogPost[] = [...blogPosts]
 
 
 // Comments (demo; in-memory)
@@ -216,11 +217,11 @@ let commentsStore: Comment[] = [
 ]
 
 export function getAllPosts(): BlogPost[] {
-  return [...blogPosts]
+  return [...postsStore]
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug)
+  return postsStore.find((p) => p.slug === slug)
 }
 
 export function getAllCategories() {
@@ -234,7 +235,7 @@ export function getAllCategories() {
    // "Company": "Messaging, presence, and scale.",
    // "Release": "Logistics, routing, and forecasting for delivery.",
   }
-  for (const p of blogPosts) {
+  for (const p of postsStore) {
     if (!unique.has(p.category)) {
       unique.set(p.category, {
         name: p.category,
@@ -248,7 +249,7 @@ export function getAllCategories() {
 
 export function getAllTags() {
   const tagSet = new Set<string>()
-  for (const p of blogPosts) p.tags.forEach((t) => tagSet.add(t))
+  for (const p of postsStore) p.tags.forEach((t) => tagSet.add(t))
   return Array.from(tagSet).map((t) => ({
     name: t,
     slug: t.toLowerCase().replace(/\s+/g, "-"),
@@ -257,11 +258,11 @@ export function getAllTags() {
 }
 
 export function getPostsByCategory(categoryName: string): BlogPost[] {
-  return blogPosts.filter((p) => p.category === categoryName)
+  return postsStore.filter((p) => p.category === categoryName)
 }
 
 export function getPostsByTag(tag: string): BlogPost[] {
-  return blogPosts.filter((p) => p.tags.includes(tag))
+  return postsStore.filter((p) => p.tags.includes(tag))
 }
 
 export function getAuthorByUsername(username: string): User | undefined {
@@ -269,12 +270,12 @@ export function getAuthorByUsername(username: string): User | undefined {
 }
 
 export function getPostsByAuthor(username: string): BlogPost[] {
-  return blogPosts.filter((p) => p.author.username === username)
+  return postsStore.filter((p) => p.author.username === username)
 }
 
 export function searchPosts(query: string): BlogPost[] {
   const q = query.toLowerCase()
-  return blogPosts.filter((p) => {
+  return postsStore.filter((p) => {
     return (
       p.title.toLowerCase().includes(q) ||
       p.excerpt.toLowerCase().includes(q) ||
@@ -292,6 +293,28 @@ export function getCommentsByPostId(postId: string): Comment[] {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
+export function getBlogPosts(): BlogPost[] {
+  return getAllPosts()
+}
+
+export function addBlogPost(post: BlogPost) {
+  postsStore = [post, ...postsStore]
+}
+
+export function updateBlogPost(slug: string, next: Partial<BlogPost>): BlogPost | undefined {
+  const index = postsStore.findIndex((post) => post.slug === slug)
+  if (index === -1) return undefined
+  const updated = { ...postsStore[index], ...next }
+  postsStore = postsStore.map((post, idx) => (idx === index ? updated : post))
+  return updated
+}
+
+export function deleteBlogPost(slug: string): boolean {
+  const next = postsStore.filter((post) => post.slug !== slug)
+  if (next.length === postsStore.length) return false
+  postsStore = next
+  return true
+}
 export function addComment(
   postId: string,
   author: { name: string; username: string; avatar: string },

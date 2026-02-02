@@ -6,28 +6,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Heart, MessageCircle, Eye, Clock, User, Bookmark } from "lucide-react"
+import { Heart, MessageCircle, Clock, User, Bookmark } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
-
-interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  author: {
-    name: string
-    avatar: string
-  }
-  category: string
-  publishedAt: string
-  readingTime: number
-  views: number
-  likes: number
-  comments: number
-  featured: boolean
-  image: string
-}
+import type { BlogPost } from "@/lib/types"
 
 interface BlogPostCardProps {
   post: BlogPost
@@ -52,11 +34,11 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
   }
 
   return (
-    <Link href={`/blog/${post.slug}`}>
+    <Link href={`/post/${post.slug}`}>
       <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden">
         <div className="relative">
           <img
-            src={post.image || "/placeholder.svg"}
+            src={post.image ?? "/images/blog-cover-gradient.svg"}
             alt={post.title}
             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -84,7 +66,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
             </Badge>
             <div className="flex items-center space-x-1 text-xs text-gray-500">
               <Clock className="h-3 w-3" />
-              <span>{post.readingTime} min</span>
+              <span>{post.readTime}</span>
             </div>
           </div>
           <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-orange-600 transition-colors">
@@ -122,10 +104,6 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
               <div className="flex items-center space-x-1">
                 <MessageCircle className="h-4 w-4" />
                 <span>{post.comments}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Eye className="h-4 w-4" />
-                <span>{post.views}</span>
               </div>
             </div>
           </div>
