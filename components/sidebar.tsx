@@ -5,8 +5,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+ 
 import { authors, blogPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
+import { blogPosts, authors, getAllCategories } from "@/lib/blog-data"
+
 
 // UI Components
 import { Button } from "@/components/ui/button"
@@ -36,6 +39,7 @@ interface SidebarProps {
 
 export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname()
+ 
   const [posts, setPosts] = React.useState<BlogPost[]>(blogPosts)
   const categoryItems = React.useMemo(() => {
     const categories = posts
@@ -67,6 +71,18 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
     }
     fetchPosts()
   }, [])
+
+  const categoryItems = React.useMemo(() => {
+    const categories = getAllCategories()
+    return categories.map((category) => ({
+      name: category.name,
+      href: `/category/${category.slug}`,
+      description: category.description,
+      count: blogPosts.filter((post) => post.category === category.name).length,
+    }))
+  }, [])
+  const primaryAuthor = authors[0]
+
 
   // Sidebar Inner Content (Shared between Mobile and Desktop)
   const SidebarContent = (

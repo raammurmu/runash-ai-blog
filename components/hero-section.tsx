@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+ 
 import { useEffect, useState } from "react"
 import { blogPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
@@ -30,6 +31,18 @@ export function HeroSection() {
 
   const totalPosts = publishedPosts.length
   const totalCategories = new Set(publishedPosts.map((post) => post.category)).size
+
+import { blogPosts } from "@/lib/blog-data"
+import { Button } from "@/components/ui/button"
+
+export function HeroSection() {
+  const featuredPost = [...blogPosts].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  )[0]
+
+  const totalPosts = blogPosts.length
+  const totalCategories = new Set(blogPosts.map((post) => post.category)).size
+
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-950 text-gray-900 dark:text-white mb-8">

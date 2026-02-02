@@ -10,13 +10,23 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ImageIcon, Eye, Edit, Loader2 } from "lucide-react"
 import { blogPosts, authors, getAllCategories } from "@/lib/blog-data"
+ 
 import { getCoverDataUrl } from "@/lib/cover-generator"
 import { getGradientOptions } from "@/lib/gradients"
+
+
 import { toast } from "sonner"
 
 export default function CreatePostPage() {
   const categories = useMemo(() => getAllCategories().map((category) => category.name), [])
+ 
   const gradients = useMemo(() => getGradientOptions(), [])
+
+  const gradients = useMemo(
+    () => Array.from(new Set(blogPosts.map((post) => post.gradient))).filter(Boolean),
+    [],
+  )
+
   const currentAuthor = authors[0]
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [title, setTitle] = useState("")
@@ -31,7 +41,10 @@ export default function CreatePostPage() {
   const [coverImage, setCoverImage] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+ 
   const [status, setStatus] = useState<"published" | "draft">("published")
+
+
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -66,7 +79,11 @@ export default function CreatePostPage() {
     }
   }
 
+ 
   const handleSubmit = async (nextStatus: "published" | "draft") => {
+
+  const handleSubmit = async () => {
+
     if (!currentAuthor) {
       toast.error("No author profile available.")
       return
@@ -88,8 +105,12 @@ export default function CreatePostPage() {
           gradient: selectedGradient,
           emoji,
           tags,
+ 
           image: coverImage ?? getCoverDataUrl(title, category),
           status: nextStatus,
+
+          image: coverImage,
+
           author: currentAuthor,
         }),
       })
@@ -99,7 +120,11 @@ export default function CreatePostPage() {
       }
 
       const created = await response.json()
+ 
       toast.success(nextStatus === "draft" ? "Draft saved" : "Post created")
+
+      toast.success("Post created")
+
       setTitle("")
       setExcerpt("")
       setContent("")
@@ -109,9 +134,13 @@ export default function CreatePostPage() {
       setEmoji("🚀")
       setSelectedGradient(gradients[0] ?? "bg-gradient-to-r from-orange-400 to-yellow-400")
       setIsPreview(false)
+ 
       if (nextStatus === "published") {
         window.location.href = `/post/${created.slug}`
       }
+
+      window.location.href = `/post/${created.slug}`
+
     } catch (error) {
       toast.error("Unable to publish post right now.")
     } finally {
@@ -200,6 +229,7 @@ export default function CreatePostPage() {
                           {isUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <ImageIcon className="h-4 w-4 mr-2" />}
                           {coverImage ? "Replace cover image" : "Upload cover image"}
                         </Button>
+ 
                       {coverImage && (
                         <div className="overflow-hidden rounded-xl border">
                           <img src={coverImage} alt="Cover preview" className="h-40 w-full object-cover" />
@@ -210,6 +240,13 @@ export default function CreatePostPage() {
                           <img src={getCoverDataUrl(title, category)} alt="Generated cover" className="h-40 w-full object-cover" />
                         </div>
                       )}
+
+                        {coverImage && (
+                          <div className="overflow-hidden rounded-xl border">
+                            <img src={coverImage} alt="Cover preview" className="h-40 w-full object-cover" />
+                          </div>
+                        )}
+ 
                       </div>
                     </>
                   ) : (
@@ -232,6 +269,7 @@ export default function CreatePostPage() {
                           </p>
                         </div>
                       </div>
+ 
                       {(coverImage || (title && category)) && (
                         <div className="overflow-hidden rounded-xl border">
                           <img
@@ -239,6 +277,11 @@ export default function CreatePostPage() {
                             alt="Cover preview"
                             className="h-48 w-full object-cover"
                           />
+
+                      {coverImage && (
+                        <div className="overflow-hidden rounded-xl border">
+                          <img src={coverImage} alt="Cover preview" className="h-48 w-full object-cover" />
+
                         </div>
                       )}
 
@@ -348,8 +391,13 @@ export default function CreatePostPage() {
               </Card>
 
               <div className="space-y-2">
+ 
                 <Button onClick={() => handleSubmit(status)} className="w-full" size="lg" disabled={isSubmitting}>
                   {isSubmitting ? "Publishing..." : status === "draft" ? "Save Draft" : "Publish Post"}
+
+                <Button onClick={handleSubmit} className="w-full" size="lg" disabled={isSubmitting}>
+                  {isSubmitting ? "Publishing..." : "Publish Post"}
+
                 </Button>
                 <Button variant="outline" className="w-full bg-transparent" onClick={() => setIsPreview(true)}>
                   Preview Draft

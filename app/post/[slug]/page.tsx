@@ -85,6 +85,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 {post.excerpt}
               </p>
             </div>
+ 
             <div className="not-prose mb-10">
               <div className="flex items-center gap-2 px-2 py-2 text-sm font-semibold text-orange-700">
                 <ImageIcon className="h-4 w-4" />
@@ -97,6 +98,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 gradient={post.gradient}
                 emoji={post.emoji}
                 className="h-64"
+
+            <div className="not-prose mb-10 overflow-hidden rounded-3xl border border-orange-100/60 bg-orange-50/30">
+              <div className="flex items-center gap-2 px-6 py-4 text-sm font-semibold text-orange-700">
+                <ImageIcon className="h-4 w-4" />
+                Cover image
+              </div>
+              <img
+                src={post.image ?? "/images/blog-cover-gradient.svg"}
+                alt={post.title}
+                className="h-64 w-full object-cover"
+
               />
             </div>
             <PostContent post={post} />
