@@ -239,10 +239,12 @@ let commentsStore: Comment[] = [
 
 export function getAllPosts(): BlogPost[] {
   return [...postsStore]
+ 
 }
 
 export function getPublishedPosts(): BlogPost[] {
   return postsStore.filter((post) => post.status !== "draft")
+
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {
@@ -296,6 +298,7 @@ export function getAuthorByUsername(username: string): User | undefined {
 
 export function getPostsByAuthor(username: string): BlogPost[] {
   return postsStore.filter((p) => p.author.username === username)
+ 
 }
 
 export function getAuthors(): User[] {
@@ -312,6 +315,8 @@ export function updateAuthorFollowers(username: string, delta: number): User | u
   authorsStore = next
   authors = [...authorsStore]
   return updated
+
+
 }
 
 export function searchPosts(query: string): BlogPost[] {
@@ -339,6 +344,7 @@ export function getBlogPosts(): BlogPost[] {
 }
 
 export function addBlogPost(post: BlogPost) {
+ 
   const normalized = {
     ...post,
     status: post.status ?? "published",
@@ -346,16 +352,23 @@ export function addBlogPost(post: BlogPost) {
     bookmarks: post.bookmarks ?? 0,
   }
   postsStore = [normalized, ...postsStore]
+
+  postsStore = [post, ...postsStore]
+
 }
 
 export function updateBlogPost(slug: string, next: Partial<BlogPost>): BlogPost | undefined {
   const index = postsStore.findIndex((post) => post.slug === slug)
   if (index === -1) return undefined
+ 
   const updated = {
     ...postsStore[index],
     ...next,
     status: next.status ?? postsStore[index].status ?? "published",
   }
+
+  const updated = { ...postsStore[index], ...next }
+
   postsStore = postsStore.map((post, idx) => (idx === index ? updated : post))
   return updated
 }

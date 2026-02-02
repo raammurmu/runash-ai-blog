@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import Link from "next/link"
+ 
 import { useEffect, useMemo, useState } from "react"
+
+import { useMemo, useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -13,7 +17,10 @@ import {
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { blogPosts } from "@/lib/blog-data"
+ 
 import type { BlogPost } from "@/lib/types"
+
+
 
 const footerLinks = [
   {
@@ -42,6 +49,7 @@ export function Footer() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { theme, setTheme } = useTheme()
+ 
   const [posts, setPosts] = useState<BlogPost[]>(blogPosts)
   const latestPosts = useMemo(() => {
     return [...posts]
@@ -62,6 +70,12 @@ export function Footer() {
       }
     }
     fetchPosts()
+
+  const latestPosts = useMemo(() => {
+    return [...blogPosts]
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      .slice(0, 3)
+
   }, [])
 
   const handleSubscribe = async (e: React.FormEvent) => {

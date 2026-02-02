@@ -16,7 +16,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     // Validate required fields
+ 
     const { title, content, category, author, excerpt, tags, gradient, emoji, image, status } = body 
+
+    const { title, content, category, author, excerpt, tags, gradient, emoji, image } = body 
+
     if (!title || !content || !category || !author || !excerpt) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
@@ -36,7 +40,10 @@ export async function POST(request: NextRequest) {
       gradient: gradient ?? "bg-gradient-to-br from-orange-500 to-amber-500",
       emoji: emoji ?? "🚀",
       image,
+ 
       status: status === "draft" ? "draft" : "published",
+
+
       publishedAt: new Date().toISOString(),
       readTime: "5 min read",
       likes: 0,

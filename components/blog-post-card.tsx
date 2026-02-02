@@ -10,7 +10,10 @@ import { Heart, MessageCircle, Clock, User, Bookmark } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
 import type { BlogPost } from "@/lib/types"
+ 
 import { PostCover } from "@/components/post-cover"
+
+
 
 interface BlogPostCardProps {
   post: BlogPost
@@ -38,6 +41,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
     <Link href={`/post/${post.slug}`}>
       <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden">
         <div className="relative">
+ 
           <PostCover
             title={post.title}
             category={post.category}
@@ -45,6 +49,12 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
             gradient={post.gradient}
             emoji={post.emoji}
             className="h-48 rounded-none group-hover:scale-[1.02] transition-transform duration-300"
+
+          <img
+            src={post.image ?? "/images/blog-cover-gradient.svg"}
+            alt={post.title}
+            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+
           />
           {post.featured && (
             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-orange-600 to-yellow-500 text-white">
