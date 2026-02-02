@@ -5,8 +5,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { authors } from "@/lib/blog-data"
 
 export default function SettingsPage() {
+  const currentUser = authors[0]
+
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
@@ -31,15 +34,17 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Display Name</Label>
-                <Input id="name" defaultValue="Ashish Kumar" />
+                <Input id="name" value={currentUser?.name ?? ""} readOnly />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" defaultValue="ash@runash.ai" />
+                <Input id="email" value={currentUser?.email ?? ""} readOnly />
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="default">Save Changes</Button>
+              <Button variant="default" disabled>
+                Managed by account provisioning
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -53,10 +58,9 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Input type="password" value="sk_live_51Mxxxxxxxxxxxxxxxx" readOnly />
-                <Button variant="outline">Copy</Button>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                API keys are managed in the RunAsh account portal. Contact support to rotate or revoke keys.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
