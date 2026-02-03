@@ -49,3 +49,4 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     return NextResponse.json({ error: "Failed to update post action" }, { status: 500 })
   }
 }
+
