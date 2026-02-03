@@ -42,3 +42,4 @@ export async function DELETE(request: NextRequest, { params }: { params: { slug:
     return NextResponse.json({ error: "Failed to delete post" }, { status: 500 })
   }
 }
+
