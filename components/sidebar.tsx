@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { blogPosts, authors, getAllCategories } from "@/lib/blog-data"
 
 // UI Components
 import { Button } from "@/components/ui/button"
@@ -12,148 +13,203 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 // Icons
 import {
-  Home, Video, ShoppingCart, Code, Brain, Beaker,
-  TrendingUp, Users, ChevronLeft, ChevronRight,
-  MessageCircle, Settings, LogOut, Search
+  Home, ChevronLeft, ChevronRight,
+  Settings, Search, LayoutGrid, Tag
 } from "lucide-react"
 
-const categories = [
+const primaryNav = [
   { name: "Home", icon: Home, href: "/", description: "Dashboard" },
-  { name: "Live Streaming", icon: Video, href: "/streaming", count: 0, description: "Real-time video" },
-  { name: "Live Shopping", icon: ShoppingCart, href: "/shopping", count: 0, description: "E-commerce" },
-  { name: "API Platform", icon: Code, href: "/api", count: 0, description: "Dev tools" },
-  { name: "AI Platform", icon: Brain, href: "/ai", count: 0, description: "AI solutions" },
-  { name: "Research", icon: Beaker, href: "/research", count: 0, description: "Findings" },
+  { name: "All Posts", icon: LayoutGrid, href: "/blog", description: "Latest articles" },
 ]
 
 interface SidebarProps {
   isCollapsed: boolean
   onToggle: () => void
+  isMobileOpen?: boolean
+  setMobileOpen?: (open: boolean) => void
 }
 
-export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname()
+  const categoryItems = React.useMemo(() => {
+    const categories = getAllCategories()
+    return categories.map((category) => ({
+      name: category.name,
+      href: `/category/${category.slug}`,
+      description: category.description,
+      count: blogPosts.filter((post) => post.category === category.name).length,
+    }))
+  }, [])
+  const primaryAuthor = authors[0]
+
+  // Sidebar Inner Content (Shared between Mobile and Desktop)
+  const SidebarContent = (
+    <div className="flex flex-col h-full">
+      {/* Header - Hidden on Mobile because it's in the Header.tsx */}
+      <div className="hidden md:flex h-16 items-center px-4 mb-2">
+        <AnimatePresence mode="wait">
+          {!isCollapsed && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-2 flex-1"
+            >
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className={cn("h-8 w-8 ml-auto", isCollapsed && "mx-auto")}
+        >
+          {isCollapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
+        </Button>
+      </div>
+
+      {/* Search - Replaced with a more touch-friendly version for mobile */}
+      <div className={cn("px-4 mb-4", isCollapsed && "md:hidden")}>
+         <Button variant="outline" className="w-full h-10 md:h-9 justify-start text-muted-foreground px-3 font-normal bg-muted/30 border-orange-100/50 dark:border-orange-900/50 rounded-xl md:rounded-lg">
+            <Search className="mr-2 size-4" />
+            <span className="text-sm md:text-xs">Search...</span>
+            <kbd className="ml-auto pointer-events-none hidden md:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+         </Button>
+      </div>
+
+      <ScrollArea className="flex-1">
+        <nav className="flex flex-col gap-1.5 px-3">
+          {primaryNav.map((item) => (
+            <SidebarNavItem
+              key={item.href}
+              item={item}
+              isCollapsed={isCollapsed}
+              isActive={pathname === item.href}
+              onSelect={() => setMobileOpen?.(false)}
+            />
+          ))}
+          
+          <Separator className="my-4 opacity-50" />
+          
+          <div className="flex flex-col gap-1">
+             <h3 className={cn(
+               "mb-2 px-2 text-[10px] font-black uppercase tracking-[0.2em] text-orange-600/60 dark:text-orange-400/60",
+               isCollapsed && "md:hidden"
+             )}>
+               Categories
+             </h3>
+             {categoryItems.map((item) => (
+               <SidebarNavItem
+                 key={item.href}
+                 item={{ ...item, icon: Tag }}
+                 isCollapsed={isCollapsed}
+                 isActive={pathname === item.href}
+                 onSelect={() => setMobileOpen?.(false)}
+               />
+             ))}
+          </div>
+        </nav>
+      </ScrollArea>
+
+      {/* User Section - Enhanced for Mobile Reachability */}
+      <div className="p-4 border-t bg-orange-50/30 dark:bg-orange-950/10">
+        <div className={cn(
+          "flex items-center gap-3 rounded-2xl", 
+          !isCollapsed && "p-2 hover:bg-orange-100/50 dark:hover:bg-orange-900/20 transition-colors"
+        )}>
+           <div
+             className="size-10 md:size-8 rounded-xl bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0 shadow-sm border-2 border-white dark:border-zinc-800"
+             aria-hidden
+           />
+           {!isCollapsed && (
+            <div className="flex-1 overflow-hidden">
+                 <p className="text-sm md:text-xs font-bold truncate">{primaryAuthor?.name ?? "RunAsh Team"}</p>
+                 <p className="text-xs md:text-[10px] text-muted-foreground truncate opacity-70">{primaryAuthor?.email ?? "team@runash.in"}</p>
+              </div>
+              
+           )}
+           {!isCollapsed && (
+             <Button variant="ghost" size="icon" className="size-8">
+               <Settings className="size-4 text-muted-foreground hover:text-orange-500 transition-colors" />
+             </Button>
+           )}
+        </div>
+      </div>
+    </div>
+  )
 
   return (
     <TooltipProvider delayDuration={0}>
+      {/* MOBILE DRAWER */}
+      <Sheet open={isMobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="left" className="p-0 w-[85%] border-none md:hidden rounded-r-[30px] overflow-hidden">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Navigation Menu</SheetTitle>
+          </SheetHeader>
+          {SidebarContent}
+        </SheetContent>
+      </Sheet>
+
+      {/* DESKTOP ASIDE */}
       <motion.aside
-        animate={{ width: isCollapsed ? 64 : 256 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="relative flex flex-col border-r bg-card h-screen shadow-sm z-40 overflow-hidden"
+        initial={false}
+        animate={{ width: isCollapsed ? 64 : 280 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="hidden md:flex relative flex-col border-r bg-card h-screen z-40 overflow-hidden"
       >
-        {/* Header */}
-        <div className="flex h-16 items-center px-4 mb-2">
-          <AnimatePresence mode="wait">
-            {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center gap-2 flex-1"
-              >
-                <div className="h-8 w-8 rounded-lg bg-orange flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold">R</span>
-                </div>
-                <span className="font-bold text-orange tracking-tight text-xl">RunAsh</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className={cn("h-8 w-8", isCollapsed && "mx-auto")}
-          >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
-        </div>
-
-        {/* Search Mockup (Better UX) */}
-        {!isCollapsed && (
-          <div className="px-4 mb-4">
-             <Button variant="outline" className="w-full h-9 justify-start text-muted-foreground px-3 font-normal bg-muted/50">
-                <Search className="mr-2 h-4 w-4" />
-                <span className="text-xs">Quick search...</span>
-                <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-                  <span className="text-xs">⌘</span>K
-                </kbd>
-             </Button>
-          </div>
-        )}
-
-        <ScrollArea className="flex-1">
-          <nav className="flex flex-col gap-1 px-3">
-            {categories.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <SidebarNavItem 
-                  key={item.href} 
-                  item={item} 
-                  isCollapsed={isCollapsed} 
-                  isActive={isActive}
-                />
-              )
-            })}
-            
-            <Separator className="my-4 opacity-50" />
-            
-            <div className="flex flex-col gap-1">
-               {!isCollapsed && (
-                  <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
-                    Community
-                  </h3>
-               )}
-               <CommunityDialog isCollapsed={isCollapsed} />
-            </div>
-          </nav>
-        </ScrollArea>
-
-        {/* Footer User Section */}
-        <div className="p-3 border-t bg-muted/10">
-          <div className={cn("flex items-center gap-3 rounded-lg", !isCollapsed && "p-2 hover:bg-muted/50 transition-colors")}>
-             <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-orange-400 to-rose-400 shrink-0" />
-             {!isCollapsed && (
-                <div className="flex-1 overflow-hidden">
-                   <p className="text-xs font-semibold truncate">Ashish Kumar</p>
-                   <p className="text-[10px] text-muted-foreground truncate">ash@runash.ai</p>
-                </div>
-             )}
-             {!isCollapsed && <Settings className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />}
-          </div>
-        </div>
+        {SidebarContent}
       </motion.aside>
     </TooltipProvider>
   )
 }
 
-function SidebarNavItem({ item, isCollapsed, isActive }: { item: any; isCollapsed: boolean; isActive: boolean }) {
+function SidebarNavItem({ item, isCollapsed, isActive, onSelect }: { 
+  item: {
+    name: string
+    href: string
+    description?: string
+    count?: number
+    icon: React.ComponentType<{ className?: string }>
+  }
+  isCollapsed: boolean
+  isActive: boolean
+  onSelect?: () => void 
+}) {
   const content = (
     <Button
-      variant={isActive ? "secondary" : "ghost"}
+      variant="ghost"
+      onClick={onSelect}
       className={cn(
-        "w-full transition-all group relative",
-        isCollapsed ? "justify-center p-0 h-10 w-10 mx-auto" : "justify-start h-10 px-3",
-        isActive && "bg-secondary font-medium text-primary shadow-sm"
+        "w-full transition-all group relative rounded-xl md:rounded-lg overflow-hidden",
+        isCollapsed ? "justify-center p-0 h-10 w-10 mx-auto" : "justify-start h-12 md:h-10 px-3",
+        isActive ? "bg-orange-50 text-orange-600 dark:bg-orange-950/30 dark:text-orange-500 shadow-sm" : "hover:bg-muted"
       )}
       asChild
     >
       <Link href={item.href}>
-        <item.icon className={cn("h-4 w-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-        {!isCollapsed && (
-          <motion.span 
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="ml-3 text-sm flex-1 truncate"
-          >
-            {item.name}
-          </motion.span>
+        {isActive && (
+          <motion.div 
+            layoutId="active-indicator"
+            className="absolute left-0 w-1 h-6 bg-orange-500 rounded-r-full"
+          />
         )}
-        {!isCollapsed && item.count && (
-          <Badge variant="outline" className="ml-auto text-[10px] py-0 h-5 bg-background shadow-none border-muted-foreground/20 text-muted-foreground">
+        <item.icon className={cn(
+          "size-5 md:size-4 shrink-0 transition-transform duration-300 group-hover:scale-110", 
+          isActive ? "text-orange-500" : "text-muted-foreground group-hover:text-orange-600"
+        )} />
+        {!isCollapsed && (
+          <span className="ml-3 text-base md:text-sm font-bold md:font-medium flex-1 truncate">
+            {item.name}
+          </span>
+        )}
+        {!isCollapsed && item.count && item.count > 0 && (
+          <Badge className="ml-auto text-[10px] px-1.5 py-0.5 bg-orange-500 text-white border-none shadow-orange-500/20 shadow-md">
             {item.count}
           </Badge>
         )}
@@ -165,9 +221,8 @@ function SidebarNavItem({ item, isCollapsed, isActive }: { item: any; isCollapse
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right" sideOffset={10} className="flex items-center gap-2">
+        <TooltipContent side="right" sideOffset={10} className="font-bold border-orange-100 bg-white dark:bg-zinc-950 dark:border-orange-900">
           {item.name}
-          {item.count && <Badge variant="secondary" className="h-4 text-[9px] px-1">{item.count}</Badge>}
         </TooltipContent>
       </Tooltip>
     )
@@ -175,45 +230,3 @@ function SidebarNavItem({ item, isCollapsed, isActive }: { item: any; isCollapse
 
   return content
 }
-
-function CommunityDialog({ isCollapsed }: { isCollapsed: boolean }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size={isCollapsed ? "icon" : "sm"} 
-          className={cn("w-full h-10", isCollapsed ? "justify-center" : "justify-start px-3 text-muted-foreground hover:text-foreground")}
-        >
-          <Users className="h-4 w-4 shrink-0" />
-          {!isCollapsed && <span className="ml-3 text-sm">Join Community</span>}
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Join our Global Developer ecosystem</DialogTitle>
-          <DialogDescription>Participate in shaping the future of AI streaming.</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-3 pt-4">
-           {[
-             { label: "Discord", desc: "Real-time support", icon: MessageCircle, color: "bg-indigo-500" },
-             { label: "GitHub", desc: "Open source contributions", icon: Code, color: "bg-slate-800" }
-           ].map((platform) => (
-             <div key={platform.label} className="flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/50 transition-colors group cursor-pointer">
-               <div className="flex items-center gap-3">
-                 <div className={cn("p-2 rounded-lg text-white", platform.color)}>
-                   <platform.icon className="h-5 w-5" />
-                 </div>
-                 <div>
-                   <p className="text-sm font-medium">{platform.label}</p>
-                   <p className="text-xs text-muted-foreground">{platform.desc}</p>
-                 </div>
-               </div>
-               <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-             </div>
-           ))}
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-  }

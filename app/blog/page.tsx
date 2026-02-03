@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, Suspense } from "react"
-import { BlogGrid } from "@/components/blog-grid"
-import { HeroSection } from "@/components/hero-section"
-import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
+import { Sidebar } from "@/components/sidebar"
+import { HeroSection } from "@/components/hero-section"
+import { BlogGrid } from "@/components/blog-grid"
 import { Footer } from "@/components/footer"
 
-export default function HomePage() {
+export default function BlogPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (

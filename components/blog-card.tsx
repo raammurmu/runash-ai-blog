@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, ArrowUp } from "lucide-react"
+import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, ArrowUp, Zap } from "lucide-react"
 import type { BlogPost } from "@/lib/types"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -21,184 +21,152 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
   const [bookmarked, setBookmarked] = useState(false)
   const [upvoted, setUpvoted] = useState(false)
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent navigation if nested in Link
     if (navigator.share) {
-      await navigator.share({
-        title: post.title,
-        text: post.excerpt,
-        url: `/post/${post.slug}`,
-      })
-    } else {
-      await navigator.clipboard.writeText(`${window.location.origin}/post/${post.slug}`)
+      try {
+        await navigator.share({
+          title: post.title,
+          text: post.excerpt,
+          url: `/post/${post.slug}`,
+        })
+      } catch (err) {
+        console.error("Share failed:", err)
+      }
     }
   }
 
-  if (viewMode === "list") {
-    return (
-      <Card className="flex flex-col md:flex-row overflow-hidden hover:shadow-sm transition-shadow">
-        <div className={cn("w-full md:w-48 h-32 md:h-auto", post.gradient)}>
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-4xl">{post.emoji}</span>
-          </div>
+  // Common Header/Thumbnail Component
+  const Thumbnail = () => (
+    <div className={cn(
+      "relative flex items-center justify-center transition-transform duration-500 group-hover:scale-105",
+      post.gradient || "bg-gradient-to-br from-orange-400 to-amber-500",
+      viewMode === "list" ? "w-full md:w-56 h-40 md:h-auto" : "h-48"
+    )}>
+      <span className="text-6xl transform group-hover:rotate-12 transition-transform duration-300 drop-shadow-xl">
+        {post.emoji}
+      </span>
+      <div className="absolute top-3 left-3">
+        <Badge className="bg-white/90 text-orange-600 border-none backdrop-blur-md shadow-sm">
+          {post.category}
+        </Badge>
+      </div>
+      {post.featured && (
+        <div className="absolute top-3 right-3">
+          <Badge className="bg-amber-400 text-amber-900 border-none">
+            <Zap className="h-3 w-3 mr-1 fill-current" /> Featured
+          </Badge>
         </div>
+      )}
+    </div>
+  )
 
-        <div className="flex-1 p-6">
-          <div className="flex justify-between items-start mb-2">
-            <Badge variant="secondary">{post.category}</Badge>
+  return (
+    <Card className={cn(
+      "group overflow-hidden border-orange-100/50 hover:border-orange-200 transition-all duration-300",
+      "hover:shadow-[0_8px_30px_rgb(255,237,213,0.5)] bg-card",
+      viewMode === "list" ? "flex flex-col md:flex-row min-h-[220px]" : "flex flex-col"
+    )}>
+      <Link href={`/post/${post.slug}`} className={viewMode === "list" ? "contents" : "block"}>
+        <Thumbnail />
+      </Link>
+
+      <div className="flex flex-col flex-1">
+        <CardContent className="p-5 flex-1">
+          <div className="flex justify-between items-start gap-4 mb-2">
+            <Link href={`/post/${post.slug}`} className="group/title">
+              <h3 className="text-xl font-bold leading-tight group-hover/title:text-orange-500 transition-colors line-clamp-2">
+                {post.title}
+              </h3>
+            </Link>
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-muted-foreground hover:text-orange-500 hover:bg-orange-50">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={handleShare}>
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share
+                  <Share2 className="mr-2 h-4 w-4" /> Share
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setBookmarked(!bookmarked)}>
-                  <Bookmark className="mr-2 h-4 w-4" />
-                  {bookmarked ? "Remove Bookmark" : "Bookmark"}
+                  <Bookmark className={cn("mr-2 h-4 w-4", bookmarked && "fill-orange-500 text-orange-500")} />
+                  {bookmarked ? "Saved" : "Save for later"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
 
-          <Link href={`/post/${post.slug}`}>
-            <h3 className="text-xl font-semibold mb-2 hover:text-orange-500 transition-colors">{post.title}</h3>
-          </Link>
+          <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
+            {post.excerpt}
+          </p>
 
-          <p className="text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
+          <div className="flex flex-wrap gap-2">
+            {post.tags?.slice(0, 2).map((tag) => (
+              <span key={tag} className="text-[10px] font-bold uppercase tracking-wider text-orange-400/80">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </CardContent>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
-                <AvatarFallback>{post.author.name[0]}</AvatarFallback>
-              </Avatar>
-              <span className="text-sm text-muted-foreground">{post.author.name}</span>
-              <span className="text-sm text-muted-foreground">•</span>
-              <span className="text-sm text-muted-foreground">{post.readTime}</span>
+        <CardFooter className="px-5 py-4 bg-orange-50/30 border-t border-orange-100/50">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Avatar className="h-8 w-8 ring-2 ring-white">
+                  <AvatarImage src={post.author.avatar} />
+                  <AvatarFallback className="bg-orange-100 text-orange-600">{post.author.name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 bg-green-500 h-2.5 w-2.5 rounded-full border-2 border-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-foreground leading-none">{post.author.name}</span>
+                <span className="text-[11px] text-muted-foreground mt-1">{post.readTime}</span>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center bg-white/50 rounded-full px-1 border border-orange-100 shadow-sm">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setUpvoted(!upvoted)}
-                className={upvoted ? "text-orange-500" : ""}
+                onClick={(e) => { e.preventDefault(); setUpvoted(!upvoted); }}
+                className={cn(
+                  "h-8 px-2 rounded-full transition-all",
+                  upvoted ? "text-orange-600 bg-orange-100/50" : "text-muted-foreground hover:text-orange-500"
+                )}
               >
-                <ArrowUp className="h-4 w-4 mr-1" />
-                {post.upvotes + (upvoted ? 1 : 0)}
+                <ArrowUp className={cn("h-4 w-4", upvoted && "animate-bounce")} />
+                <span className="ml-1 text-xs font-bold">{post.upvotes + (upvoted ? 1 : 0)}</span>
               </Button>
+
+              <div className="w-[1px] h-4 bg-orange-200 mx-0.5" />
+
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setLiked(!liked)}
-                className={liked ? "text-red-500" : ""}
+                onClick={(e) => { e.preventDefault(); setLiked(!liked); }}
+                className={cn(
+                  "h-8 px-2 rounded-full transition-all",
+                  liked ? "text-red-500 bg-red-50" : "text-muted-foreground hover:text-red-500"
+                )}
               >
-                <Heart className="h-4 w-4 mr-1" />
-                {post.likes + (liked ? 1 : 0)}
+                <Heart className={cn("h-4 w-4", liked && "fill-current animate-pulse")} />
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+
+              <div className="w-[1px] h-4 bg-orange-200 mx-0.5" />
+
+              <Button variant="ghost" size="sm" className="h-8 px-2 rounded-full text-muted-foreground hover:text-orange-500" asChild>
                 <Link href={`/post/${post.slug}`}>
-                  <MessageCircle className="h-4 w-4 mr-1" />
-                  {post.comments}
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="ml-1 text-xs font-bold">{post.comments}</span>
                 </Link>
               </Button>
             </div>
           </div>
-        </div>
-      </Card>
-    )
-  }
-
-  return (
-    <Card className="overflow-hidden hover:shadow-sm transition-shadow group">
-      <CardHeader className="p-0">
-        <div className={cn("h-48 relative", post.gradient)}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl">{post.emoji}</span>
-          </div>
-          <div className="absolute top-4 left-4">
-            <Badge variant="secondary">{post.category}</Badge>
-          </div>
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleShare}>
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setBookmarked(!bookmarked)}>
-                  <Bookmark className="mr-2 h-4 w-4" />
-                  {bookmarked ? "Remove Bookmark" : "Bookmark"}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-6">
-        <Link href={`/post/${post.slug}`}>
-          <h3 className="text-lg font-semibold mb-2 hover:text-orange-500 transition-colors line-clamp-2">
-            {post.title}
-          </h3>
-        </Link>
-
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{post.excerpt}</p>
-
-        <div className="flex flex-wrap gap-1 mb-4">
-          {post.tags.slice(0, 3).map((tag) => (
-            <Badge key={tag} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-
-      <CardFooter className="px-6 py-4 border-t">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center space-x-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
-              <AvatarFallback>{post.author.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="text-sm">
-              <div className="font-medium">{post.author.name}</div>
-              <div className="text-muted-foreground">{post.readTime}</div>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setUpvoted(!upvoted)}
-              className={upvoted ? "text-orange-500" : ""}
-            >
-              <ArrowUp className="h-4 w-4" />
-              <span className="ml-1 text-xs">{post.upvotes + (upvoted ? 1 : 0)}</span>
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setLiked(!liked)} className={liked ? "text-red-500" : ""}>
-              <Heart className="h-4 w-4" />
-              <span className="ml-1 text-xs">{post.likes + (liked ? 1 : 0)}</span>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href={`/post/${post.slug}`}>
-                <MessageCircle className="h-4 w-4" />
-                <span className="ml-1 text-xs">{post.comments}</span>
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </CardFooter>
+        </CardFooter>
+      </div>
     </Card>
   )
-}
+  }

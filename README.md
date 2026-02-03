@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-# RunAsh AI Blog
-=======
 # 🚀 RunAsh AI Blog
->>>>>>> refs/remotes/origin/main
+
 
 Welcome to the official **RunAsh Blog** repository. This project is a high-performance blog platform powered by [v0.dev](https://v0.dev) and [Vercel](https://vercel.com), designed for real-time AI content.
 
@@ -25,10 +22,10 @@ This repository stays in sync with **v0.dev**.
 
 We welcome contributions! Please follow these steps to ensure your post is formatted correctly:
 
-### 1. Branching & File Naming
+### 1. Branching & Post Entries
 
 * Create a branch: `feature/YourName-Title`.
-* Create a `.md` file in the root. Keep the filename short (e.g., `ai-agents.md`). **Note:** The filename becomes the URL slug.
+* Add a new entry in `lib/blog-data.tsx` with a unique `id`, `slug`, and `publishedAt`.
 
 ### 2. Handling Assets (Thumbnails & Images)
 
@@ -36,20 +33,9 @@ We welcome contributions! Please follow these steps to ensure your post is forma
 * **Other Images:** To keep the repo light, please host post images in the [RunAsh Documentation Images Repo](https://www.google.com/search?q=https://docs.runash.in).
 * **Optimization:** Always compress images using [TinyPNG](https://tinypng.com) before uploading.
 
-### 3. Frontmatter Configuration
+### 3. Content Configuration
 
-Every article must start with this header:
-
-```yaml
----
-title: "Your Impactful Title" 
-thumbnail: /blog/assets/your-slug/thumb.png
-authors:
-  - user: primary_author
-  - user: co_author (optional)
----
-
-```
+Ensure the blog entry includes the title, excerpt, and content HTML string. Keep the `slug` URL-safe and match `thumbnail` paths to assets under `/public` when used.
 
 ### 4. Special Formatting
 
@@ -81,7 +67,7 @@ If your post is not an official RunAsh collaboration, please use our [Community 
 
 ## 🚢 Publishing
 
-1. Modify `_blog.yml` to include your new filename.
+1. Update `lib/blog-data.tsx` with your new post entry.
 2. Open a **Pull Request**.
 3. Once merged, the article goes live automatically.
 

@@ -7,6 +7,8 @@ export interface BlogPost {
   category: string
   gradient: string
   emoji: string
+  image?: string
+  featured?: boolean
   author: {
     name: string
     avatar: string
