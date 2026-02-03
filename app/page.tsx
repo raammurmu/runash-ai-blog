@@ -14,8 +14,8 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <div className="flex flex-1">
-         <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} /> 
-        <main className="flex-1 p-6">
+        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+        <main className="flex-1 px-4 py-8 lg:px-8">
           <HeroSection />
           <Suspense fallback={<div>Loading posts...</div>}>
             <BlogGrid />

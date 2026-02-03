@@ -10,6 +10,7 @@ import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, ArrowUp, Zap } 
 import type { BlogPost } from "@/lib/types"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { PostCover } from "@/components/post-cover"
 
 interface BlogCardProps {
   post: BlogPost
@@ -36,21 +37,16 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
     }
   }
 
-  // Common Header/Thumbnail Component
   const Thumbnail = () => (
-    <div className={cn(
-      "relative flex items-center justify-center transition-transform duration-500 group-hover:scale-105",
-      post.gradient || "bg-gradient-to-br from-orange-400 to-amber-500",
-      viewMode === "list" ? "w-full md:w-56 h-40 md:h-auto" : "h-48"
-    )}>
-      <span className="text-6xl transform group-hover:rotate-12 transition-transform duration-300 drop-shadow-xl">
-        {post.emoji}
-      </span>
-      <div className="absolute top-3 left-3">
-        <Badge className="bg-white/90 text-orange-600 border-none backdrop-blur-md shadow-sm">
-          {post.category}
-        </Badge>
-      </div>
+    <div className={cn("relative", viewMode === "list" ? "w-full md:w-56" : "")}>
+      <PostCover
+        title={post.title}
+        category={post.category}
+        image={post.image}
+        gradient={post.gradient}
+        emoji={post.emoji}
+        className={cn(viewMode === "list" ? "h-40 md:h-full rounded-2xl" : "h-48 rounded-2xl")}
+      />
       {post.featured && (
         <div className="absolute top-3 right-3">
           <Badge className="bg-amber-400 text-amber-900 border-none">

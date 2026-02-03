@@ -7,6 +7,11 @@ export interface BlogPost {
   category: string
   gradient: string
   emoji: string
+  image?: string
+  featured?: boolean
+  status?: "published" | "draft"
+  shares?: number
+  bookmarks?: number
   author: {
     name: string
     avatar: string
@@ -47,22 +52,3 @@ export interface User {
   following: number
   createdAt: string
 }
-// lib/types.ts
-export interface BlogPost {
-  id: string;
-  slug: string; // Used for SEO-friendly URLs
-  title: string;
-  excerpt: string;
-  content: string; // The full body text
-  author: {
-    name: string;
-    role: string;
-    avatar?: string;
-  };
-  date: string;
-  readTime: string; // e.g., "8 min read"
-  category: "Tutorials" | "Product Updates" | "AI Research" | "Community";
-  image: string;
-  featured?: boolean;
-  upvotes: number;
-  }
