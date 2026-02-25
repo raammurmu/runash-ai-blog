@@ -8,10 +8,11 @@ import { ReadingProgress } from "@/components/reading-progress"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { MobilePostActions } from "@/components/mobile-post-actions"
 import { RelatedPosts } from "@/components/related-posts"
+import { PostHeroActions } from "@/components/post-hero-actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { Clock, Calendar, ChevronLeft, ImageIcon } from "lucide-react"
+import { Calendar, ChevronLeft, Clock, ImageIcon } from "lucide-react"
 import Link from "next/link"
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
@@ -47,21 +48,34 @@ export default async function PostPage({ params }: { params: { slug: string } })
           <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight leading-tight mb-8">
             {post.title}
           </h1>
-          <div className="flex items-center justify-center gap-4 text-white">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-white">
             <Avatar className="h-10 w-10 ring-2 ring-white/20">
               <AvatarImage src={post.author.avatar} />
               <AvatarFallback className="bg-orange-400">{post.author.name[0]}</AvatarFallback>
             </Avatar>
             <span className="font-bold">{post.author.name}</span>
             <span className="opacity-50">•</span>
-            <span className="text-sm font-medium">{post.readTime}</span>
+            <span className="inline-flex items-center gap-1 text-sm font-medium">
+              <Calendar className="h-4 w-4" />
+              {post.publishedAt}
+            </span>
+            <span className="opacity-50">•</span>
+            <span className="inline-flex items-center gap-1 text-sm font-medium">
+              <Clock className="h-4 w-4" />
+              {post.readTime}
+            </span>
           </div>
         </div>
       </section>
 
       {/* Article Content Area */}
-      <main className="container max-w-4xl mx-auto px-4 md:px-6 -mt-16 relative z-20">
+      <main className="container max-w-4xl mx-auto px-4 md:px-6 -mt-12 md:-mt-16 relative z-20">
         <div className="bg-card rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-16 shadow-2xl border border-border/50">
+          <div className="not-prose mb-10 border-b border-border/60 pb-6">
+            <p className="text-sm font-medium text-muted-foreground">Support this post</p>
+            <PostHeroActions post={post} />
+          </div>
+
           <article className="prose prose-orange dark:prose-invert prose-lg md:prose-xl max-w-none">
             <div className="not-prose mb-10">
               <p className="text-xl md:text-2xl leading-relaxed text-orange-600 dark:text-orange-400 font-medium italic border-l-4 border-primary pl-6 py-2">
