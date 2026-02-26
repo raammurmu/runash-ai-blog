@@ -10,10 +10,17 @@ import { ReadingProgress } from "@/components/reading-progress"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { MobilePostActions } from "@/components/mobile-post-actions"
 import { RelatedPosts } from "@/components/related-posts"
+import { PostHeroActions } from "@/components/post-hero-actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+ 
 import { Button } from "@/components/ui/button"
 import { Calendar, ChevronLeft, Clock, MessageSquareText } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Calendar, ChevronLeft, Clock, ImageIcon } from "lucide-react"
+import Link from "next/link"
+
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -35,6 +42,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <Link href="/blog" className="mb-6 inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-medium text-white/90 backdrop-blur-sm transition hover:bg-white/20">
             <ChevronLeft className="h-4 w-4" /> Back to blog
           </Link>
+ 
 
           <div className="max-w-3xl">
             <Badge className="mb-4 rounded-full border border-white/30 bg-white/15 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
@@ -42,8 +50,34 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </Badge>
             <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">{post.title}</h1>
             <p className="mt-5 text-base text-white/90 sm:text-lg">{post.excerpt}</p>
+
+          <span className="text-7xl md:text-9xl mb-8 block drop-shadow-2xl">{post.emoji}</span>
+          <Badge className="mb-6 bg-white/20 text-white border-white/20 px-6 py-1.5 text-xs font-bold uppercase tracking-widest">
+            {post.category}
+          </Badge>
+          <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight leading-tight mb-8">
+            {post.title}
+          </h1>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-white">
+            <Avatar className="h-10 w-10 ring-2 ring-white/20">
+              <AvatarImage src={post.author.avatar} />
+              <AvatarFallback className="bg-orange-400">{post.author.name[0]}</AvatarFallback>
+            </Avatar>
+            <span className="font-bold">{post.author.name}</span>
+            <span className="opacity-50">•</span>
+            <span className="inline-flex items-center gap-1 text-sm font-medium">
+              <Calendar className="h-4 w-4" />
+              {post.publishedAt}
+            </span>
+            <span className="opacity-50">•</span>
+            <span className="inline-flex items-center gap-1 text-sm font-medium">
+              <Clock className="h-4 w-4" />
+              {post.readTime}
+            </span>
+
           </div>
 
+ 
           <div className="mt-8 flex flex-wrap items-center gap-4 text-white/90">
             <div className="inline-flex items-center gap-3 rounded-2xl border border-white/25 bg-white/10 px-3 py-2 backdrop-blur-sm">
               <Avatar className="h-9 w-9">
@@ -53,6 +87,26 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <div>
                 <p className="text-sm font-semibold leading-none">{post.author.name}</p>
                 <p className="text-xs text-white/70">@{post.author.username}</p>
+
+      {/* Article Content Area */}
+      <main className="container max-w-4xl mx-auto px-4 md:px-6 -mt-12 md:-mt-16 relative z-20">
+        <div className="bg-card rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-16 shadow-2xl border border-border/50">
+          <div className="not-prose mb-10 border-b border-border/60 pb-6">
+            <p className="text-sm font-medium text-muted-foreground">Support this post</p>
+            <PostHeroActions post={post} />
+          </div>
+
+          <article className="prose prose-orange dark:prose-invert prose-lg md:prose-xl max-w-none">
+            <div className="not-prose mb-10">
+              <p className="text-xl md:text-2xl leading-relaxed text-orange-600 dark:text-orange-400 font-medium italic border-l-4 border-primary pl-6 py-2">
+                {post.excerpt}
+              </p>
+            </div>
+            <div className="not-prose mb-10 overflow-hidden rounded-3xl border border-orange-100/60 bg-orange-50/30">
+              <div className="flex items-center gap-2 px-6 py-4 text-sm font-semibold text-orange-700">
+                <ImageIcon className="h-4 w-4" />
+                Cover image
+
               </div>
             </div>
             <span className="inline-flex items-center gap-1 text-sm"><Calendar className="h-4 w-4" /> {new Date(post.publishedAt).toLocaleDateString()}</span>
