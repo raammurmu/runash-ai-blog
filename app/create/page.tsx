@@ -32,6 +32,7 @@ export default function CreatePostPage() {
   const [coverImage, setCoverImage] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -58,6 +59,7 @@ export default function CreatePostPage() {
       }
       const data = await response.json()
       setCoverImage(data.url)
+      setFormError(null)
       toast.success("Image uploaded")
     } catch (error) {
       toast.error("Failed to upload image")
@@ -68,13 +70,18 @@ export default function CreatePostPage() {
 
   const handleSubmit = async () => {
     if (!currentAuthor) {
-      toast.error("No author profile available.")
+      const message = "No author profile available."
+      setFormError(message)
+      toast.error(message)
       return
     }
     if (!title || !excerpt || !content || !category) {
-      toast.error("Please fill in title, excerpt, content, and category.")
+      const message = "Please fill in title, excerpt, content, and category."
+      setFormError(message)
+      toast.error(message)
       return
     }
+    setFormError(null)
     setIsSubmitting(true)
     try {
       const response = await fetch("/api/posts", {
@@ -99,6 +106,7 @@ export default function CreatePostPage() {
 
       const created = await response.json()
       toast.success("Post created")
+      setFormError(null)
       setTitle("")
       setExcerpt("")
       setContent("")
@@ -110,6 +118,7 @@ export default function CreatePostPage() {
       setIsPreview(false)
       window.location.href = `/post/${created.slug}`
     } catch (error) {
+      setFormError("Unable to publish post right now. Please try again.")
       toast.error("Unable to publish post right now.")
     } finally {
       setIsSubmitting(false)
@@ -125,6 +134,12 @@ export default function CreatePostPage() {
             <h1 className="text-3xl font-bold mb-2">Create New Post</h1>
             <p className="text-muted-foreground">Share your insights with the RunAsh AI community</p>
           </div>
+
+          {formError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+              {formError}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}

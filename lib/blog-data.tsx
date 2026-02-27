@@ -7,7 +7,7 @@ export const authors: User[] = [
     name: "Ram Murmu",
     username: "rammurmu",
     email: "rammurmu@runash.in",
-    avatar: "/rammurmu.png?height=64&width=64",
+    avatar: "/placeholder-user.jpg",
     bio: "Full-stack developer.",
     followers: 0,
     following: 0,
