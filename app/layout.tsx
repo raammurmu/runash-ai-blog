@@ -21,7 +21,11 @@ export const metadata: Metadata = {
     title: "RunAsh Blog",
     description: "Deep dives on AI, live streaming, APIs, payments, chat systems, and more.",
   },
-    generator: 'runash.app'
+  icons: {
+    icon: "/placeholder-logo.svg",
+    shortcut: "/placeholder-logo.svg",
+  },
+  generator: "runash.app",
 }
 
 export default function RootLayout({
