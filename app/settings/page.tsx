@@ -1,7 +1,11 @@
 "use client"
 
+ 
 import { useRef, useState } from "react"
 import { Bell, ImagePlus, KeyRound, ShieldCheck, UserCircle2 } from "lucide-react"
+
+import { Bell, KeyRound, ShieldCheck, UserCircle2 } from "lucide-react"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -38,7 +42,11 @@ export default function SettingsPage() {
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
             <p className="mt-2 text-sm text-muted-foreground">
+ 
               Manage your publishing profile, notifications, API access, and media assets from one dashboard.
+
+              Manage your publishing profile, notifications, and API access from one dashboard.
+
             </p>
           </div>
           <div className="rounded-2xl border border-orange-200/70 bg-white/80 px-4 py-3 text-sm dark:border-orange-900/40 dark:bg-gray-900/70">
@@ -65,7 +73,11 @@ export default function SettingsPage() {
           <Card className="rounded-2xl">
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
+ 
               <CardDescription>Update your account details and upload profile/logo images.</CardDescription>
+
+              <CardDescription>Update your account details and public persona.</CardDescription>
+
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap items-center gap-4">
