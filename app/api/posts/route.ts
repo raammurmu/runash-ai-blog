@@ -1,12 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { addBlogPost, getAllPosts } from "@/lib/blog-data"
-import type { BlogPost } from "@/lib/types"
+import { createPost, listPosts } from "@/lib/posts-repository"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const posts = getAllPosts()
+    const posts = await listPosts()
     return NextResponse.json(posts)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 })
   }
 }
@@ -14,39 +13,26 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    const { title, content, category, author, excerpt, tags = [], gradient, emoji, image } = body
 
-    // Validate required fields
-    const { title, content, category, author, excerpt, tags, gradient, emoji, image } = body 
     if (!title || !content || !category || !author || !excerpt) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    const newPost: BlogPost = {
-      id: Date.now().toString(),
-      slug: title
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]/g, ""),
+    const created = await createPost({
       title,
       content,
       category,
-      excerpt,
       author,
+      excerpt,
       tags: Array.isArray(tags) ? tags : [],
       gradient: gradient ?? "bg-gradient-to-br from-orange-500 to-amber-500",
       emoji: emoji ?? "🚀",
       image,
-      publishedAt: new Date().toISOString(),
-      readTime: "5 min read",
-      likes: 0,
-      comments: 0,
-      upvotes: 0,
-    }
+    })
 
-    addBlogPost(newPost)
-
-    return NextResponse.json(newPost, { status: 201 })
-  } catch (error) {
+    return NextResponse.json(created, { status: 201 })
+  } catch {
     return NextResponse.json({ error: "Failed to create post" }, { status: 500 })
   }
 }
