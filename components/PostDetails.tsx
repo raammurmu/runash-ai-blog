@@ -14,6 +14,7 @@ import {
   Check 
 } from "lucide-react"
 import { BlogPost } from "@/lib/types" // Ensure this matches your type definition
+import { ArticleInteractions } from "@/components/article-interactions"
 
 // --- Sub-Component: Reading Progress Bar ---
 const ReadingProgress = () => {
@@ -180,6 +181,8 @@ export default function PostDetail({
               "The future of content isn't just about high definition; it's about high intelligence."
             </blockquote>
           </article>
+
+          <ArticleInteractions initialReadTime={post.readTime} />
 
           {/* Related Posts Section */}
           {relatedPosts.length > 0 && (
