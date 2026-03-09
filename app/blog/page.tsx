@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { ArrowRight, Calendar, Clock, Search, User } from "lucide-react"
 
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatPostDate, getAllPosts } from "@/lib/blog-data"
+import { formatPostDate } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
 
 const BlogPostCard = ({ post, featured = false }: { post: BlogPost; featured?: boolean }) => {
@@ -70,8 +70,18 @@ const BlogPostCard = ({ post, featured = false }: { post: BlogPost; featured?: b
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([])
 
-  const allPosts = useMemo(() => getAllPosts(), [])
+  useEffect(() => {
+    const loadPosts = async () => {
+      const response = await fetch("/api/posts", { cache: "no-store" })
+      if (!response.ok) return
+      const data = (await response.json()) as BlogPost[]
+      setAllPosts(data)
+    }
+
+    loadPosts()
+  }, [])
   const categoryTabs = useMemo(() => {
     const categories = Array.from(new Set(allPosts.map((post) => post.category)))
     return ["all", ...categories]
