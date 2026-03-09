@@ -17,6 +17,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
+  const hasRelatedPosts = blogPosts.some((item) => item.id !== post.id && item.category === post.category)
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">

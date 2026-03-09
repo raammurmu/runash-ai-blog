@@ -2,22 +2,35 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus } from "lucide-react"
+import { ChevronDown, Menu, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageTranslateControl } from "@/components/page-translate-control"
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { getAllCategories } from "@/lib/blog-data"
 
 const navItems = [
   { label: "Home", href: "/" },
   { label: "API", href: "/search?q=api" },
   { label: "Codex", href: "/search?q=codex" },
   { label: "ChatGPT", href: "/search?q=chatgpt" },
-  { label: "Learn", href: "/blog" },
 ]
 
 export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [mobileLearnOpen, setMobileLearnOpen] = React.useState(true)
+  const categories = React.useMemo(() => getAllCategories(), [])
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12)
@@ -45,6 +58,26 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="site-nav-link gap-1 px-2">
+                Learn
+                <ChevronDown className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-64">
+              <DropdownMenuLabel>All posts</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Link href="/blog">Browse everything</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {categories.map((category) => (
+                <DropdownMenuItem key={category.slug} asChild>
+                  <Link href={`/category/${category.slug}`}>{category.name}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-2">
@@ -59,6 +92,57 @@ export function Header() {
           <div className="site-theme-toggle-wrap">
             <ThemeToggle />
           </div>
+
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="h-8 w-8 md:hidden" aria-label="Open navigation menu">
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[85%]">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <div className="mt-5 space-y-3">
+                {navItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    asChild
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </Button>
+                ))}
+
+                <Collapsible open={mobileLearnOpen} onOpenChange={setMobileLearnOpen}>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-between">
+                      Learn
+                      <ChevronDown className={cn("size-4 transition-transform", mobileLearnOpen && "rotate-180")} />
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-1 pl-2">
+                    <Button asChild variant="ghost" className="w-full justify-start" onClick={() => setMobileOpen(false)}>
+                      <Link href="/blog">All posts</Link>
+                    </Button>
+                    {categories.map((category) => (
+                      <Button
+                        key={category.slug}
+                        asChild
+                        variant="ghost"
+                        className="w-full justify-start text-muted-foreground"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <Link href={`/category/${category.slug}`}>{category.name}</Link>
+                      </Button>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

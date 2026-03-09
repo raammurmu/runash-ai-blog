@@ -80,6 +80,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["PreRelease", "Beta", "Startups", "Waitlist"],
+    image: "/images/posts/runash-pre-release.svg",
   },
   {
     id: "2",
@@ -124,6 +125,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["Launch", "LiveStreaming", "Ecommerce", "FinTech"],
+    image: "/images/posts/runash-live-journey.svg",
   },
 
   {
@@ -168,6 +170,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["streaming", "ai", "video", "real-time"],
+    image: "/images/posts/runash-introducing.svg",
   },
   {
     id: "4",
@@ -212,6 +215,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["Launch", "LiveStreaming", "Ecommerce", "FinTech"],
+    image: "/images/posts/runash-launch-today.svg",
   },
 
 ]
