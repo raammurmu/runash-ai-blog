@@ -1,14 +1,14 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { formatPostDate, getBlogPost } from "@/lib/blog-data"
+import { getBlogPost, blogPosts } from "@/lib/blog-data"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
-import { Header } from "@/components/header"
+import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
 import { ReadingProgress } from "@/components/reading-progress"
-import { ScrollToTop } from "@/components/scroll-to-top"
 import { MobilePostActions } from "@/components/mobile-post-actions"
 import { RelatedPosts } from "@/components/related-posts"
 import { Badge } from "@/components/ui/badge"
+import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Calendar, ChevronLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -17,63 +17,77 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
+  const recentPosts = [...blogPosts]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 4)
+
+  const topics = Array.from(new Set(blogPosts.map((item) => item.category)))
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
       <ReadingProgress />
-      <ScrollToTop />
-      <Header />
+      <BlogHeaderMinimal />
 
-      <main className="mx-auto w-full max-w-5xl px-4 pb-20 pt-10 md:px-6 md:pt-14">
-        <div className="mx-auto w-full max-w-4xl">
-          <Link
-            href="/blog"
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Back to Resources
-          </Link>
+      <main className="mx-auto flex w-full max-w-[1440px] gap-8 px-4 pb-20 pt-8 lg:px-10 lg:pt-10">
+        <BlogLeftRail
+          className="sticky top-20 hidden w-72 shrink-0 lg:block"
+          recentLinks={recentPosts.map((item) => ({ label: item.title, href: `/post/${item.slug}` }))}
+          topicLinks={topics.map((topic) => ({ label: topic, href: `/search?q=${encodeURIComponent(topic)}` }))}
+          allPostsLink={{ label: "Browse everything", href: "/blog" }}
+        />
 
-          <header className="mb-10 rounded-2xl border border-border/70 bg-card px-6 py-8 text-center md:px-10 md:py-10">
-            <div className="mb-4 flex flex-wrap items-center justify-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
-              <span className="inline-flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
-                {post.publishedAt}
-              </span>
-              <span className="text-border">•</span>
-              <Badge variant="outline" className="px-2.5 py-0.5 text-[11px] md:text-xs">
-                {post.category}
-              </Badge>
+        <div className="min-w-0 flex-1">
+          <div className="mx-auto w-full max-w-4xl">
+            <Link
+              href="/blog"
+              className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back to Resources
+            </Link>
+
+            <header className="mb-10 rounded-2xl border border-border/70 bg-card px-6 py-8 text-center md:px-10 md:py-10">
+              <div className="mb-4 flex flex-wrap items-center justify-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  {post.publishedAt}
+                </span>
+                <span className="text-border">•</span>
+                <Badge variant="outline" className="px-2.5 py-0.5 text-[11px] md:text-xs">
+                  {post.category}
+                </Badge>
+              </div>
+
+              <h1 className="text-balance text-3xl font-bold tracking-tight md:text-4xl">{post.title}</h1>
+              <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-8 text-muted-foreground md:text-lg">
+                {post.excerpt}
+              </p>
+              <p className="mt-5 text-sm font-medium text-muted-foreground">By {post.author.name}</p>
+            </header>
+
+            <div className="mx-auto mb-12 w-full max-w-3xl overflow-hidden rounded-2xl border border-border/70 bg-muted/20">
+              <img
+                src={post.image ?? "/images/blog-cover-gradient.svg"}
+                alt={post.title}
+                className="h-64 w-full object-cover md:h-80"
+              />
             </div>
 
-            <h1 className="text-balance text-3xl font-bold tracking-tight md:text-4xl">{post.title}</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-8 text-muted-foreground md:text-lg">
-              {post.excerpt}
-            </p>
-            <p className="mt-5 text-sm font-medium text-muted-foreground">By {post.author.name}</p>
-          </header>
+            <article className="prose prose-neutral dark:prose-invert mx-auto max-w-3xl text-[17px] leading-[1.9] md:text-lg">
+              <PostContent post={post} />
+            </article>
 
-          <div className="mx-auto mb-12 w-full max-w-3xl overflow-hidden rounded-2xl border border-border/70 bg-muted/20">
-            <img
-              src={post.image ?? "/images/blog-cover-gradient.svg"}
-              alt={post.title}
-              className="h-64 w-full object-cover md:h-80"
-            />
+            <div className="mx-auto mt-16 max-w-3xl border-t border-border/80 pt-10">
+              <RelatedPosts currentPostId={post.id} category={post.category} />
+            </div>
+
+            <section id="comments" className="mx-auto mt-14 max-w-3xl border-t border-border/80 pt-10">
+              <h3 className="mb-8 text-2xl font-semibold tracking-tight text-foreground/90 md:text-3xl">Discussion</h3>
+              <Suspense fallback={<div className="h-40 w-full animate-pulse rounded-xl bg-muted" />}>
+                <PostComments postId={post.id} />
+              </Suspense>
+            </section>
           </div>
-
-          <article className="prose prose-neutral dark:prose-invert mx-auto max-w-3xl text-[17px] leading-[1.9] md:text-lg">
-            <PostContent post={post} />
-          </article>
-
-          <div className="mx-auto mt-16 max-w-3xl border-t border-border/80 pt-10">
-            <RelatedPosts currentPostId={post.id} category={post.category} />
-          </div>
-
-          <section id="comments" className="mx-auto mt-14 max-w-3xl border-t border-border/80 pt-10">
-            <h3 className="mb-8 text-2xl font-semibold tracking-tight text-foreground/90 md:text-3xl">Discussion</h3>
-            <Suspense fallback={<div className="h-40 w-full animate-pulse rounded-xl bg-muted" />}>
-              <PostComments postId={post.id} />
-            </Suspense>
-          </section>
         </div>
       </main>
 
