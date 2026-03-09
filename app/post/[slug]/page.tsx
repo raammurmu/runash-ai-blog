@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { getBlogPost } from "@/lib/blog-data"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
-import { Header } from "@/components/header"
+import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
 import { ReadingProgress } from "@/components/reading-progress"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { PostHeroActions } from "@/components/post-hero-actions"
@@ -16,11 +16,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
+  const recentPosts = [...blogPosts]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 4)
+
+  const topics = Array.from(new Set(blogPosts.map((item) => item.category)))
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
       <ReadingProgress />
-      <ScrollToTop />
-      <Header />
+      <BlogHeaderMinimal />
 
       <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-10 md:px-6 md:pt-14">
         <div className="mx-auto w-full max-w-[820px]">
