@@ -1,8 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import type { BlogPost } from "@/lib/types"
 
 interface PostContentProps {
@@ -10,8 +8,6 @@ interface PostContentProps {
 }
 
 export function PostContent({ post }: PostContentProps) {
-  const [isLiked, setIsLiked] = useState(false)
-  const [isBookmarked, setIsBookmarked] = useState(false)
   const renderedContent = useMemo(() => {
     return post.content
       .replace(/<h2(?![^>]*class=)([^>]*)>/g, '<h2 class="post-h2"$1>')
@@ -28,39 +24,9 @@ export function PostContent({ post }: PostContentProps) {
   }, [post.content])
 
   return (
-    <article className="space-y-10">
+    <article className="space-y-8">
       <div className="prose prose-lg dark:prose-invert max-w-none">
         <div dangerouslySetInnerHTML={{ __html: renderedContent }} />
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-between border-y border-border/80 py-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => setIsLiked(!isLiked)} className={isLiked ? "text-red-500" : ""}>
-            <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
-            {post.likes} Likes
-          </Button>
-
-          <Button variant="ghost">
-            <MessageCircle className="h-5 w-5 mr-2" />
-            {post.comments} Comments
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm">
-            <Share2 className="h-4 w-4" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsBookmarked(!isBookmarked)}
-            className={isBookmarked ? "text-orange-500" : ""}
-          >
-            <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`} />
-          </Button>
-        </div>
       </div>
     </article>
   )
