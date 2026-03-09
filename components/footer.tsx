@@ -29,19 +29,19 @@ const footerLinks = [
     title: "Platform",
     links: [
       { name: "AI", href: "https://runash.in" },
-      { name: "LiveStream", href: "https://runash.in" },
-      { name: "LiveShop", href: "https://runash.in" },
-      { name: "RunAshChat", href: "https://runash.in" },
-      { name: "Studio", href: "https://runash.in" },
+      { name: "LiveX", href: "https://runash.in/live" },
+      { name: "eDitX", href: "https://runash.in/editor" },
+      { name: "RunAshChat", href: "https://runash.in,runashchat" },
+      { name: "ShopX", href: "https://runash.in/shopx" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Documentation", href: "https://api.runash.in" },
-      { name: "API Ref", href: "https://api.runash.in" },
-      { name: "Changelog", href: "https://runash.in" },
-      { name: "Status", href: "https://api.runash.in" },
+      { name: "Documentation", href: "https://docs.runash.in" },
+      { name: "API Ref", href: "https://runash.in/api/documentation" },
+      { name: "Changelog", href: "https://runash.in/changelog" },
+      { name: "Status", href: "https://runash.in/status" },
     ],
   },
 ]
@@ -81,21 +81,28 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full border-t border-orange-200/60 bg-white py-10 dark:border-orange-900/30 dark:bg-gray-950 md:py-14">
+    <footer className="w-full border-t border-orange-200/60 bg-white py-10 dark:border-orange-900/30 dark:bg-gray-950 sm:py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-yellow-50 px-6 py-8 shadow-xl shadow-orange-500/10 dark:border-orange-900/40 dark:from-gray-950 dark:via-orange-950/20 dark:to-yellow-950/10 md:px-8 md:py-10">
           <div className="mb-10 flex flex-col gap-6 border-b border-orange-200/70 pb-8 dark:border-orange-900/40 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <Link href="/" className="group flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-orange-600 to-yellow-500 shadow-lg shadow-orange-500/30 transition-transform group-hover:scale-105 dark:from-orange-500 dark:to-yellow-400">
-                  <span className="text-sm font-black text-white">R</span>
-                </div>
+                <div className="relative h-9 w-9 overflow-hidden rounded-md border border-orange-200/70 bg-white shadow-sm dark:border-orange-900/40 dark:bg-gray-900">
+                <Image
+                  src="/logo.png"
+                  alt="RunAsh logo"
+                  fill
+                  sizes="36px"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+              </div>
                 <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-xl font-black tracking-tight text-transparent dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300">
                   RunAsh AI
                 </span>
               </Link>
               <p className="max-w-md text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                Runash Digital Innovation Technologies Private Limited builds AI-first products for teams that want to move faster.
+                Runash Digital Innovation Technologies Private Limited.
               </p>
             </div>
 
