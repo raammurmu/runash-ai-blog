@@ -17,17 +17,25 @@ export default function HomePage() {
       <div className="flex flex-1">
         <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
         <main className="flex-1 px-4 py-8 lg:px-8">
-          <HeroSection
-            badge="RunAsh Magazine"
-            title="Built for AI commerce stories"
-            description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
-            primaryCta={{ label: "Browse all posts", href: "/blog" }}
-            secondaryCta={{ label: "Publish article", href: "/create" }}
-          />
-          <PageHighlights />
-          <Suspense fallback={<div>Loading posts...</div>}>
-            <BlogGrid />
-          </Suspense>
+          <div className="mx-auto w-full max-w-6xl">
+            <section className="py-6 lg:py-10">
+              <HeroSection
+                badge="RunAsh Magazine"
+                title="Built for AI commerce stories"
+                description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
+                primaryCta={{ label: "Browse all posts", href: "/blog" }}
+                secondaryCta={{ label: "Publish article", href: "/create" }}
+              />
+            </section>
+
+            <section className="pb-8 lg:pb-10">
+              <PageHighlights />
+            </section>
+
+            <Suspense fallback={<div>Loading posts...</div>}>
+              <BlogGrid />
+            </Suspense>
+          </div>
         </main>
       </div>
       <Footer />

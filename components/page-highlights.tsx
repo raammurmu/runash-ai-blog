@@ -27,26 +27,33 @@ const highlights = [
 
 export function PageHighlights() {
   return (
-    <section className="mb-10 grid gap-4 md:grid-cols-3">
-      {highlights.map((item) => {
-        const Icon = item.icon
+    <section className="space-y-6">
+      <div className="space-y-2">
+        <p className="text-sm font-medium uppercase tracking-wide text-orange-600 dark:text-orange-300">Learning & content tracks</p>
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Choose where to dive in next</h2>
+      </div>
 
-        return (
-          <article
-            key={item.title}
-            className="rounded-2xl border border-orange-100/70 bg-white/80 p-5 shadow-sm transition-transform hover:-translate-y-1 dark:border-orange-900/40 dark:bg-gray-950/60"
-          >
-            <div className="mb-4 inline-flex rounded-xl bg-orange-100 p-2 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300">
-              <Icon className="h-5 w-5" />
-            </div>
-            <h3 className="text-lg font-semibold">{item.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
-            <Link href={item.href} className="mt-4 inline-flex items-center text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-300">
-              {item.linkLabel} <Rocket className="ml-1 h-4 w-4" />
-            </Link>
-          </article>
-        )
-      })}
+      <div className="grid gap-6 md:grid-cols-3">
+        {highlights.map((item) => {
+          const Icon = item.icon
+
+          return (
+            <article
+              key={item.title}
+              className="rounded-3xl border border-orange-100/70 bg-white/90 p-6 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-orange-900/40 dark:bg-gray-950/60"
+            >
+              <div className="mb-5 inline-flex rounded-xl bg-orange-100 p-2 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="text-xl font-semibold">{item.title}</h3>
+              <p className="mt-3 text-sm text-muted-foreground">{item.description}</p>
+              <Link href={item.href} className="mt-6 inline-flex items-center text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-300">
+                {item.linkLabel} <Rocket className="ml-1 h-4 w-4" />
+              </Link>
+            </article>
+          )
+        })}
+      </div>
     </section>
   )
 }
