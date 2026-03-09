@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { PageTranslateControl } from "@/components/page-translate-control"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -46,7 +47,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex flex-1 items-center justify-end gap-1.5">
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <PageTranslateControl />
           <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
             <Link href="/create">
               <Plus className="mr-1.5 size-3.5" />
