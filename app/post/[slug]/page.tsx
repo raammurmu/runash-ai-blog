@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { getBlogPost, blogPosts } from "@/lib/blog-data"
+import { getBlogPost, getAllPosts } from "@/lib/posts"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
 import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
@@ -17,6 +17,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
+  const relatedCandidates = (await getAllPosts()).filter((candidate) => candidate.id !== post.id && candidate.category === post.category)
+  const hasRelatedPosts = relatedCandidates.length > 0
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
