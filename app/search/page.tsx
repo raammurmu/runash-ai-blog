@@ -2,25 +2,57 @@
 
 import type React from "react"
 
-import { useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { searchPosts } from "@/lib/blog-data"
+import type { ApiSearchResponse, SearchResultItem } from "@/lib/types"
 import { Header } from "@/components/header"
-import { BlogCard } from "@/components/blog-card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
+import Link from "next/link"
 
 export default function SearchPage() {
   const params = useSearchParams()
   const router = useRouter()
   const [q, setQ] = useState(params.get("q") ?? "")
+  const [results, setResults] = useState<SearchResultItem[]>([])
+  const [loading, setLoading] = useState(false)
 
-  const results = useMemo(() => (q.trim() ? searchPosts(q) : []), [q])
+  useEffect(() => {
+    const currentQ = params.get("q") ?? ""
+    setQ(currentQ)
+
+    if (!currentQ.trim()) {
+      setResults([])
+      return
+    }
+
+    let cancelled = false
+    const load = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(currentQ)}`, { cache: "no-store" })
+        if (!res.ok) {
+          throw new Error("Search failed")
+        }
+        const data: ApiSearchResponse = await res.json()
+        if (!cancelled) setResults(data.results)
+      } catch {
+        if (!cancelled) setResults([])
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [params])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    router.push(`/search?q=${encodeURIComponent(q)}`)
+    router.push(`/search?q=${encodeURIComponent(q.trim())}`)
   }
 
   return (
@@ -45,12 +77,18 @@ export default function SearchPage() {
 
         {q.trim().length === 0 ? (
           <div className="text-sm text-muted-foreground">Type to search the blog.</div>
+        ) : loading ? (
+          <div className="text-sm text-muted-foreground">Searching…</div>
         ) : results.length === 0 ? (
           <div className="text-sm text-muted-foreground">No results found for "{q}".</div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {results.map((p) => (
-              <BlogCard key={p.id} post={p} />
+          <div className="space-y-3">
+            {results.map((item) => (
+              <Link key={`${item.type}-${item.id}`} href={item.url} className="block rounded-lg border p-4 hover:bg-muted/40">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.type}</div>
+                <div className="font-medium">{item.title}</div>
+                {item.subtitle ? <div className="text-sm text-muted-foreground">{item.subtitle}</div> : null}
+              </Link>
             ))}
           </div>
         )}
