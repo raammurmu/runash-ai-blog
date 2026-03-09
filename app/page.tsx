@@ -18,9 +18,9 @@ export default function HomePage() {
         <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
         <main className="flex-1 px-4 py-8 lg:px-8">
           <HeroSection
-            badge="RunAsh Magazine"
-            title="Built for AI commerce stories"
-            description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
+            badge="RunAsh AI Blog"
+            title="Professional stories for modern AI teams"
+            description="Explore a simple, clean and modern tech-focused reading experience with practical AI insights and engineering notes."
             primaryCta={{ label: "Browse all posts", href: "/blog" }}
             secondaryCta={{ label: "Publish article", href: "/create" }}
           />
