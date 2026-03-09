@@ -1,38 +1,44 @@
 "use client"
 
-import { useState } from "react"
-import { ArrowUp, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { BlogPost } from "@/lib/types"
+import { Copy, FileText } from "lucide-react"
+import { toast } from "sonner"
 
 interface PostHeroActionsProps {
   post: BlogPost
 }
 
 export function PostHeroActions({ post }: PostHeroActionsProps) {
-  const [isUpvoted, setIsUpvoted] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(false)
+  const handleCopyPage = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.success("Page link copied")
+    } catch {
+      toast.error("Could not copy page link")
+    }
+  }
+
+  const handleCopyMarkdown = async () => {
+    const markdown = `# ${post.title}\n\n${post.excerpt}\n\nRead more: ${window.location.href}`
+
+    try {
+      await navigator.clipboard.writeText(markdown)
+      toast.success("Markdown copied")
+    } catch {
+      toast.error("Could not copy markdown")
+    }
+  }
 
   return (
-    <div className="not-prose mt-6 flex flex-wrap items-center gap-3">
-      <Button
-        variant={isUpvoted ? "default" : "outline"}
-        size="sm"
-        onClick={() => setIsUpvoted(!isUpvoted)}
-        className="gap-2"
-      >
-        <ArrowUp className={`h-4 w-4 ${isUpvoted ? "animate-bounce" : ""}`} />
-        {post.upvotes + (isUpvoted ? 1 : 0)}
+    <div className="not-prose flex flex-wrap items-center justify-end gap-2">
+      <Button variant="ghost" size="sm" onClick={handleCopyPage} className="h-8 gap-1.5 px-2.5 text-xs text-muted-foreground">
+        <Copy className="h-3.5 w-3.5" />
+        Copy page
       </Button>
-
-      <Button
-        variant={isFollowing ? "default" : "outline"}
-        size="sm"
-        onClick={() => setIsFollowing(!isFollowing)}
-        className="gap-2"
-      >
-        <UserPlus className="h-4 w-4" />
-        {isFollowing ? "Following" : "Follow"}
+      <Button variant="ghost" size="sm" onClick={handleCopyMarkdown} className="h-8 gap-1.5 px-2.5 text-xs text-muted-foreground">
+        <FileText className="h-3.5 w-3.5" />
+        Copy markdown
       </Button>
     </div>
   )

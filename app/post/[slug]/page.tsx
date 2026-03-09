@@ -34,35 +34,37 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             Back to Resources
           </Link>
 
-          <div className="mb-5 flex flex-wrap items-center justify-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              {post.publishedAt}
-            </span>
-            <span className="text-border">•</span>
-            <Badge variant="outline" className="px-2.5 py-0.5 text-[11px] md:text-xs">
-              {post.category}
-            </Badge>
-          </div>
+          <header className="mb-10 border-b border-border pb-8">
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  {post.publishedAt}
+                </span>
+                <span className="text-border">•</span>
+                <Badge variant="outline" className="px-2.5 py-0.5 text-[11px] md:text-xs">
+                  {post.category}
+                </Badge>
+              </div>
 
-          <header className="mb-10 text-center">
-            <h1 className="text-balance text-3xl font-bold tracking-tight md:text-5xl">{post.title}</h1>
-            <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
+              <div className="hidden md:block">
+                <PostHeroActions post={post} />
+              </div>
+            </div>
+
+            <h1 className="text-balance text-center text-3xl font-bold tracking-tight md:text-5xl">{post.title}</h1>
+            <p className="mx-auto mt-5 max-w-2xl text-center text-pretty text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
               {post.excerpt}
             </p>
+            <p className="mt-6 text-center text-sm text-muted-foreground">By {post.author.name}</p>
           </header>
 
-          <div className="mb-10 overflow-hidden rounded-2xl border border-border/70 bg-muted/20">
+          <div className="mb-10 overflow-hidden rounded-xl border border-border/70 bg-muted/10 shadow-sm">
             <img
               src={post.image ?? "/images/blog-cover-gradient.svg"}
               alt={post.title}
               className="h-64 w-full object-cover md:h-80"
             />
-          </div>
-
-          <div className="mb-10 border-b border-border pb-6">
-            <p className="mb-3 text-sm font-medium text-muted-foreground">Support this post</p>
-            <PostHeroActions post={post} />
           </div>
 
           <article className="prose prose-neutral dark:prose-invert max-w-none text-[17px] leading-8 md:text-lg">
