@@ -20,7 +20,7 @@ export function PostContent({ post }: PostContentProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between py-6 border-t border-b">
+      <div className="flex items-center justify-between border-y border-border/80 py-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={() => setIsLiked(!isLiked)} className={isLiked ? "text-red-500" : ""}>
             <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />
