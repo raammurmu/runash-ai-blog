@@ -9,17 +9,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatPostDate, getAllPosts, getPostsByCategory } from "@/lib/blog-data"
+import { formatPostDate, getAllPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
 
-type CategoryTab = {
-  key: string
-  label: string
-}
-
-const BlogPostCard = ({ post }: { post: BlogPost }) => {
+const BlogPostCard = ({ post, featured = false }: { post: BlogPost; featured?: boolean }) => {
   return (
-    <Card className="overflow-hidden border-orange-200/50 transition-shadow hover:shadow-md dark:border-orange-900/30">
+    <Card
+      className={`overflow-hidden ${featured ? "border-orange-500/50 bg-orange-50/50 dark:bg-orange-950/20" : "border-orange-200/50 dark:border-orange-900/30"}`}
+    >
       <div className="aspect-video overflow-hidden">
         <img
           src={post.image || "/placeholder.svg?height=300&width=400"}
@@ -28,31 +25,41 @@ const BlogPostCard = ({ post }: { post: BlogPost }) => {
         />
       </div>
       <CardContent className="p-6">
-        <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
-          {post.category}
-        </span>
-        <h3 className="mt-3 line-clamp-2 text-xl font-bold">{post.title}</h3>
-        <p className="mb-4 mt-2 line-clamp-3 text-gray-600 dark:text-gray-400">{post.excerpt}</p>
+        <div className="mb-3 flex items-center gap-2">
+          <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
+            {post.category}
+          </span>
+          {featured ? (
+            <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
+              Featured
+            </span>
+          ) : null}
+        </div>
+        <h3 className="mb-3 line-clamp-2 text-xl font-bold">{post.title}</h3>
+        <p className="mb-4 line-clamp-3 text-gray-600 dark:text-gray-400">{post.excerpt}</p>
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div className="space-y-1">
+          <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <User className="h-4 w-4" />
               <span>{post.author.name}</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                {formatPostDate(post.publishedAt)}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                {post.readTime}
-              </span>
+            <div className="flex items-center gap-1">
+              <Calendar className="h-4 w-4" />
+              <span>{formatPostDate(post.publishedAt)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              <span>{post.readTime}</span>
             </div>
           </div>
-          <Button asChild variant="ghost" size="sm" className="text-orange-600 hover:text-orange-700 dark:text-orange-400">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300"
+          >
             <Link href={`/post/${post.slug}`}>
-              Read <ArrowRight className="ml-1 h-3 w-3" />
+              Read More <ArrowRight className="ml-1 h-3 w-3" />
             </Link>
           </Button>
         </div>
@@ -65,30 +72,32 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("")
 
   const allPosts = useMemo(() => getAllPosts(), [])
-  const featuredPost = allPosts[0]
-  const categoryTabs = useMemo<CategoryTab[]>(() => {
+  const categoryTabs = useMemo(() => {
     const categories = Array.from(new Set(allPosts.map((post) => post.category)))
-    return [{ key: "all", label: "All Posts" }, ...categories.map((c) => ({ key: c, label: c }))]
+    return ["all", ...categories]
   }, [allPosts])
 
   const filteredPosts = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     if (!q) return allPosts
+
     return allPosts.filter((post) => {
       return (
         post.title.toLowerCase().includes(q) ||
         post.excerpt.toLowerCase().includes(q) ||
-        post.category.toLowerCase().includes(q) ||
         post.author.name.toLowerCase().includes(q) ||
+        post.category.toLowerCase().includes(q) ||
         post.tags.some((tag) => tag.toLowerCase().includes(q))
       )
     })
   }, [allPosts, searchQuery])
 
-  const postsByTab = (tabKey: string) => {
-    if (tabKey === "all") return filteredPosts
-    const byCategory = getPostsByCategory(tabKey)
-    return byCategory.filter((post) => filteredPosts.some((filtered) => filtered.slug === post.slug))
+  const featuredPost = filteredPosts[0]
+  const recentPosts = featuredPost ? filteredPosts.filter((post) => post.id !== featuredPost.id) : filteredPosts
+
+  const postsForTab = (tab: string) => {
+    if (tab === "all") return filteredPosts
+    return filteredPosts.filter((post) => post.category === tab)
   }
 
   return (
@@ -109,13 +118,13 @@ export default function BlogPage() {
               Insights & Updates
             </h1>
             <p className="mb-8 text-xl text-gray-700 dark:text-gray-300">
-              Explore new product updates, launch stories, and practical live-commerce tips from the RunAsh team.
+              Stay up to date with the latest news, tutorials, and insights from the RunAsh AI team.
             </p>
 
             <div className="relative mx-auto max-w-md">
               <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
               <Input
-                placeholder="Search by title, category, author, or tag..."
+                placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="border-orange-200 bg-white/50 pl-10 focus:border-orange-500/70 dark:border-orange-800/30 dark:bg-gray-900/50"
@@ -128,48 +137,127 @@ export default function BlogPage() {
       <section className="bg-white py-16 dark:bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-6xl">
-            {featuredPost ? (
-              <div className="mb-12 rounded-2xl border border-orange-200/60 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 dark:border-orange-900/40 dark:from-orange-950/30 dark:to-yellow-950/20 md:p-8">
-                <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-orange-700 dark:text-orange-400">Featured Post</p>
-                <h2 className="text-2xl font-bold md:text-3xl">{featuredPost.title}</h2>
-                <p className="mt-3 text-gray-700 dark:text-gray-300">{featuredPost.excerpt}</p>
-                <Button asChild className="mt-6 bg-gradient-to-r from-orange-600 to-yellow-600 text-white hover:from-orange-700 hover:to-yellow-700">
-                  <Link href={`/post/${featuredPost.slug}`}>
-                    Read Featured Story <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            ) : null}
-
             <Tabs defaultValue="all" className="mb-8">
-              <TabsList className="h-auto flex-wrap bg-orange-100/50 p-1 dark:bg-orange-900/20">
+              <TabsList className="h-auto flex-wrap bg-orange-100/50 dark:bg-orange-900/20">
                 {categoryTabs.map((tab) => (
-                  <TabsTrigger key={tab.key} value={tab.key} className="capitalize">
-                    {tab.label}
+                  <TabsTrigger key={tab} value={tab} className="capitalize">
+                    {tab === "all" ? "All Posts" : tab}
                   </TabsTrigger>
                 ))}
               </TabsList>
 
-              {categoryTabs.map((tab) => {
-                const posts = postsByTab(tab.key)
-                return (
-                  <TabsContent key={tab.key} value={tab.key} className="mt-8">
-                    {posts.length === 0 ? (
-                      <p className="text-center text-gray-500 dark:text-gray-400">No posts found for this filter.</p>
-                    ) : (
-                      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {posts.map((post) => (
-                          <BlogPostCard key={post.id} post={post} />
-                        ))}
+              <TabsContent value="all" className="mt-8">
+                {featuredPost ? (
+                  <div className="mb-12">
+                    <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Featured Article</h2>
+                    <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+                      <div className="aspect-video overflow-hidden rounded-xl">
+                        <img
+                          src={featuredPost.image || "/placeholder.svg?height=400&width=600"}
+                          alt={featuredPost.title}
+                          className="h-full w-full object-cover"
+                        />
                       </div>
-                    )}
-                  </TabsContent>
-                )
-              })}
+                      <div>
+                        <div className="mb-3 flex items-center gap-2">
+                          <span className="rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
+                            {featuredPost.category}
+                          </span>
+                          <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
+                            Featured
+                          </span>
+                        </div>
+                        <h3 className="mb-4 text-3xl font-bold">{featuredPost.title}</h3>
+                        <p className="mb-6 text-lg text-gray-600 dark:text-gray-400">{featuredPost.excerpt}</p>
+                        <div className="mb-6 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <User className="h-4 w-4" />
+                            <span>{featuredPost.author.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            <span>{formatPostDate(featuredPost.publishedAt)}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{featuredPost.readTime}</span>
+                          </div>
+                        </div>
+                        <Button
+                          asChild
+                          className="bg-gradient-to-r from-orange-600 to-yellow-600 text-white hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600"
+                        >
+                          <Link href={`/post/${featuredPost.slug}`}>
+                            Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                <div>
+                  <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Recent Posts</h2>
+                  {recentPosts.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                      {recentPosts.map((post) => (
+                        <BlogPostCard key={post.id} post={post} />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">No posts found.</p>
+                  )}
+                </div>
+              </TabsContent>
+
+              {categoryTabs
+                .filter((tab) => tab !== "all")
+                .map((tab) => {
+                  const posts = postsForTab(tab)
+                  return (
+                    <TabsContent key={tab} value={tab} className="mt-8">
+                      {posts.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                          {posts.map((post) => (
+                            <BlogPostCard key={post.id} post={post} />
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 dark:text-gray-400">No posts found in this category.</p>
+                      )}
+                    </TabsContent>
+                  )
+                })}
             </Tabs>
+
+            <div className="mt-16 rounded-xl border border-orange-200 bg-gradient-to-br from-orange-100 to-yellow-100 p-8 dark:border-orange-800/30 dark:from-orange-900/30 dark:to-yellow-900/30">
+              <div className="mb-6 text-center">
+                <h3 className="mb-2 text-2xl font-bold text-orange-800 dark:text-orange-300">Stay Updated</h3>
+                <p className="text-gray-700 dark:text-gray-300">
+                  Subscribe to our newsletter for the latest updates, tutorials, and insights.
+                </p>
+              </div>
+              <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
+                <Input
+                  placeholder="Enter your email"
+                  className="border-orange-200 bg-white dark:border-orange-800/30 dark:bg-gray-900"
+                />
+                <Button className="bg-gradient-to-r from-orange-600 to-yellow-600 text-white hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600">
+                  Subscribe
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      <footer className="border-t border-orange-200/50 bg-white py-12 dark:border-orange-900/30 dark:bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-gray-500">
+            <p>© {new Date().getFullYear()} RunAsh AI. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
