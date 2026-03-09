@@ -5,22 +5,20 @@ import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
 import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
 import { ReadingProgress } from "@/components/reading-progress"
-import { ScrollToTop } from "@/components/scroll-to-top"
 import { PostHeroActions } from "@/components/post-hero-actions"
 import { RelatedPosts } from "@/components/related-posts"
+import { ReadAloud } from "@/components/read-aloud"
 import { Calendar, ChevronLeft } from "lucide-react"
 import Link from "next/link"
+
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const post = await getBlogPost(slug)
   if (!post) notFound()
+  const readAloudText = stripHtml(post.content) || `${post.title}. ${post.excerpt}`
 
-  const recentPosts = [...blogPosts]
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 4)
-
-  const topics = Array.from(new Set(blogPosts.map((item) => item.category)))
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
@@ -60,6 +58,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           <div className="mb-12 w-full overflow-hidden rounded-2xl border border-border/70 bg-muted/20">
             <img src={post.image ?? "/images/blog-cover-gradient.svg"} alt={post.title} className="h-64 w-full object-cover md:h-80" />
+          </div>
+
+          <div className="mb-8">
+            <ReadAloud text={readAloudText} />
           </div>
 
           <article className="prose prose-neutral dark:prose-invert mx-auto max-w-none text-[17px] leading-[1.9] md:text-lg">
