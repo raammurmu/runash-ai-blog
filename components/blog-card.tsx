@@ -51,6 +51,8 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
           </Badge>
         </div>
       )}
+    >
+      <span className="text-5xl drop-shadow-sm">{post.emoji}</span>
     </div>
   )
 
