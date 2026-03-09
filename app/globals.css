@@ -154,3 +154,33 @@
 .prose blockquote {
   @apply border-l-4 border-primary pl-4 italic;
 }
+
+@layer components {
+  .site-header--top {
+    @apply bg-background/85 py-1;
+  }
+
+  .site-header--scrolled {
+    @apply bg-background/90 backdrop-blur-md py-0.5 border-border/70;
+  }
+
+  .site-wordmark {
+    @apply text-base font-semibold tracking-tight text-foreground/90 transition-colors hover:text-foreground;
+  }
+
+  .site-nav-link {
+    @apply rounded-md px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground;
+  }
+
+  .site-utility-button {
+    @apply rounded-md bg-foreground text-background shadow-none transition-colors hover:bg-foreground/90;
+  }
+
+  .site-theme-toggle-wrap {
+    @apply rounded-md border border-border/70 bg-transparent;
+  }
+
+  .site-theme-toggle-wrap button {
+    @apply h-8 w-8 rounded-md px-0 text-muted-foreground hover:bg-muted/50 hover:text-foreground;
+  }
+}
