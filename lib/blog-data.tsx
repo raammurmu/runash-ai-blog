@@ -51,6 +51,17 @@ export const blogPosts: BlogPost[] = [
       <h3>Why We Are Building This</h3>
       <p>Small businesses and independent sellers need better ways to compete. By providing a platform where the product is the star and the interaction is real-time, we are leveling the playing field for entrepreneurs everywhere.</p>
       
+      <figure class="post-media">
+        <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80" alt="RunAsh live commerce setup" />
+        <figcaption>Inside the RunAsh control room as the pre-release cohort goes live.</figcaption>
+      </figure>
+
+      <div class="post-video">
+        <video controls preload="metadata" poster="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80">
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+        </video>
+      </div>
+
       <h3>Join the Inner Circle</h3>
       <ul>
         <li><strong>Early Access:</strong> Be among the first to set up your shop and start streaming.</li>
@@ -91,6 +102,8 @@ export const blogPosts: BlogPost[] = [
 
       <h3>What's New in the Public Release?</h3>
       <p>We’ve used the feedback from our early testers to refine the platform. This release includes several major upgrades to help you scale your sales immediately.</p>
+
+      <blockquote>RunAsh is built for sellers who want every stream to feel like a curated, high-touch storefront.</blockquote>
 
       <h3>Ready to Scale Your Business?</h3>
       <ul>
@@ -178,6 +191,8 @@ export const blogPosts: BlogPost[] = [
       <h3>What's New in the Public Release?</h3>
       <p>We’ve used feedback from our early testers to refine the platform. This release includes several major upgrades to help you scale your sales immediately.</p>
 
+      <blockquote>RunAsh is built for sellers who want every stream to feel like a curated, high-touch storefront.</blockquote>
+
       <h3>Ready to Scale Your Business?</h3>
       <ul>
         <li><strong>Enhanced AI Chat:</strong> Our AI now automatically answers common shipping and pricing questions so you don't have to break your flow.</li>
@@ -218,6 +233,12 @@ let commentsStore: Comment[] = [
 
 export function getAllPosts(): BlogPost[] {
   return [...postsStore]
+}
+
+export function getRecentPosts(limit = 5): BlogPost[] {
+  return [...postsStore]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, limit)
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {

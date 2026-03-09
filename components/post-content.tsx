@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import type { BlogPost } from "@/lib/types"
 
 interface PostContentProps {
@@ -12,15 +12,29 @@ interface PostContentProps {
 export function PostContent({ post }: PostContentProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const renderedContent = useMemo(() => {
+    return post.content
+      .replace(/<h2(?![^>]*class=)([^>]*)>/g, '<h2 class="post-h2"$1>')
+      .replace(/<h3(?![^>]*class=)([^>]*)>/g, '<h3 class="post-h3"$1>')
+      .replace(/<p(?![^>]*class=)([^>]*)>/g, '<p class="post-p"$1>')
+      .replace(/<ul(?![^>]*class=)([^>]*)>/g, '<ul class="post-list"$1>')
+      .replace(/<pre(?![^>]*class=)([^>]*)>/g, '<pre class="post-pre"$1>')
+      .replace(/<blockquote(?![^>]*class=)([^>]*)>/g, '<blockquote class="post-callout"$1>')
+      .replace(/<figure(?![^>]*class=)([^>]*)>/g, '<figure class="post-media"$1>')
+      .replace(/<figcaption(?![^>]*class=)([^>]*)>/g, '<figcaption class="post-caption"$1>')
+      .replace(/<img(?![^>]*class=)([^>]*)>/g, '<img class="post-media-image"$1>')
+      .replace(/<(video|iframe)(?![^>]*class=)([^>]*)>/g, '<$1 class="post-embed"$2>')
+      .replace(/<div class="post-video">/g, '<div class="post-media post-video">')
+  }, [post.content])
 
   return (
     <article className="space-y-10">
-      <div className="prose prose-lg dark:prose-invert mx-auto w-full">
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div className="prose prose-lg dark:prose-invert max-w-none">
+        <div dangerouslySetInnerHTML={{ __html: renderedContent }} />
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between py-6 border-t border-b">
+      <div className="flex items-center justify-between border-y border-border/80 py-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={() => setIsLiked(!isLiked)} className={isLiked ? "text-red-500" : ""}>
             <Heart className={`h-5 w-5 mr-2 ${isLiked ? "fill-current" : ""}`} />

@@ -110,7 +110,7 @@
 
 /* Prose styles for blog content */
 .prose {
-  @apply text-foreground max-w-[72ch] mx-auto;
+  @apply text-foreground/90;
 }
 
 .prose h1,
@@ -119,19 +119,19 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply text-foreground font-bold;
+  @apply text-foreground/90 font-semibold;
 }
 
 .prose h2 {
-  @apply text-[1.75rem] leading-tight mt-12 mb-5;
+  @apply text-2xl mt-10 mb-5;
 }
 
 .prose h3 {
-  @apply text-[1.375rem] leading-snug mt-8 mb-4;
+  @apply text-xl mt-8 mb-4;
 }
 
 .prose p {
-  @apply mb-6 leading-8 text-foreground/90;
+  @apply mb-5 leading-8;
 }
 
 .prose ul,
@@ -185,6 +185,54 @@
 .dark .prose .caption,
 .dark .prose .wp-caption-text {
   @apply text-muted-foreground/90;
+}
+
+
+@layer components {
+  .post-h2 {
+    @apply mt-10 mb-4 text-2xl font-bold tracking-tight text-foreground;
+  }
+
+  .post-h3 {
+    @apply mt-8 mb-3 text-xl font-semibold text-foreground;
+  }
+
+  .post-p {
+    @apply my-4 leading-8 text-foreground/90 dark:text-foreground/85;
+  }
+
+  .post-list {
+    @apply my-4 list-disc space-y-2 pl-6 text-foreground/90 dark:text-foreground/85;
+  }
+
+  .post-pre {
+    @apply my-6 overflow-x-auto rounded-xl border border-border/70 bg-muted/60 p-4 text-sm;
+  }
+
+  .post-callout {
+    @apply my-6 rounded-xl border border-border/80 bg-muted/40 px-5 py-4 italic text-foreground/90 dark:bg-muted/20;
+  }
+
+  .post-media {
+    @apply my-8 overflow-hidden rounded-xl border border-border/80 bg-muted/30;
+  }
+
+  .post-video {
+    @apply p-2;
+  }
+
+  .post-embed {
+    @apply block w-full rounded-lg border border-border/60 bg-black/5 dark:bg-white/5;
+    aspect-ratio: 16 / 9;
+  }
+
+  .post-media-image {
+    @apply block w-full;
+  }
+
+  .post-caption {
+    @apply border-t border-border/70 px-4 py-3 text-sm text-muted-foreground;
+  }
 }
 
 @layer components {
