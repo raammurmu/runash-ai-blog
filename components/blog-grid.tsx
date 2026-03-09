@@ -212,8 +212,8 @@ export function BlogGrid() {
 
       {/* Results Grid */}
       <div className={cn(
-        "grid gap-6 transition-all duration-500",
-        view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+        "grid transition-all duration-300",
+        view === "grid" ? "grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 gap-4"
       )}>
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
