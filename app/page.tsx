@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PageHighlights } from "@/components/page-highlights"
+import { RunashTechShowcase } from "@/components/runash-tech-showcase"
 
 export default function HomePage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -24,6 +25,7 @@ export default function HomePage() {
             primaryCta={{ label: "Browse all posts", href: "/blog" }}
             secondaryCta={{ label: "Publish article", href: "/create" }}
           />
+          <RunashTechShowcase />
           <PageHighlights />
           <Suspense fallback={<div>Loading posts...</div>}>
             <BlogGrid />
