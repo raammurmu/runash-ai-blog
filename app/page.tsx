@@ -21,9 +21,9 @@ export default function HomePage() {
             <section className="py-6 lg:py-10">
               <HeroSection
                 badge="RunAsh Blog"
-                title="Agentic Live Commerce"
-                description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
-                primaryCta={{ label: "Browse All posts", href: "/blog" }}
+                title="Blogs"
+                description="Discover launch updates, founder notes, tutorials."
+                primaryCta={{ label: "Browse all posts", href: "/blog" }}
                 secondaryCta={{ label: "Publish article", href: "/create" }}
               />
             </section>
