@@ -1,85 +1,285 @@
 "use client"
-import { useState, useEffect } from "react"
-import { Volume2, VolumeX, Play, Pause, Square } from "lucide-react"
+
+import { useEffect, useMemo, useRef, useState } from "react"
+import { Languages, Loader2, Pause, Play, Share2, Square, Volume2 } from "lucide-react"
+import { toast } from "sonner"
+
+type VoiceLanguage = "en-US" | "hi-IN"
+
+const WORDS_PER_MINUTE = 150
+
+const formatDuration = (seconds: number) => {
+  const safe = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0
+  const mm = Math.floor(safe / 60)
+  const ss = safe % 60
+  return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`
+}
+
+const stripHtml = (value: string) => value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
 
 export const ReadAloud = ({ text }: { text: string }) => {
+  const [synth, setSynth] = useState<SpeechSynthesis | null>(null)
   const [isReading, setIsReading] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
-  const [synth, setSynth] = useState<SpeechSynthesis | null>(null)
-  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null)
+  const [elapsed, setElapsed] = useState(0)
+  const [voiceLanguage, setVoiceLanguage] = useState<VoiceLanguage>("en-US")
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const [isTranslating, setIsTranslating] = useState(false)
+  const [hindiTranslation, setHindiTranslation] = useState("")
+
+  const startedAtRef = useRef<number | null>(null)
+  const elapsedBeforePauseRef = useRef(0)
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+
+  const plainText = useMemo(() => stripHtml(text), [text])
+
+  const speechText = useMemo(() => {
+    if (voiceLanguage === "hi-IN" && hindiTranslation) return hindiTranslation
+    return plainText
+  }, [voiceLanguage, hindiTranslation, plainText])
+
+  const estimatedDuration = useMemo(() => {
+    const words = speechText.length ? speechText.split(/\s+/).length : 0
+    return Math.ceil((words / WORDS_PER_MINUTE) * 60)
+  }, [speechText])
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSynth(window.speechSynthesis)
-    }
-  }, [])
+    if (typeof window === "undefined") return
 
-  const startReading = () => {
-    if (!synth) return
+    const speech = window.speechSynthesis
+    setSynth(speech)
 
-    if (isPaused) {
-      synth.resume()
-      setIsPaused(false)
-      setIsReading(true)
-      return
-    }
-
-    const newUtterance = new SpeechSynthesisUtterance(text)
-    
-    // Customizing the voice experience
-    newUtterance.rate = 0.95; // Slightly slower for better clarity
-    newUtterance.pitch = 1;
-    
-    newUtterance.onend = () => {
-      setIsReading(false)
-      setIsPaused(false)
+    const syncVoices = () => {
+      const available = speech.getVoices()
+      if (available.length) {
+        setVoices(available)
+        const hasHindi = available.some((voice) => voice.lang.toLowerCase().startsWith("hi"))
+        if (!hasHindi && voiceLanguage === "hi-IN") {
+          setVoiceLanguage("en-US")
+        }
+      }
     }
 
-    setUtterance(newUtterance)
-    synth.speak(newUtterance)
-    setIsReading(true)
-  }
+    syncVoices()
+    speech.onvoiceschanged = syncVoices
 
-  const pauseReading = () => {
-    synth?.pause()
-    setIsPaused(true)
-    setIsReading(false)
+    return () => {
+      speech.cancel()
+      speech.onvoiceschanged = null
+    }
+  }, [voiceLanguage])
+
+  useEffect(() => {
+    if (!isReading) return
+
+    const id = window.setInterval(() => {
+      if (startedAtRef.current) {
+        const activeElapsed = elapsedBeforePauseRef.current + (Date.now() - startedAtRef.current) / 1000
+        setElapsed(activeElapsed)
+      }
+    }, 400)
+
+    return () => window.clearInterval(id)
+  }, [isReading])
+
+  const hasHindiVoice = useMemo(() => voices.some((voice) => voice.lang.toLowerCase().startsWith("hi")), [voices])
+
+  const findVoice = (lang: VoiceLanguage) => {
+    const normalized = lang.toLowerCase()
+    return (
+      voices.find((voice) => voice.lang.toLowerCase() === normalized) ??
+      voices.find((voice) => voice.lang.toLowerCase().startsWith(normalized.split("-")[0]))
+    )
   }
 
   const stopReading = () => {
     synth?.cancel()
     setIsReading(false)
     setIsPaused(false)
+    setElapsed(0)
+    elapsedBeforePauseRef.current = 0
+    startedAtRef.current = null
+    utteranceRef.current = null
   }
 
+  const translateToHindi = async () => {
+    if (!plainText) return
+    setIsTranslating(true)
+
+    try {
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: plainText, source: "en", target: "hi" }),
+      })
+
+      if (!response.ok) {
+        throw new Error("translation failed")
+      }
+
+      const payload = (await response.json()) as { translatedText?: string }
+      if (!payload.translatedText) {
+        throw new Error("empty translation")
+      }
+
+      setHindiTranslation(payload.translatedText)
+      toast.success("Translated to Hindi")
+    } catch {
+      toast.error("Could not translate this article right now")
+    } finally {
+      setIsTranslating(false)
+    }
+  }
+
+  useEffect(() => {
+    if (voiceLanguage === "hi-IN" && !hindiTranslation && !isTranslating) {
+      void translateToHindi()
+    }
+  }, [voiceLanguage, hindiTranslation, isTranslating])
+
+  const startReading = async () => {
+    if (!synth || !plainText) return
+
+    if (isPaused && utteranceRef.current) {
+      synth.resume()
+      startedAtRef.current = Date.now()
+      setIsPaused(false)
+      setIsReading(true)
+      return
+    }
+
+    if (voiceLanguage === "hi-IN" && !hindiTranslation) {
+      await translateToHindi()
+    }
+
+    const nextSpeech = voiceLanguage === "hi-IN" && hindiTranslation ? hindiTranslation : plainText
+
+    synth.cancel()
+    const newUtterance = new SpeechSynthesisUtterance(nextSpeech)
+    const selectedVoice = findVoice(voiceLanguage)
+
+    newUtterance.lang = selectedVoice?.lang ?? voiceLanguage
+    if (selectedVoice) newUtterance.voice = selectedVoice
+    newUtterance.rate = 0.95
+    newUtterance.pitch = 1
+
+    newUtterance.onend = () => stopReading()
+    newUtterance.onerror = () => {
+      toast.error("Unable to play audio for this article")
+      stopReading()
+    }
+
+    utteranceRef.current = newUtterance
+    elapsedBeforePauseRef.current = 0
+    setElapsed(0)
+    startedAtRef.current = Date.now()
+    synth.speak(newUtterance)
+    setIsReading(true)
+    setIsPaused(false)
+  }
+
+  const pauseReading = () => {
+    if (!synth) return
+    synth.pause()
+    if (startedAtRef.current) {
+      elapsedBeforePauseRef.current += (Date.now() - startedAtRef.current) / 1000
+      setElapsed(elapsedBeforePauseRef.current)
+      startedAtRef.current = null
+    }
+    setIsPaused(true)
+    setIsReading(false)
+  }
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.success("Article link copied")
+    } catch {
+      toast.error("Could not copy article link")
+    }
+  }
+
+  const showPlay = !isReading && !isPaused
+
   return (
-    <div className="flex items-center gap-2 p-1.5 bg-orange-50 dark:bg-orange-950/20 rounded-xl border border-orange-100 dark:border-orange-900/30">
-      {!isReading && !isPaused ? (
+    <div className="not-prose mt-8 border border-border/70 bg-background/90 px-4 py-3 shadow-sm backdrop-blur-sm md:px-5">
+      <div className="flex flex-wrap items-center gap-3 md:gap-5">
         <button
-          onClick={startReading}
-          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 rounded-lg text-sm font-bold text-orange-600 shadow-sm hover:shadow-md transition-all"
+          aria-label={showPlay ? "Listen to article" : isReading ? "Pause reading" : "Resume reading"}
+          onClick={isReading ? pauseReading : () => void startReading()}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-foreground transition hover:bg-muted/70"
+          disabled={isTranslating}
         >
-          <Volume2 className="h-4 w-4" /> Listen to Article
+          {showPlay ? (
+            <Play className="h-4 w-4 fill-current" />
+          ) : isReading ? (
+            <Pause className="h-4 w-4 fill-current" />
+          ) : (
+            <Play className="h-4 w-4 fill-current" />
+          )}
         </button>
-      ) : (
-        <div className="flex items-center gap-1">
-          <button 
-            onClick={isReading ? pauseReading : startReading}
-            className="p-2 hover:bg-white dark:hover:bg-gray-800 rounded-lg text-orange-600"
-          >
-            {isReading ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
-          </button>
-          <button 
-            onClick={stopReading}
-            className="p-2 hover:bg-white dark:hover:bg-gray-800 rounded-lg text-red-500"
-          >
-            <Square className="h-4 w-4 fill-current" />
-          </button>
-          <span className="text-xs font-bold text-orange-600 px-2 animate-pulse">
-            {isReading ? "Reading..." : "Paused"}
-          </span>
+
+        <div className="flex items-center gap-2 text-sm">
+          <Volume2 className="h-4 w-4 text-muted-foreground" />
+          <span className="font-medium">Listen to article</span>
+          {isTranslating ? (
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" /> Translating…
+            </span>
+          ) : null}
         </div>
-      )}
+
+        <span className="text-sm tabular-nums text-muted-foreground">
+          {formatDuration(Math.min(elapsed, estimatedDuration))} / {formatDuration(estimatedDuration)}
+        </span>
+
+        <button
+          aria-label="Stop reading"
+          onClick={stopReading}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted/70 hover:text-foreground"
+        >
+          <Square className="h-4 w-4 fill-current" />
+        </button>
+
+        <div className="ml-auto flex items-center gap-2">
+          <label className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+            <Languages className="h-3.5 w-3.5" />
+            Voice
+          </label>
+          <select
+            aria-label="Select article voice language"
+            className="h-8 rounded-md border border-border bg-background px-2 text-xs"
+            value={voiceLanguage}
+            onChange={(event) => setVoiceLanguage(event.target.value as VoiceLanguage)}
+          >
+            <option value="en-US">English</option>
+            <option value="hi-IN" disabled={!hasHindiVoice}>
+              Hindi {hasHindiVoice ? "" : "(not available)"}
+            </option>
+          </select>
+
+          {voiceLanguage === "hi-IN" ? (
+            <button
+              aria-label="Translate article to Hindi"
+              onClick={() => void translateToHindi()}
+              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition hover:bg-muted/70 hover:text-foreground"
+              disabled={isTranslating}
+            >
+              <Languages className="h-3.5 w-3.5" />
+              Hindi translation
+            </button>
+          ) : null}
+
+          <button
+            aria-label="Share article"
+            onClick={copyLink}
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition hover:bg-muted/70 hover:text-foreground"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+            Share
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
