@@ -7,6 +7,7 @@ import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
 import { ReadingProgress } from "@/components/reading-progress"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { PostHeroActions } from "@/components/post-hero-actions"
+import { ReadAloud } from "@/components/read-aloud"
 import { RelatedPosts } from "@/components/related-posts"
 import { Calendar, ChevronLeft } from "lucide-react"
 import Link from "next/link"
@@ -16,7 +17,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
-  const hasRelatedPosts = blogPosts.some((item) => item.id !== post.id && item.category === post.category)
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
@@ -52,6 +52,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               {post.excerpt}
             </p>
             <p className="mt-5 text-sm text-muted-foreground">By {post.author.name}</p>
+
+            <ReadAloud text={`${post.title}. ${post.excerpt}. ${post.content}`} />
           </header>
 
           <div className="mb-12 w-full overflow-hidden rounded-2xl border border-border/70 bg-muted/20">
@@ -77,6 +79,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       </main>
 
+      <ScrollToTop />
       <div className="h-12 md:hidden" />
     </div>
   )
