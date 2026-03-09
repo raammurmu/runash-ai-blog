@@ -84,7 +84,7 @@ export function Footer() {
   return (
     <footer className="w-full border-t border-orange-200/60 bg-white py-10 dark:border-orange-900/30 dark:bg-gray-950 sm:py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-yellow-50 px-6 py-8 shadow-xl shadow-orange-500/10 dark:border-orange-900/40 dark:from-gray-950 dark:via-orange-950/20 dark:to-yellow-950/10 md:px-8 md:py-10">
+        <div className="rounded-3xl border border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-yellow-50 px-6 py-8 shadow-sm shadow-orange-500/10 dark:border-orange-900/40 dark:from-gray-950 dark:via-orange-950/20 dark:to-yellow-950/10 md:px-8 md:py-10">
           <div className="mb-10 flex flex-col gap-6 border-b border-orange-200/70 pb-8 dark:border-orange-900/40 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <Link href="/" className="group flex items-center gap-3">
