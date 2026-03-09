@@ -14,6 +14,19 @@ import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { blogPosts } from "@/lib/blog-data"
 
+const socialLinks = [
+  { icon: Github, href: "https://github.com/runash", label: "RunAsh on GitHub" },
+  { icon: Twitter, href: "https://twitter.com/runashai", label: "RunAsh on X/Twitter" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/runash-ai/", label: "RunAsh on LinkedIn" },
+  { icon: Mail, href: "mailto:hello@runash.in", label: "Email RunAsh" },
+]
+
+const legalLinks = [
+  { name: "Privacy", href: "https://runash.in/privacy" },
+  { name: "Terms", href: "https://runash.in/terms" },
+  { name: "Cookies", href: "https://runash.in/cookies" },
+]
+
 const footerLinks = [
   {
     title: "Platform",
@@ -49,7 +62,15 @@ export function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail) return
+
+    const isEmailFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)
+    if (!isEmailFormatValid) {
+      toast.error("Please enter a valid email address.")
+      return
+    }
+
     setIsLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -81,22 +102,22 @@ export function Footer() {
               Runash Digital Innovation Technologies Private Limited.
             </p>
             <div className="mt-6 flex gap-2">
-              {[
-                { icon: Github, href: "https://github.com/runash" },
-                { icon: Twitter, href: "https://twitter.com/runashai" },
-                { icon: Linkedin, href: "https://www.linkedin.com/company/runash-ai/" },
-                { icon: Mail, href: "mailto:hello@runash.in" },
-              ].map((item, i) => (
+              {socialLinks.map((item) => (
                 <Button
-                  key={i}
+                  key={item.href}
                   asChild
                   variant="outline"
                   size="icon"
                   className="h-10 w-10 rounded-full border-orange-500/10 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all active:scale-90"
                 >
-                  <Link href={item.href} aria-label="RunAsh social link">
+                  <a
+                    href={item.href}
+                    aria-label={item.label}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  >
                     <item.icon className="h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
               ))}
             </div>
@@ -111,13 +132,15 @@ export function Footer() {
                 </h4>
                 <nav className="flex flex-col space-y-3">
                   {section.links.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href} 
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm text-muted-foreground hover:text-orange-500 transition-colors w-fit"
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   ))}
                 </nav>
               </div>
@@ -149,7 +172,13 @@ export function Footer() {
               Stay in the Loop
             </h4>
             <form onSubmit={handleSubscribe} className="relative w-full max-w-sm">
+              <label htmlFor="newsletter-email" className="sr-only">
+                Work email address
+              </label>
               <Input 
+                id="newsletter-email"
+                type="email"
+                autoComplete="email"
                 placeholder="Enter work email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -158,6 +187,8 @@ export function Footer() {
               <Button 
                 size="icon" 
                 type="submit"
+                disabled={isLoading}
+                aria-busy={isLoading}
                 className="absolute right-1.5 top-1.5 h-9 w-9 rounded-xl bg-orange-600 hover:bg-orange-700 shadow-orange-500/20 shadow-md active:scale-95 transition-all"
               >
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
@@ -181,10 +212,16 @@ export function Footer() {
           {/* Legal & Theme */}
           <div className="flex items-center gap-8">
             <nav className="flex gap-6">
-              {["Privacy", "Terms", "Cookies"].map((l) => (
-                <Link key={l} href="https://runash.in/privacy" className="text-xs font-semibold text-muted-foreground hover:text-orange-500 transition-colors">
-                  {l}
-                </Link>
+              {legalLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-muted-foreground hover:text-orange-500 transition-colors"
+                >
+                  {link.name}
+                </a>
               ))}
             </nav>
 
