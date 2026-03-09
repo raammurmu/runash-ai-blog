@@ -80,6 +80,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["PreRelease", "Beta", "Startups", "Waitlist"],
+    image: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80",
   },
   {
     id: "2",
@@ -124,6 +125,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["Launch", "LiveStreaming", "Ecommerce", "FinTech"],
+    image: "https://images.unsplash.com/photo-1551817958-20204d6ab0b9?auto=format&fit=crop&w=1400&q=80",
   },
 
   {
@@ -168,6 +170,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["streaming", "ai", "video", "real-time"],
+    image: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=1400&q=80",
   },
   {
     id: "4",
@@ -212,6 +215,7 @@ export const blogPosts: BlogPost[] = [
     comments: 0,
     upvotes: 0,
     tags: ["Launch", "LiveStreaming", "Ecommerce", "FinTech"],
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80",
   },
 
 ]
