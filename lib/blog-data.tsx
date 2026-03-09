@@ -302,6 +302,10 @@ export function getPostsByCategory(categoryName: string): BlogPost[] {
   return postsStore.filter((p) => p.category === categoryName)
 }
 
+export function getRelatedPosts(postId: string, category: string, limit = 3): BlogPost[] {
+  return postsStore.filter((p) => p.id !== postId && p.category === category).slice(0, limit)
+}
+
 export function getPostsByTag(tag: string): BlogPost[] {
   return postsStore.filter((p) => p.tags.includes(tag))
 }
