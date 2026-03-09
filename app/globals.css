@@ -110,7 +110,7 @@
 
 /* Prose styles for blog content */
 .prose {
-  @apply text-foreground;
+  @apply text-foreground/90;
 }
 
 .prose h1,
@@ -119,19 +119,19 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply text-foreground font-bold;
+  @apply text-foreground/90 font-semibold;
 }
 
 .prose h2 {
-  @apply text-2xl mt-8 mb-4;
+  @apply text-2xl mt-10 mb-5;
 }
 
 .prose h3 {
-  @apply text-xl mt-6 mb-3;
+  @apply text-xl mt-8 mb-4;
 }
 
 .prose p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-5 leading-8;
 }
 
 .prose ul,
