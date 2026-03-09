@@ -15,7 +15,7 @@ export function PostContent({ post }: PostContentProps) {
 
   return (
     <article className="space-y-10">
-      <div className="prose prose-lg dark:prose-invert max-w-none">
+      <div className="prose prose-lg dark:prose-invert mx-auto w-full">
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>
 
