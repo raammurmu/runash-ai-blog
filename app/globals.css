@@ -161,7 +161,7 @@
   }
 
   .site-header--scrolled {
-    @apply bg-background/92 backdrop-blur-md py-0.5 border-border/70;
+    @apply bg-background/90 backdrop-blur-md py-0.5 border-border/70;
   }
 
   .site-wordmark {
