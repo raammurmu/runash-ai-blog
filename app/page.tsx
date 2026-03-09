@@ -20,9 +20,9 @@ export default function HomePage() {
           <div className="mx-auto w-full max-w-6xl">
             <section className="py-6 lg:py-10">
               <HeroSection
-                badge="RunAsh Magazine"
-                title="Built for AI commerce stories"
-                description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
+                badge="RunAsh Blog"
+                title="Blogs"
+                description="Discover launch updates, founder notes, tutorials."
                 primaryCta={{ label: "Browse all posts", href: "/blog" }}
                 secondaryCta={{ label: "Publish article", href: "/create" }}
               />
