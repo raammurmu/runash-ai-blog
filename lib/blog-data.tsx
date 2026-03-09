@@ -237,12 +237,23 @@ export function getAllPosts(): BlogPost[] {
 
 export type PostSortKey = "newest" | "popular"
 
+const parsePostDate = (date: string) => {
+  const dateOnlyMatch = date.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+
+  if (dateOnlyMatch) {
+    const [, year, month, day] = dateOnlyMatch
+    return new Date(Number(year), Number(month) - 1, Number(day))
+  }
+
+  return new Date(date)
+}
+
 export const formatPostDate = (date: string, withYear = true) =>
   new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     ...(withYear ? { year: "numeric" } : {}),
-  }).format(new Date(date))
+  }).format(parsePostDate(date))
 
 export function getPostsSorted(posts: BlogPost[], sortBy: PostSortKey = "newest"): BlogPost[] {
   return [...posts].sort((a, b) => {
@@ -260,11 +271,6 @@ export function getRecentPosts(limit = 5): BlogPost[] {
   return getPostsSorted(postsStore, "newest").slice(0, limit)
 }
 
-export function getRecentPosts(limit = 5): BlogPost[] {
-  return [...postsStore]
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, limit)
-}
 
 export function getBlogPost(slug: string): BlogPost | undefined {
   return postsStore.find((p) => p.slug === slug)
