@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { getBlogPost } from "@/lib/blog-data"
+import { getBlogPost, blogPosts } from "@/lib/blog-data"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
 import { BlogHeaderMinimal } from "@/components/blog-header-minimal"
@@ -16,11 +16,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) notFound()
 
-  const recentPosts = [...blogPosts]
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 4)
-
-  const topics = Array.from(new Set(blogPosts.map((item) => item.category)))
+  const hasRelatedPosts = blogPosts.some((item) => item.id !== post.id && item.category === post.category)
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-orange-500/30">
@@ -66,9 +62,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <PostContent post={post} />
           </article>
 
-          <div className="mt-16 border-t border-border/80 pt-10">
-            <RelatedPosts currentPostId={post.id} category={post.category} />
-          </div>
+          {hasRelatedPosts ? (
+            <div className="mt-16 border-t border-border/80 pt-10">
+              <RelatedPosts currentPostId={post.id} category={post.category} />
+            </div>
+          ) : null}
 
           <section id="comments" className="mt-14 border-t border-border/80 pt-10">
             <h3 className="mb-8 text-2xl font-semibold tracking-tight text-foreground/90 md:text-3xl">Discussion</h3>
