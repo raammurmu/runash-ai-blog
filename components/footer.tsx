@@ -14,6 +14,19 @@ import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { blogPosts } from "@/lib/blog-data"
 
+const socialLinks = [
+  { icon: Github, href: "https://github.com/runash", label: "RunAsh on GitHub" },
+  { icon: Twitter, href: "https://twitter.com/runashai", label: "RunAsh on X/Twitter" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/runash-ai/", label: "RunAsh on LinkedIn" },
+  { icon: Mail, href: "mailto:hello@runash.in", label: "Email RunAsh" },
+]
+
+const legalLinks = [
+  { name: "Privacy", href: "https://runash.in/privacy" },
+  { name: "Terms", href: "https://runash.in/terms" },
+  { name: "Cookies", href: "https://runash.in/cookies" },
+]
+
 const footerLinks = [
   {
     title: "Platform",
@@ -49,7 +62,15 @@ export function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail) return
+
+    const isEmailFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)
+    if (!isEmailFormatValid) {
+      toast.error("Please enter a valid email address.")
+      return
+    }
+
     setIsLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -87,15 +108,20 @@ export function Footer() {
                 { icon: Mail, href: "mailto:hello@runash.in" },
               ].map((item, i) => (
                 <Button
-                  key={i}
+                  key={item.href}
                   asChild
                   variant="outline"
                   size="icon"
                   className="h-9 w-9 rounded-full border-white/15 bg-white/5 text-zinc-300 hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-300"
                 >
-                  <Link href={item.href} aria-label="RunAsh social link">
+                  <a
+                    href={item.href}
+                    aria-label={item.label}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  >
                     <item.icon className="h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
               ))}
             </div>
