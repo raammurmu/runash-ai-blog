@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { PageTranslateControl } from "@/components/page-translate-control"
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -30,7 +31,8 @@ export function BlogHeaderMinimal() {
           ))}
         </nav>
 
-        <div className="flex flex-1 justify-end">
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <PageTranslateControl />
           <Link
             href="/search?q=api"
             className="inline-flex h-9 items-center rounded-full bg-slate-900 px-4 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"

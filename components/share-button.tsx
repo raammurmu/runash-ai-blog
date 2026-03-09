@@ -1,49 +1,72 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Share2, Twitter, Facebook, Linkedin, Copy } from "lucide-react"
 import { toast } from "sonner"
+import { SHARE_MESSAGES, copyTextToClipboard, createShareLinks, openSharePopup, shareWithNative } from "@/lib/share"
 
 interface ShareButtonProps {
   url: string
   title: string
   description?: string
+  trigger?: ReactNode
 }
 
-export function ShareButton({ url, title, description }: ShareButtonProps) {
+export function ShareButton({ url, title, description, trigger }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [canNativeShare, setCanNativeShare] = useState(false)
 
-  const shareLinks = {
-    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description || "")}`,
-  }
+  useEffect(() => {
+    setCanNativeShare(Boolean(navigator.share))
+  }, [])
+
+  const shareLinks = createShareLinks({ title, url, description })
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(url)
-      toast.success("Link copied to clipboard!")
+      await copyTextToClipboard(url)
+      toast.success(SHARE_MESSAGES.copySuccess)
       setIsOpen(false)
-    } catch (err) {
-      toast.error("Failed to copy link")
+    } catch {
+      toast.error(SHARE_MESSAGES.copyError)
+    }
+  }
+
+  const handleNativeShare = async () => {
+    try {
+      const shared = await shareWithNative({ title, text: description, url })
+      if (!shared) {
+        openSharePopup(shareLinks.twitter)
+      }
+      setIsOpen(false)
+    } catch {
+      toast.error(SHARE_MESSAGES.shareError)
     }
   }
 
   const handleShare = (platform: keyof typeof shareLinks) => {
-    window.open(shareLinks[platform], "_blank", "width=600,height=400")
+    openSharePopup(shareLinks[platform])
     setIsOpen(false)
   }
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <Share2 className="h-4 w-4" />
-        </Button>
+        {trigger ?? (
+          <Button variant="ghost" size="sm">
+            <Share2 className="h-4 w-4" />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
+        {canNativeShare && (
+          <DropdownMenuItem onClick={handleNativeShare} className="cursor-pointer">
+            <Share2 className="h-4 w-4 mr-2" />
+            Share...
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={() => handleShare("twitter")} className="cursor-pointer">
           <Twitter className="h-4 w-4 mr-2 text-blue-400" />
           Share on Twitter
