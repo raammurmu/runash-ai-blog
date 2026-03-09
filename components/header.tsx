@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Search, Plus, Sparkles, Command } from "lucide-react"
+import { Search, Plus, Sparkles, Command, CircuitBoard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -37,12 +37,12 @@ export function Header() {
         
         <div className="flex items-center gap-6 shrink-0">
           <Link href="/" className="group flex items-center gap-3 transition-transform hover:scale-105">
-            <div className="relative size-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-400 flex items-center justify-center shadow-xl shadow-orange-500/20">
+            <div className="relative size-11 rounded-2xl bg-gradient-to-tr from-cyan-600 to-violet-500 flex items-center justify-center shadow-xl shadow-cyan-500/20">
               <span className="text-white font-black text-lg">R</span>
-              <Sparkles className="absolute -top-1 -right-1 size-4 text-orange-500 fill-white" />
+              <Sparkles className="absolute -top-1 -right-1 size-4 text-cyan-200 fill-white" />
             </div>
-            <span className="hidden font-black text-2xl lg:inline-block tracking-tighter bg-foreground">
-              RunAsh
+            <span className="hidden items-center gap-1 font-black text-2xl lg:inline-flex tracking-tight text-foreground">
+              <CircuitBoard className="size-5 text-cyan-500" /> RunAsh
             </span>
           </Link>
           <nav className="hidden lg:flex items-center gap-4 text-sm font-semibold text-muted-foreground">
@@ -50,7 +50,7 @@ export function Header() {
               <Link
                 key={category.slug}
                 href={`/category/${category.slug}`}
-                className="transition-colors hover:text-orange-600"
+                className="transition-colors hover:text-cyan-600"
               >
                 {category.name}
               </Link>
@@ -59,14 +59,14 @@ export function Header() {
         </div>
 
         <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-lg relative group">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-muted-foreground pointer-events-none group-focus-within:text-orange-500 transition-colors">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-muted-foreground pointer-events-none group-focus-within:text-cyan-500 transition-colors">
             <Search className="size-4" />
           </div>
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search posts, tags, or authors..."
-            className="pl-12 pr-12 h-11 bg-muted/30 border-none rounded-2xl focus-visible:ring-2 focus-visible:ring-orange-500/20 transition-all text-base"
+            className="pl-12 pr-12 h-11 bg-muted/30 border-none rounded-2xl focus-visible:ring-2 focus-visible:ring-cyan-500/20 transition-all text-base"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md border bg-background/50 text-[10px] font-bold text-muted-foreground">
             <Command className="size-3" /> K
@@ -75,7 +75,7 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <Button 
-            className="hidden sm:flex rounded-2xl bg-orange-600 hover:bg-orange-700 shadow-lg shadow-orange-600/20 font-bold active:scale-95 transition-all" 
+            className="hidden sm:flex rounded-2xl bg-cyan-600 hover:bg-cyan-700 shadow-lg shadow-cyan-600/20 font-bold active:scale-95 transition-all" 
             asChild
           >
             <Link href="/create"><Plus className="size-4 mr-2" /> New Post</Link>
