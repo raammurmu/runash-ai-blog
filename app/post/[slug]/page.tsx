@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { getBlogPost } from "@/lib/blog-data"
+import { formatPostDate, getBlogPost } from "@/lib/blog-data"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
 import { Header } from "@/components/header"
