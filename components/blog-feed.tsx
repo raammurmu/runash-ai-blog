@@ -7,40 +7,40 @@ export function BlogFeed() {
   )
 
   return (
-    <section className="mx-auto w-full max-w-3xl space-y-10 lg:ml-8 lg:mr-auto xl:ml-12">
-      {posts.map((post) => (
-        <article key={post.id} className="space-y-5 border-b border-border/60 pb-10 last:border-b-0 last:pb-0">
-          <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-2xl">
-            <div
-              className={`relative flex h-64 items-center justify-center rounded-2xl ${post.gradient || "bg-gradient-to-br from-orange-400 to-amber-500"}`}
-            >
-              <span className="text-7xl drop-shadow-xl" aria-hidden="true">
-                {post.emoji}
+    <section className="w-full max-w-[760px] space-y-8">
+      <header className="space-y-3 border-b border-border/60 pb-6">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">RunAsh Journal</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Insights and product notes</h1>
+        <p className="max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
+          Practical updates on AI workflows, product design, and shipping with modern LLM tools.
+        </p>
+      </header>
+
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <article key={post.id} className="space-y-3 border-b border-border/60 pb-6 last:border-b-0">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>{post.category}</span>
+              <span aria-hidden="true">•</span>
+              <span>
+                {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </span>
             </div>
-          </Link>
 
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
-
-            <Link href={`/post/${post.slug}`}>
-              <h2 className="text-2xl font-semibold leading-tight text-foreground transition-colors hover:text-primary sm:text-3xl">
+            <Link href={`/post/${post.slug}`} className="group block">
+              <h2 className="text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
                 {post.title}
               </h2>
             </Link>
 
-            <p className="text-base leading-relaxed text-muted-foreground">{post.excerpt}</p>
-
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground/90">{post.category}</p>
-          </div>
-        </article>
-      ))}
+            <p className="text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+          </article>
+        ))}
+      </div>
     </section>
   )
 }

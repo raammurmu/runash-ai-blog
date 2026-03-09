@@ -12,9 +12,9 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div className="flex flex-1">
+      <div className="mx-auto flex w-full max-w-[1180px] flex-1">
         <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-        <main className="flex-1 px-4 py-8 lg:px-8">
+        <main className="flex flex-1 justify-center px-4 py-8 md:px-6 lg:px-10">
           <Suspense fallback={<div>Loading posts...</div>}>
             <BlogFeed />
           </Suspense>
