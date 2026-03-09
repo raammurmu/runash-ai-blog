@@ -1,5 +1,5 @@
 import { blogPosts } from "@/lib/blog-data"
-import { BlogPostCard } from "@/components/blog-post-card"
+import { EditorialPostCard } from "@/components/editorial-post-card"
 import type { BlogPost } from "@/lib/types"
 
 interface BlogFeedProps {
@@ -13,7 +13,7 @@ export function BlogFeed({ posts }: BlogFeedProps) {
   return (
     <section className="mx-auto w-full max-w-4xl space-y-14">
       {orderedPosts.map((post) => (
-        <BlogPostCard key={post.id} post={post} />
+        <EditorialPostCard key={post.id} post={post} />
       ))}
     </section>
   )
