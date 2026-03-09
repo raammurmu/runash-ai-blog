@@ -1,4 +1,5 @@
 import type { BlogPost, Comment, User } from "./types"
+import { formatPublishedDate } from "./utils"
 
 // Authors
 export const authors: User[] = [
@@ -237,23 +238,7 @@ export function getAllPosts(): BlogPost[] {
 
 export type PostSortKey = "newest" | "popular"
 
-const parsePostDate = (date: string) => {
-  const dateOnlyMatch = date.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-
-  if (dateOnlyMatch) {
-    const [, year, month, day] = dateOnlyMatch
-    return new Date(Number(year), Number(month) - 1, Number(day))
-  }
-
-  return new Date(date)
-}
-
-export const formatPostDate = (date: string, withYear = true) =>
-  new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    ...(withYear ? { year: "numeric" } : {}),
-  }).format(parsePostDate(date))
+export const formatPostDate = (date: string, withYear = true) => formatPublishedDate(date, withYear)
 
 export function getPostsSorted(posts: BlogPost[], sortBy: PostSortKey = "newest"): BlogPost[] {
   return [...posts].sort((a, b) => {
