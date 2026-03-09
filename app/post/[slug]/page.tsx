@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { getBlogPost } from "@/lib/blog-data"
+import { formatPostDate, getBlogPost } from "@/lib/blog-data"
 import { PostContent } from "@/components/post-content"
 import { PostComments } from "@/components/post-comments"
 import { Header } from "@/components/header"
@@ -37,7 +37,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <div className="mb-5 flex flex-wrap items-center justify-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {post.publishedAt}
+              {formatPostDate(post.publishedAt)}
             </span>
             <span className="text-border">•</span>
             <Badge variant="outline" className="px-2.5 py-0.5 text-[11px] md:text-xs">

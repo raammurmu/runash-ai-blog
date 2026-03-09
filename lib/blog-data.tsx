@@ -217,7 +217,32 @@ let commentsStore: Comment[] = [
 ]
 
 export function getAllPosts(): BlogPost[] {
-  return [...postsStore]
+  return getPostsSorted(postsStore, "newest")
+}
+
+export type PostSortKey = "newest" | "popular"
+
+export const formatPostDate = (date: string, withYear = true) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    ...(withYear ? { year: "numeric" } : {}),
+  }).format(new Date(date))
+
+export function getPostsSorted(posts: BlogPost[], sortBy: PostSortKey = "newest"): BlogPost[] {
+  return [...posts].sort((a, b) => {
+    if (sortBy === "popular") {
+      const scoreA = (a.likes || 0) + (a.upvotes || 0)
+      const scoreB = (b.likes || 0) + (b.upvotes || 0)
+      return scoreB - scoreA
+    }
+
+    return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
+  })
+}
+
+export function getRecentPosts(limit = 5): BlogPost[] {
+  return getPostsSorted(postsStore, "newest").slice(0, limit)
 }
 
 export function getBlogPost(slug: string): BlogPost | undefined {

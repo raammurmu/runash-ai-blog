@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { blogPosts, getAllCategories } from "@/lib/blog-data"
+import { getAllCategories, getRecentPosts } from "@/lib/blog-data"
 
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -27,10 +27,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
   const pathname = usePathname()
 
   const recentPosts = React.useMemo(
-    () =>
-      [...blogPosts]
-        .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-        .slice(0, RECENT_POSTS_LIMIT),
+    () => getRecentPosts(RECENT_POSTS_LIMIT),
     [],
   )
 

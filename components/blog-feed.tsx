@@ -1,10 +1,8 @@
 import Link from "next/link"
-import { blogPosts } from "@/lib/blog-data"
+import { getAllPosts, formatPostDate } from "@/lib/blog-data"
 
 export function BlogFeed() {
-  const posts = [...blogPosts].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  )
+  const posts = getAllPosts()
 
   return (
     <section className="mx-auto w-full max-w-3xl space-y-10 lg:ml-8 lg:mr-auto xl:ml-12">
@@ -21,13 +19,7 @@ export function BlogFeed() {
           </Link>
 
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
+            <p className="text-sm text-muted-foreground">{formatPostDate(post.publishedAt)}</p>
 
             <Link href={`/post/${post.slug}`}>
               <h2 className="text-2xl font-semibold leading-tight text-foreground transition-colors hover:text-primary sm:text-3xl">
