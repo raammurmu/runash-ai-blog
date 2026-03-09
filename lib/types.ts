@@ -49,3 +49,33 @@ export interface User {
   following: number
   createdAt: string
 }
+
+
+export interface CommentCreateRequest {
+  postId: string
+  content: string
+  author: {
+    name: string
+    avatar?: string
+    username: string
+  }
+  parentId?: string | null
+}
+
+export type ApiComment = Comment
+export type CommentsResponse = ApiComment[]
+
+export type SearchResultType = "post" | "author" | "tag"
+
+export interface SearchResultItem {
+  id: string
+  type: SearchResultType
+  title: string
+  subtitle?: string
+  url: string
+}
+
+export interface ApiSearchResponse {
+  query: string
+  results: SearchResultItem[]
+}
