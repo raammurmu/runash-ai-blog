@@ -20,10 +20,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getAllCategories } from "@/lib/blog-data"
 
 const navItems = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "https://runash.in" },
   { label: "API", href: "/search?q=api" },
-  { label: "Codex", href: "/search?q=codex" },
-  { label: "ChatGPT", href: "/search?q=chatgpt" },
+  { label: "eDitX", href: "/search?q=codex" },
+  { label: "RunAshChat", href: "/search?q=chatgpt" },
 ]
 
 export function Header() {
@@ -66,9 +66,9 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center" className="w-64">
-              <DropdownMenuLabel>All posts</DropdownMenuLabel>
+              <DropdownMenuLabel>Documentation</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link href="/blog">Browse everything</Link>
+                <Link href="https://docs.runash.in">Browse everything</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {categories.map((category) => (
@@ -85,7 +85,7 @@ export function Header() {
           <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
             <Link href="/create">
               <Plus className="mr-1.5 size-3.5" />
-              New Post
+              Create
             </Link>
           </Button>
 
@@ -125,7 +125,7 @@ export function Header() {
                   </CollapsibleTrigger>
                   <CollapsibleContent className="space-y-1 pl-2">
                     <Button asChild variant="ghost" className="w-full justify-start" onClick={() => setMobileOpen(false)}>
-                      <Link href="/blog">All posts</Link>
+                      <Link href="https://docs.runash.in">Documentation</Link>
                     </Button>
                     {categories.map((category) => (
                       <Button
