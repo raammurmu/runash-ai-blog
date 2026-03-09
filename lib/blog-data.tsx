@@ -220,6 +220,12 @@ export function getAllPosts(): BlogPost[] {
   return [...postsStore]
 }
 
+export function getRecentPosts(limit = 5): BlogPost[] {
+  return [...postsStore]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, limit)
+}
+
 export function getBlogPost(slug: string): BlogPost | undefined {
   return postsStore.find((p) => p.slug === slug)
 }
