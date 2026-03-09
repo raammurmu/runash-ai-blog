@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
-import { blogPosts, getAllCategories } from "@/lib/blog-data"
+import { blogPosts, getAllCategories, getPostsSorted, type PostSortKey } from "@/lib/blog-data"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -10,11 +10,9 @@ import { Input } from "@/components/ui/input"
 import { List, LayoutGrid, Filter, Flame, Clock, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type SortKey = "newest" | "popular"
-
 export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
-  const [sort, setSort] = useState<SortKey>("newest")
+  const [sort, setSort] = useState<PostSortKey>("newest")
   const [view, setView] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [mounted, setMounted] = useState(false)
@@ -31,7 +29,8 @@ export function BlogGrid() {
   const filteredPosts = useMemo(() => {
     if (!blogPosts) return []
 
-    return blogPosts
+    return getPostsSorted(
+      blogPosts
       .filter((post) => {
         const matchesCategory = activeCategory === "All" || post.category === activeCategory
         const matchesSearch = 
@@ -41,16 +40,9 @@ export function BlogGrid() {
           post.content?.toLowerCase().includes(searchQuery.toLowerCase())
         
         return matchesCategory && matchesSearch
-      })
-      .sort((a, b) => {
-        if (sort === "newest") {
-          return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
-        }
-        // Popularity: Likes + Upvotes (with safety check)
-        const scoreA = (a.likes || 0) + (a.upvotes || 0)
-        const scoreB = (b.likes || 0) + (b.upvotes || 0)
-        return scoreB - scoreA
-      })
+      }),
+      sort,
+    )
   }, [activeCategory, sort, searchQuery])
 
   if (!mounted) return null // Prevent hydration flash
