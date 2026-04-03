@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 interface RailLink {
@@ -23,8 +24,8 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground",
-    active && "bg-muted/75 text-foreground",
+    "block rounded-lg px-2.5 py-1.5 text-sm text-foreground/80 transition-colors hover:text-foreground",
+    active && "bg-black/10 text-foreground",
   )
 
   if (href) {
@@ -44,7 +45,7 @@ function RailItem({ label, href, onClick, active }: RailLink) {
 
 function TopicRailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-1.5 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground",
+    "block rounded-md px-1.5 py-1 text-sm text-foreground/75 transition-colors hover:text-foreground",
     active && "text-foreground",
   )
 
@@ -72,10 +73,9 @@ export function BlogLeftRail({
   className,
 }: BlogLeftRailProps) {
   return (
-    <aside className={cn("h-fit rounded-2xl border border-border/70 bg-background p-5", className)}>
+    <aside className={cn("h-fit rounded-2xl border border-border/70 bg-[#efefef] p-5", className)}>
       <div className="space-y-7">
         <section className="space-y-2.5">
-          <h2 className="text-xs font-medium text-muted-foreground/85">Search</h2>
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
             <Input
@@ -83,20 +83,22 @@ export function BlogLeftRail({
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search posts"
-              className="h-9 rounded-lg pl-9"
+              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-12"
             />
+            <Badge variant="outline" className="pointer-events-none absolute right-2 top-1/2 h-5 -translate-y-1/2 rounded-md px-1.5 text-[10px] text-muted-foreground">
+              K
+            </Badge>
           </div>
         </section>
 
         {allPostsLink && (
           <section className="space-y-2">
-            <h2 className="text-xs font-medium text-muted-foreground/85">All posts</h2>
             <RailItem {...allPostsLink} />
           </section>
         )}
 
         <section className="space-y-2">
-          <h2 className="text-xs font-medium text-muted-foreground/85">Recent</h2>
+          <h2 className="text-xs font-medium text-foreground">Recent</h2>
           <div className="space-y-0.5">
             {recentLinks.map((link) => (
               <RailItem key={link.label} {...link} />
@@ -105,7 +107,7 @@ export function BlogLeftRail({
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xs font-medium text-muted-foreground/85">Topics</h2>
+          <h2 className="text-xs font-medium text-foreground">Topics</h2>
           <div className="space-y-0.5">
             {topicLinks.map((link) => (
               <TopicRailItem key={link.label} {...link} />
