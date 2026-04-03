@@ -11,7 +11,7 @@ export function BlogFeed({ posts }: BlogFeedProps) {
     posts ?? [...blogPosts].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
 
   return (
-    <section className="mx-auto w-full max-w-4xl space-y-14">
+    <section className="w-full space-y-10 sm:space-y-12 lg:space-y-14">
       {orderedPosts.map((post) => (
         <EditorialPostCard key={post.id} post={post} />
       ))}
