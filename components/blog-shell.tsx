@@ -11,8 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 interface BlogShellProps {
   searchQuery: string
   onSearchChange: (value: string) => void
-  activeBucket: "all" | "recent"
-  onBucketChange: (value: "all" | "recent") => void
+  recentLinks: { label: string; href: string }[]
   activeTopic: string
   topics: string[]
   onTopicChange: (value: string) => void
@@ -22,8 +21,7 @@ interface BlogShellProps {
 export function BlogShell({
   searchQuery,
   onSearchChange,
-  activeBucket,
-  onBucketChange,
+  recentLinks,
   activeTopic,
   topics,
   onTopicChange,
@@ -54,17 +52,11 @@ export function BlogShell({
       searchQuery={searchQuery}
       onSearchChange={onSearchChange}
       allPostsLink={{
-        label: "Browse all posts",
-        onClick: () => onBucketChange("all"),
-        active: activeBucket === "all",
+        label: "All posts",
+        href: "/blog",
+        active: true,
       }}
-      recentLinks={[
-        {
-          label: "Latest updates",
-          onClick: () => onBucketChange("recent"),
-          active: activeBucket === "recent",
-        },
-      ]}
+      recentLinks={recentLinks}
       topicLinks={topics.map((topic) => ({
         label: topic,
         onClick: () => onTopicChange(topic),
