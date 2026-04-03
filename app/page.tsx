@@ -33,7 +33,7 @@ export default function HomePage() {
             </section>
 
             <Suspense fallback={<div>Loading posts...</div>}>
-              
+              <BlogGrid />
             </Suspense>
           </div>
         </main>
