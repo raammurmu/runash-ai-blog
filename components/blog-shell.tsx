@@ -62,13 +62,13 @@ export function BlogShell({
         onClick: () => onTopicChange(topic),
         active: activeTopic === topic,
       }))}
-      className="rounded-xl border-border/60 bg-gray-100 p-4 lg:p-5"
+      className="rounded-xl border-border/70 bg-muted/50 p-4 lg:p-5"
     />
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-border/60 bg-gray-50/95 backdrop-blur supports-[backdrop-filter]:bg-gray-50/80">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="text-base font-semibold tracking-tight text-foreground">
             RunAsh AI Blog
@@ -114,12 +114,12 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
+      <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-12 lg:px-10 lg:py-12 xl:gap-16">
         <main className="order-1 min-w-0 flex-1 lg:order-2">
-          <div className="mx-auto w-full max-w-[760px]">{children}</div>
+          <div className="mx-auto w-full max-w-[820px]">{children}</div>
         </main>
 
-        <aside className="order-2 hidden w-full lg:order-1 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[260px] lg:shrink-0">
+        <aside className="order-2 hidden w-full lg:order-1 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[280px] lg:shrink-0">
           {railContent}
         </aside>
       </div>

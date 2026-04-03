@@ -81,16 +81,16 @@ export default function BlogPage() {
       topics={topics}
       onTopicChange={setActiveTopic}
     >
-      <main className="site-gradient-bg px-1 py-2 sm:px-0">
-          <div className="mx-auto w-full max-w-5xl">
-            <section className="py-6 lg:py-10">
-              <div className="mx-auto max-w-3xl text-center">
-                <h1 className="text-balance text-4xl font-bold tracking-tight md:text-5xl">RunAsh Blog</h1>
-                <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                  Insights, product updates, and practical guides from the RunAsh AI team.
-                </p>
-              </div>
-            </section>
+      <main className="bg-transparent px-1 py-2 sm:px-0">
+        <div className="mx-auto w-full max-w-5xl">
+          <section className="py-10 sm:py-12 lg:py-16">
+            <div className="mx-auto max-w-2xl text-center">
+              <h1 className="text-balance text-4xl font-bold tracking-tight md:text-5xl">RunAsh AI Blog</h1>
+              <p className="mt-4 text-base text-muted-foreground sm:text-lg">
+                Insights, product updates, and practical guides from the RunAsh AI team.
+              </p>
+            </div>
+          </section>
 
             <section className="pb-10">
               <div className="space-y-10">
