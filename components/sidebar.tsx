@@ -58,22 +58,22 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
         </Button>
       </div>
 
-      <div className={cn("mb-4 px-4", isCollapsed && "md:hidden")}>
-        <form className="flex items-center gap-2" role="search" aria-label="Blog sidebar search">
+      <div className={cn("mb-3 px-4", isCollapsed && "md:hidden")}>
+        <form className="flex items-center gap-1.5" role="search" aria-label="Blog sidebar search">
           <Input
             type="search"
             placeholder="Search posts"
-            className="h-9 rounded-lg text-sm"
+            className="h-8 rounded-md text-xs"
             aria-label="Search posts"
           />
-          <Button type="submit" size="icon" variant="outline" className="h-9 w-9 rounded-lg" aria-label="Search">
-            <Search className="size-4" />
+          <Button type="submit" size="icon" variant="outline" className="h-8 w-8 rounded-md" aria-label="Search">
+            <Search className="size-3.5" />
           </Button>
         </form>
       </div>
 
       <ScrollArea className="flex-1">
-        <nav className="flex flex-col gap-1.5 px-3 pb-4">
+        <nav className="flex flex-col gap-1 px-3 pb-4">
           <SidebarTextLink
             href="/blog"
             label="All posts"
@@ -85,7 +85,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
           <Separator className={cn("my-3", isCollapsed && "md:hidden")} />
 
           <div className={cn("space-y-1", isCollapsed && "md:hidden")}>
-            <h3 className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">Recent</h3>
+            <h3 className="px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/85">Recent</h3>
             {recentPosts.map((post) => (
               <SidebarTextLink
                 key={post.slug}
@@ -101,7 +101,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
           <Separator className={cn("my-3", isCollapsed && "md:hidden")} />
 
           <div className={cn("space-y-1", isCollapsed && "md:hidden")}>
-            <h3 className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">Topics</h3>
+            <h3 className="px-2 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/85">Topics</h3>
             {topicItems.map((item) => (
               <SidebarTextLink
                 key={item.href}
@@ -131,7 +131,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
 
       <aside
         className={cn(
-          "sticky top-0 z-40 hidden h-screen flex-col overflow-hidden border-r bg-card transition-[width] duration-200 md:flex",
+          "sticky top-0 z-40 hidden h-screen flex-col overflow-hidden border-r border-border/70 bg-muted/35 backdrop-blur-sm transition-[width] duration-200 md:flex",
           isCollapsed ? "w-16" : "w-[280px]",
         )}
       >
@@ -159,11 +159,11 @@ function SidebarTextLink({
       variant="ghost"
       onClick={onSelect}
       className={cn(
-        "h-10 w-full rounded-lg text-sm transition-colors",
+        "h-9 w-full rounded-md text-xs font-normal transition-colors",
         isCollapsed ? "mx-auto w-10 justify-center p-0" : "justify-start px-3",
         isActive
-          ? "rounded-xl bg-muted/80 font-medium text-foreground"
-          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+          ? "bg-muted/55 text-foreground"
+          : "text-muted-foreground hover:bg-muted/45 hover:text-foreground",
       )}
       asChild
     >
