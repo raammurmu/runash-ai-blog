@@ -1,8 +1,6 @@
 "use client"
 
-import Link from "next/link"
 import { useMemo, useState } from "react"
-import { ArrowRight, Calendar, Clock, User } from "lucide-react"
 
 import { BlogShell } from "@/components/blog-shell"
 import { Button } from "@/components/ui/button"
