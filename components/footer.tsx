@@ -2,36 +2,47 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import {
-  Github, Twitter, Linkedin, Mail, Send,
-  Loader2, Moon, Sun
-} from "lucide-react"
+import { Github, Twitter, Linkedin, Mail, Send, Loader2, Moon, Sun } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { blogPosts } from "@/lib/blog-data"
+
+const socialLinks = [
+  { icon: Github, href: "https://github.com/runash", label: "RunAsh on GitHub" },
+  { icon: Twitter, href: "https://twitter.com/runashai", label: "RunAsh on X/Twitter" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/runash-ai/", label: "RunAsh on LinkedIn" },
+  { icon: Mail, href: "mailto:hello@runash.in", label: "Email RunAsh" },
+]
+
+const legalLinks = [
+  { name: "Privacy", href: "https://runash.in/privacy" },
+  { name: "Terms", href: "https://runash.in/terms" },
+  { name: "Cookies", href: "https://runash.in/cookies" },
+]
 
 const footerLinks = [
   {
     title: "Platform",
     links: [
       { name: "AI", href: "https://runash.in" },
-      { name: "LiveStream", href: "https://runash.in" },
-      { name: "LiveShop", href: "https://runash.in" },
-      { name: "RunAshChat", href: "https://runash.in" },
-      { name: "Studio", href: "https://runash.in" },
+      { name: "LiveX", href: "https://runash.in/live" },
+      { name: "eDitX", href: "https://runash.in/editor" },
+      { name: "RunAshChat", href: "https://runash.in,runashchat" },
+      { name: "ShopX", href: "https://runash.in/shopx" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Documentation", href: "https://api.runash.in" },
-      { name: "API Ref", href: "https://api.runash.in" },
-      { name: "Changelog", href: "https://runash.in" },
-      { name: "Status", href: "https://api.runash.in" },
+      { name: "Documentation", href: "https://docs.runash.in" },
+      { name: "API Ref", href: "https://runash.in/api/documentation" },
+      { name: "Changelog", href: "https://runash.in/changelog" },
+      { name: "Status", href: "https://runash.in/status" },
     ],
   },
 ]
@@ -49,10 +60,18 @@ export function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail) return
+
+    const isEmailFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)
+    if (!isEmailFormatValid) {
+      toast.error("Please enter a valid email address.")
+      return
+    }
+
     setIsLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       toast.success("Subscription successful!")
       setEmail("")
     } catch (error) {
@@ -63,143 +82,152 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full border-t bg-background/95 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 mb-16">
-          
-          {/* Brand Identity */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:col-span-4">
-            <Link href="/" className="group flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
-                <span className="text-white font-black text-sm">R</span>
+    <footer className="w-full border-t border-orange-200/60 bg-white py-10 dark:border-orange-900/30 dark:bg-gray-950 sm:py-14">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-yellow-50 px-6 py-8 shadow-sm shadow-orange-500/10 dark:border-orange-900/40 dark:from-gray-950 dark:via-orange-950/20 dark:to-yellow-950/10 md:px-8 md:py-10">
+          <div className="mb-10 flex flex-col gap-6 border-b border-orange-200/70 pb-8 dark:border-orange-900/40 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-3">
+              <Link href="/" className="group flex items-center gap-3">
+                <div className="relative h-9 w-9 overflow-hidden rounded-md border border-orange-200/70 bg-white shadow-sm dark:border-orange-900/40 dark:bg-gray-900">
+                <Image
+                  src="/logo.png"
+                  alt="RunAsh logo"
+                  fill
+                  sizes="36px"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
               </div>
-              <span className="text-2xl font-black tracking-tighter">RunAsh AI</span>
-            </Link>
-            <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs px-4 lg:px-0">
-              Runash Digital Innovation Technologies Private Limited.
-            </p>
-            <div className="mt-6 flex gap-2">
-              {[
-                { icon: Github, href: "https://github.com/runash" },
-                { icon: Twitter, href: "https://twitter.com/runashai" },
-                { icon: Linkedin, href: "https://www.linkedin.com/company/runash-ai/" },
-                { icon: Mail, href: "mailto:hello@runash.in" },
-              ].map((item, i) => (
+                <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-xl font-black tracking-tight text-transparent dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300">
+                  RunAsh AI
+                </span>
+              </Link>
+              <p className="max-w-md text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                Runash Digital Innovation Technologies Private Limited.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {socialLinks.map((item) => (
                 <Button
-                  key={i}
+                  key={item.href}
                   asChild
                   variant="outline"
                   size="icon"
-                  className="h-10 w-10 rounded-full border-orange-500/10 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all active:scale-90"
+                  className="h-9 w-9 rounded-full border-orange-200 bg-white/80 text-gray-600 hover:border-orange-500/50 hover:bg-orange-100 hover:text-orange-700 dark:border-orange-900/40 dark:bg-gray-900/70 dark:text-gray-300 dark:hover:bg-orange-900/30 dark:hover:text-orange-300"
                 >
-                  <Link href={item.href} aria-label="RunAsh social link">
+                  <a
+                    href={item.href}
+                    aria-label={item.label}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  >
                     <item.icon className="h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
               ))}
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <div className="grid grid-cols-2 gap-8 sm:col-span-2">
-            {footerLinks.map((section) => (
-              <div key={section.title} className="space-y-5">
-                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">
-                  {section.title}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:col-span-8">
+              {footerLinks.map((section) => (
+                <div key={section.title} className="space-y-4">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-600/80 dark:text-orange-300/80">
+                    {section.title}
+                  </h4>
+                  <nav className="flex flex-col gap-2.5">
+                    {section.links.map((link) => (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        className="w-fit text-sm text-gray-600 transition-colors hover:text-orange-700 dark:text-gray-300 dark:hover:text-orange-300"
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              ))}
+
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-600/80 dark:text-orange-300/80">
+                  Latest Posts
                 </h4>
-                <nav className="flex flex-col space-y-3">
-                  {section.links.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href} 
-                      className="text-sm text-muted-foreground hover:text-orange-500 transition-colors w-fit"
+                <div className="space-y-3">
+                  {latestPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="block text-sm text-gray-600 transition-colors hover:text-orange-700 dark:text-gray-300 dark:hover:text-orange-300"
                     >
-                      {link.name}
+                      <div className="mb-1 text-[11px] uppercase tracking-wide text-orange-600/80 dark:text-orange-300/80">
+                        {post.category}
+                      </div>
+                      <span className="leading-snug">{post.title}</span>
                     </Link>
                   ))}
-                </nav>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* Latest Posts */}
-          <div className="lg:col-span-2 flex flex-col items-center lg:items-start">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70 mb-5">
-              Latest Posts
-            </h4>
-            <div className="space-y-4 w-full">
-              {latestPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="block text-sm font-medium text-foreground/80 hover:text-orange-500 transition-colors"
-                >
-                  <div className="text-xs text-muted-foreground mb-1">{post.category}</div>
-                  {post.title}
-                </Link>
-              ))}
+            <div className="lg:col-span-4">
+              <div className="rounded-2xl border border-orange-200 bg-white/80 p-5 dark:border-orange-900/40 dark:bg-gray-900/60 md:p-6">
+                <h4 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-600/80 dark:text-orange-300/80">
+                  Stay in the Loop
+                </h4>
+                <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">Get product updates and practical AI insights in your inbox.</p>
+                <form onSubmit={handleSubscribe} className="relative mt-5">
+                  <Input
+                    placeholder="Enter work email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-11 rounded-xl border-orange-200 bg-white pr-12 text-gray-800 placeholder:text-gray-400 focus-visible:ring-orange-500 dark:border-orange-900/40 dark:bg-gray-950/70 dark:text-gray-200 dark:placeholder:text-gray-500"
+                  />
+                  <Button
+                    size="icon"
+                    type="submit"
+                    className="absolute right-1.5 top-1.5 h-8 w-8 rounded-lg bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600"
+                  >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  </Button>
+                </form>
+                <p className="mt-3 text-[11px] text-gray-500 dark:text-gray-400">By subscribing, you agree to our Privacy Policy.</p>
+              </div>
             </div>
           </div>
 
-          {/* Newsletter Section */}
-          <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/70 mb-5">
-              Stay in the Loop
-            </h4>
-            <form onSubmit={handleSubscribe} className="relative w-full max-w-sm">
-              <Input 
-                placeholder="Enter work email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="rounded-2xl h-12 bg-muted/40 border-orange-500/10 focus-visible:ring-orange-500 pl-4 pr-12" 
-              />
-              <Button 
-                size="icon" 
-                type="submit"
-                className="absolute right-1.5 top-1.5 h-9 w-9 rounded-xl bg-orange-600 hover:bg-orange-700 shadow-orange-500/20 shadow-md active:scale-95 transition-all"
+          <Separator className="my-8 bg-orange-200/70 dark:bg-orange-900/40" />
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-sm text-gray-500 dark:text-gray-400">&copy; {currentYear} RunAsh AI</span>
+
+            <div className="flex items-center gap-5">
+              <nav className="flex items-center gap-4">
+                {legalLinks.map((l) => (
+                  <Link
+                    key={l.name}
+                    href={l.href}
+                    className="text-xs uppercase tracking-wide text-gray-500 transition-colors hover:text-orange-700 dark:text-gray-400 dark:hover:text-orange-300"
+                  >
+                    {l.name}
+                  </Link>
+                ))}
+              </nav>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="group h-9 w-9 rounded-xl border-orange-200 bg-white/80 text-gray-600 hover:bg-orange-100 dark:border-orange-900/40 dark:bg-gray-900/70 dark:text-gray-300 dark:hover:bg-orange-900/30"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 group-hover:text-orange-600 dark:group-hover:text-orange-300" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 group-hover:text-orange-600 dark:group-hover:text-orange-300" />
               </Button>
-            </form>
-            <p className="mt-3 text-[10px] text-muted-foreground/60">
-              By subscribing, you agree to our Privacy Policy.
-            </p>
-          </div>
-        </div>
-
-        <Separator className="mb-10 opacity-30 bg-orange-500/20" />
-
-        {/* Bottom Utility Bar */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-          
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <span className="text-sm font-medium text-muted-foreground/80">&copy; {currentYear} RunAsh AI</span>
-          </div>
-
-          {/* Legal & Theme */}
-          <div className="flex items-center gap-8">
-            <nav className="flex gap-6">
-              {["Privacy", "Terms", "Cookies"].map((l) => (
-                <Link key={l} href="https://runash.in/privacy" className="text-xs font-semibold text-muted-foreground hover:text-orange-500 transition-colors">
-                  {l}
-                </Link>
-              ))}
-            </nav>
-
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-10 w-10 rounded-2xl border-orange-500/10 bg-muted/30 hover:bg-orange-500/5 transition-all group"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 group-hover:text-orange-500" />
-              <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 group-hover:text-orange-400" />
-            </Button>
+            </div>
           </div>
         </div>
       </div>
     </footer>
   )
-  }
+}

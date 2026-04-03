@@ -14,22 +14,25 @@ export function RelatedPosts({ currentPostId, category }: { currentPostId: strin
   if (related.length === 0) return null
 
   return (
-    <section className="mt-20 pt-10 border-t border-orange-100">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold text-orange-950">More in {category}</h3>
-        <Link href="/blog" className="text-orange-600 font-semibold text-sm flex items-center hover:underline">
+    <section className="mt-8 border-t border-border/80 pt-10">
+      <div className="mb-6 flex items-center justify-between">
+        <h3 className="text-2xl font-semibold tracking-tight text-foreground/90">More in {category}</h3>
+        <Link
+          href="/blog"
+          className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
           View all <ChevronRight className="h-4 w-4" />
         </Link>
       </div>
 
       {/* Horizontal Snap Scroller for Mobile, Grid for Desktop */}
-      <div className="flex overflow-x-auto gap-6 pb-6 no-scrollbar snap-x snap-mandatory -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-3">
+      <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-6 md:mx-0 md:grid md:grid-cols-3 md:px-0">
         {related.map((post) => (
-          <div key={post.id} className="min-w-[280px] sm:min-w-[320px] snap-start">
+          <div key={post.id} className="min-w-[280px] snap-start sm:min-w-[320px]">
             <BlogCard post={post} viewMode="grid" />
           </div>
         ))}
       </div>
     </section>
   )
-      }
+}

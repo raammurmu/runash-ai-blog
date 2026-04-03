@@ -1,24 +1,20 @@
 "use client"
 
 import { useMemo, useState, useEffect } from "react"
-import { blogPosts, getAllCategories } from "@/lib/blog-data"
+import { blogPosts, getAllCategories, getPostsSorted, type PostSortKey } from "@/lib/blog-data"
 import { BlogCard } from "@/components/blog-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
-import { List, LayoutGrid, Filter, Flame, Clock, Check, Search, X } from "lucide-react"
+import { List, LayoutGrid, Filter, Flame, Clock, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-type SortKey = "newest" | "popular"
 
 export function BlogGrid() {
   const [activeCategory, setActiveCategory] = useState("All")
-  const [sort, setSort] = useState<SortKey>("newest")
+  const [sort, setSort] = useState<PostSortKey>("newest")
   const [view, setView] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   // Fix hydration mismatch errors by ensuring component is mounted
@@ -33,7 +29,8 @@ export function BlogGrid() {
   const filteredPosts = useMemo(() => {
     if (!blogPosts) return []
 
-    return blogPosts
+    return getPostsSorted(
+      blogPosts
       .filter((post) => {
         const matchesCategory = activeCategory === "All" || post.category === activeCategory
         const matchesSearch = 
@@ -43,59 +40,75 @@ export function BlogGrid() {
           post.content?.toLowerCase().includes(searchQuery.toLowerCase())
         
         return matchesCategory && matchesSearch
-      })
-      .sort((a, b) => {
-        if (sort === "newest") {
-          return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime()
-        }
-        // Popularity: Likes + Upvotes (with safety check)
-        const scoreA = (a.likes || 0) + (a.upvotes || 0)
-        const scoreB = (b.likes || 0) + (b.upvotes || 0)
-        return scoreB - scoreA
-      })
+      }),
+      sort,
+    )
   }, [activeCategory, sort, searchQuery])
 
   if (!mounted) return null // Prevent hydration flash
 
   return (
-    <section className="space-y-6 px-2 md:px-4 max-w-7xl mx-auto">
-      {/* Header & Search Bar */}
+    <section className="mx-auto max-w-7xl space-y-7 px-1 sm:px-2 md:px-4">
+      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className={cn("transition-all duration-300", isSearchExpanded ? "hidden sm:block" : "block")}>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300 text-transparent bg-clip-text">
+        <div>
+          <h2 className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300">
             Explore
           </h2>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Animated Search Bar */}
-          <div className={cn(
-            "relative flex items-center transition-all duration-500 ease-in-out h-10 overflow-hidden",
-            isSearchExpanded ? "w-full sm:w-64" : "w-10 sm:w-64"
-          )}>
-            <Input
-              placeholder="Search articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={cn(
-                "pl-10 pr-10 border-orange-200 focus-visible:ring-orange-500 transition-all duration-300",
-                !isSearchExpanded && "sm:opacity-100 opacity-0 pointer-events-none sm:pointer-events-auto"
-              )}
-            />
-            <Search 
-              className="absolute left-3 h-4 w-4 text-orange-500 cursor-pointer" 
-              onClick={() => setIsSearchExpanded(true)}
-            />
-            {isSearchExpanded && (
-              <X 
-                className="absolute right-3 h-4 w-4 text-muted-foreground cursor-pointer hover:text-orange-500" 
-                onClick={() => { setIsSearchExpanded(false); setSearchQuery(""); }}
+        <div className="flex items-center gap-2 w-full sm:w-auto sm:justify-end">
+          {/* Tablet/Desktop Controls */}
+          <div className="hidden w-full flex-wrap items-center justify-end gap-2 sm:flex">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-500" />
+              <Input
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 border-orange-200 focus-visible:ring-orange-500"
               />
-            )}
+            </div>
+
+            <div className="no-scrollbar flex max-w-full items-center gap-2 overflow-x-auto rounded-full border border-orange-100/80 bg-orange-50/40 px-2 py-1">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={cn(
+                    "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-all",
+                    activeCategory === cat
+                      ? "bg-orange-100 text-orange-700 ring-1 ring-orange-300"
+                      : "text-muted-foreground hover:text-orange-600"
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex rounded-lg border border-orange-100 p-1 bg-orange-50/30">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSort("newest")}
+                className={cn("h-8 px-3", sort === "newest" && "bg-white shadow-sm text-orange-600")}
+              >
+                <Clock className="h-4 w-4 mr-1" /> Newest
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSort("popular")}
+                className={cn("h-8 px-3", sort === "popular" && "bg-white shadow-sm text-orange-600")}
+              >
+                <Flame className="h-4 w-4 mr-1" /> Popular
+              </Button>
+            </div>
           </div>
 
           {/* Desktop View Switcher */}
-          <div className="hidden md:flex rounded-lg border border-orange-100 p-1 bg-orange-50/30">
+          <div className="hidden rounded-lg border border-orange-100 bg-orange-50/30 p-1 lg:flex">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -117,7 +130,7 @@ export function BlogGrid() {
           {/* Mobile Filter Sheet */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
+              <Button variant="outline" size="sm" className="sm:hidden border-orange-200 hover:bg-orange-50">
                 <Filter className="h-4 w-4 mr-2 text-orange-500" />
                 Filters
               </Button>
@@ -128,6 +141,16 @@ export function BlogGrid() {
               </SheetHeader>
               
               <div className="space-y-8 pb-8">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Search</h4>
+                  <Input
+                    placeholder="Search articles..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="border-orange-200 focus-visible:ring-orange-500"
+                  />
+                </div>
+
                 <div className="space-y-4">
                   <h4 className="text-sm font-semibold text-orange-900/70 uppercase tracking-widest">Sort By</h4>
                   <div className="grid grid-cols-2 gap-3">
@@ -179,38 +202,22 @@ export function BlogGrid() {
         </div>
       </div>
 
-      {/* Horizontal Category Scroller */}
-      <div className="flex items-center overflow-x-auto gap-2 pb-4 no-scrollbar -mx-2 px-2">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={cn(
-              "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-              activeCategory === cat
-                ? "bg-orange-100 text-orange-700 ring-1 ring-orange-300"
-                : "text-muted-foreground hover:text-orange-600"
-            )}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
       {/* Results Grid */}
       <div className={cn(
-        "grid gap-6 transition-all duration-500",
-        view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+        "grid items-stretch transition-all duration-300",
+        view === "grid" ? "grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 gap-4"
       )}>
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <BlogCard key={post.id} post={post} viewMode={view} />
           ))
         ) : (
-          <div className="col-span-full text-center py-20 bg-orange-50/50 rounded-3xl border-2 border-dashed border-orange-200">
-            <p className="text-orange-900/60 font-medium">No matches found for your search.</p>
+          <div className="col-span-full text-center py-12 sm:py-16 px-4 bg-orange-50/50 rounded-3xl border-2 border-dashed border-orange-200">
+            <p className="text-orange-900/70 font-medium text-sm sm:text-base max-w-xs sm:max-w-md mx-auto">
+              No results match your current filters. Try another keyword or reset your category and sorting options.
+            </p>
             <Button variant="link" className="text-orange-600" onClick={() => {setSearchQuery(""); setActiveCategory("All")}}>
-              Clear all filters
+              Reset filters
             </Button>
           </div>
         )}

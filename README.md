@@ -65,6 +65,29 @@ If your post is not an official RunAsh collaboration, please use our [Community 
 
 ---
 
+## 🔐 Upload Storage Environment Variables
+
+The upload API uses **Cloudinary** for permanent public files and falls back to local `/public/uploads` storage in development.
+
+Add these variables to your environment:
+
+```bash
+# Required in production for cloud uploads
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# Optional: explicit environment mode
+NODE_ENV=development
+```
+
+Notes:
+- Configure Cloudinary credentials in Vercel Project Settings → Environment Variables.
+- Without Cloudinary credentials, uploads only work in local development and are saved to `public/uploads`.
+- The upload API enforces max file size (10MB), allowed MIME types, and sanitizes filenames before storage.
+
+---
+
 ## 🚢 Publishing
 
 1. Update `lib/blog-data.tsx` with your new post entry.

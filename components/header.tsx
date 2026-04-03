@@ -2,88 +2,146 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Search, Plus, Sparkles, Command } from "lucide-react"
+import { ChevronDown, Menu, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { PageTranslateControl } from "@/components/page-translate-control"
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { getAllCategories } from "@/lib/blog-data"
+
+const navItems = [
+  { label: "API", href: "/search?q=api" },
+  { label: "RunAsh Chat", href: "/search?q=chatgpt" },
+  { label: "EditX", href: "/search?q=codex" },
+]
 
 export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
-  const [query, setQuery] = React.useState("")
-  const router = useRouter()
-  const categories = React.useMemo(() => getAllCategories().slice(0, 4), [])
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [mobileLearnOpen, setMobileLearnOpen] = React.useState(true)
+  const categories = React.useMemo(() => getAllCategories(), [])
 
   React.useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
+    const handleScroll = () => setIsScrolled(window.scrollY > 12)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const handleSearch = (event: React.FormEvent) => {
-    event.preventDefault()
-    if (!query.trim()) return
-    router.push(`/search?q=${encodeURIComponent(query.trim())}`)
-  }
-
   return (
-    <header className={cn(
-      "sticky top-0 z-[60] w-full transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-2xl border-b py-2" : "bg-transparent py-4"
-    )}>
-      <div className="container mx-auto flex h-14 items-center justify-between px-4 gap-4">
-        
-        <div className="flex items-center gap-6 shrink-0">
-          <Link href="/" className="group flex items-center gap-3 transition-transform hover:scale-105">
-            <div className="relative size-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-400 flex items-center justify-center shadow-xl shadow-orange-500/20">
-              <span className="text-white font-black text-lg">R</span>
-              <Sparkles className="absolute -top-1 -right-1 size-4 text-orange-500 fill-white" />
-            </div>
-            <span className="hidden font-black text-2xl lg:inline-block tracking-tighter bg-foreground">
-              RunAsh
-            </span>
+    <header
+      className={cn(
+        "site-header sticky top-0 z-[60] w-full border-b border-border/60 bg-background/95 transition-all duration-200 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        isScrolled ? "site-header--scrolled" : "site-header--top"
+      )}
+    >
+      <div className="container mx-auto flex h-11 items-center justify-between gap-3 px-4">
+        <div className="flex min-w-0 flex-1 items-center">
+          <Link href="/" className="site-wordmark inline-flex items-center">
+            RunAsh
           </Link>
-          <nav className="hidden lg:flex items-center gap-4 text-sm font-semibold text-muted-foreground">
-            {categories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className="transition-colors hover:text-orange-600"
-              >
-                {category.name}
-              </Link>
-            ))}
-          </nav>
         </div>
 
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-lg relative group">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-muted-foreground pointer-events-none group-focus-within:text-orange-500 transition-colors">
-            <Search className="size-4" />
-          </div>
-          <Input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search posts, tags, or authors..."
-            className="pl-12 pr-12 h-11 bg-muted/30 border-none rounded-2xl focus-visible:ring-2 focus-visible:ring-orange-500/20 transition-all text-base"
-          />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2 py-1 rounded-md border bg-background/50 text-[10px] font-bold text-muted-foreground">
-            <Command className="size-3" /> K
-          </div>
-        </form>
+        <nav className="hidden items-center justify-center gap-0.5 md:flex" aria-label="Primary">
+          {navItems.map((item) => (
+            <Link key={item.label} href={item.href} className="site-nav-link">
+              {item.label}
+            </Link>
+          ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="site-nav-link h-8 gap-1 px-2">
+                Learn
+                <ChevronDown className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-64">
+              <DropdownMenuLabel>Documentation</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Link href="https://docs.runash.in">Browse everything</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {categories.map((category) => (
+                <DropdownMenuItem key={category.slug} asChild>
+                  <Link href={`/category/${category.slug}`}>{category.name}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
 
-        <div className="flex items-center gap-3">
-          <Button 
-            className="hidden sm:flex rounded-2xl bg-orange-600 hover:bg-orange-700 shadow-lg shadow-orange-600/20 font-bold active:scale-95 transition-all" 
-            asChild
-          >
-            <Link href="/create"><Plus className="size-4 mr-2" /> New Post</Link>
+        <div className="flex flex-1 items-center justify-end gap-1.5">
+          <PageTranslateControl />
+          <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
+            <Link href="/create">
+              <Plus className="mr-1.5 size-3.5" />
+              Start creating
+            </Link>
           </Button>
 
-          <div className="flex items-center bg-muted/30 p-1.5 rounded-2xl gap-1">
+          <div className="site-theme-toggle-wrap">
             <ThemeToggle />
           </div>
+
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="h-8 w-8 md:hidden" aria-label="Open navigation menu">
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[85%]">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <div className="mt-5 space-y-3">
+                {navItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    asChild
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </Button>
+                ))}
+
+                <Collapsible open={mobileLearnOpen} onOpenChange={setMobileLearnOpen}>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-between">
+                      Learn
+                      <ChevronDown className={cn("size-4 transition-transform", mobileLearnOpen && "rotate-180")} />
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-1 pl-2">
+                    <Button asChild variant="ghost" className="w-full justify-start" onClick={() => setMobileOpen(false)}>
+                      <Link href="https://docs.runash.in">Documentation</Link>
+                    </Button>
+                    {categories.map((category) => (
+                      <Button
+                        key={category.slug}
+                        asChild
+                        variant="ghost"
+                        className="w-full justify-start text-muted-foreground"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <Link href={`/category/${category.slug}`}>{category.name}</Link>
+                      </Button>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

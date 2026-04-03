@@ -10,8 +10,8 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
     --muted: 210 40% 96%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 24 95% 53%;
     --radius: 0.75rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -41,8 +41,8 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
+    --primary: 27 96% 61%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
@@ -53,7 +53,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+    --ring: 27 96% 61%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -110,7 +110,7 @@
 
 /* Prose styles for blog content */
 .prose {
-  @apply text-foreground;
+  @apply text-foreground/90;
 }
 
 .prose h1,
@@ -119,19 +119,19 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply text-foreground font-bold;
+  @apply text-foreground/90 font-semibold;
 }
 
 .prose h2 {
-  @apply text-2xl mt-8 mb-4;
+  @apply text-2xl mt-10 mb-5;
 }
 
 .prose h3 {
-  @apply text-xl mt-6 mb-3;
+  @apply text-xl mt-8 mb-4;
 }
 
 .prose p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-5 leading-8;
 }
 
 .prose ul,
@@ -144,13 +144,131 @@
 }
 
 .prose code {
-  @apply bg-muted px-2 py-1 rounded text-sm;
+  @apply bg-muted/80 px-2 py-1 rounded-md text-sm text-foreground;
 }
 
 .prose pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto;
+  @apply bg-muted/70 border border-border/70 p-5 rounded-xl overflow-x-auto my-8 text-foreground;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-primary pl-4 italic;
+  @apply border-l-2 border-border bg-muted/35 text-foreground/85 pl-5 py-1 rounded-r-xl not-italic my-8;
+}
+
+.prose img,
+.prose video,
+.prose iframe,
+.prose figure,
+.prose pre {
+  @apply rounded-xl border border-border/70 my-8;
+}
+
+.prose figcaption,
+.prose .caption,
+.prose .wp-caption-text {
+  @apply mt-3 text-sm leading-6 text-muted-foreground;
+}
+
+.dark .prose p {
+  @apply text-foreground/85;
+}
+
+.dark .prose code {
+  @apply bg-muted/60 text-foreground;
+}
+
+.dark .prose pre {
+  @apply bg-muted/50 border-border text-foreground;
+}
+
+.dark .prose figcaption,
+.dark .prose .caption,
+.dark .prose .wp-caption-text {
+  @apply text-muted-foreground/90;
+}
+
+
+@layer components {
+  .post-h2 {
+    @apply mt-10 mb-4 text-2xl font-bold tracking-tight text-foreground;
+  }
+
+  .post-h3 {
+    @apply mt-8 mb-3 text-xl font-semibold text-foreground;
+  }
+
+  .post-p {
+    @apply my-4 leading-8 text-foreground/90 dark:text-foreground/85;
+  }
+
+  .post-list {
+    @apply my-4 list-disc space-y-2 pl-6 text-foreground/90 dark:text-foreground/85;
+  }
+
+  .post-pre {
+    @apply my-6 overflow-x-auto rounded-xl border border-border/70 bg-muted/60 p-4 text-sm;
+  }
+
+  .post-callout {
+    @apply my-6 rounded-xl border border-border/80 bg-muted/40 px-5 py-4 italic text-foreground/90 dark:bg-muted/20;
+  }
+
+  .post-media {
+    @apply my-8 overflow-hidden rounded-xl border border-border/80 bg-muted/30;
+  }
+
+  .post-video {
+    @apply p-2;
+  }
+
+  .post-embed {
+    @apply block w-full rounded-lg border border-border/60 bg-black/5 dark:bg-white/5;
+    aspect-ratio: 16 / 9;
+  }
+
+  .post-media-image {
+    @apply block w-full;
+  }
+
+  .post-caption {
+    @apply border-t border-border/70 px-4 py-3 text-sm text-muted-foreground;
+  }
+}
+
+@layer components {
+  .site-surface {
+    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-white;
+  }
+
+  .site-gradient-bg {
+    @apply bg-gradient-to-br from-white via-orange-50/40 to-yellow-50/40 dark:from-gray-950 dark:via-orange-950/30 dark:to-yellow-950/20;
+  }
+
+  .site-header--top {
+    @apply py-1 bg-white/85 dark:bg-gray-950/85;
+  }
+
+  .site-header--scrolled {
+    @apply py-0.5 border-orange-200/70 bg-white/90 backdrop-blur-md dark:border-orange-900/40 dark:bg-gray-950/90;
+  }
+
+  .site-wordmark {
+    @apply bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-base font-semibold tracking-tight text-transparent transition-opacity hover:opacity-85 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300;
+  }
+
+  .site-nav-link {
+    @apply rounded-md px-2.5 py-1 text-sm font-medium text-gray-600 transition-colors hover:bg-orange-100/60 hover:text-orange-700 dark:text-gray-300 dark:hover:bg-orange-900/30 dark:hover:text-orange-300;
+  }
+
+  .site-utility-button {
+    @apply rounded-md bg-gradient-to-r from-orange-600 to-yellow-600 text-white shadow-none transition-colors hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600;
+  }
+
+  .site-theme-toggle-wrap {
+    @apply rounded-md border border-orange-200/70 bg-white/50 dark:border-orange-900/40 dark:bg-gray-900/40;
+  }
+
+  .site-theme-toggle-wrap button {
+    @apply h-8 w-8 rounded-md px-0 text-gray-600 hover:bg-orange-100/70 hover:text-orange-700 dark:text-gray-300 dark:hover:bg-orange-900/30 dark:hover:text-orange-300;
+  }
 }

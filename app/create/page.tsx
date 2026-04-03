@@ -57,7 +57,22 @@ export default function CreatePostPage() {
         throw new Error("Upload failed")
       }
       const data = await response.json()
-      setCoverImage(data.url)
+      const uploadUrl = typeof data.url === "string" ? data.url.trim() : ""
+      if (!uploadUrl) {
+        throw new Error("Upload did not return a URL")
+      }
+
+      let normalizedUrl: string
+      try {
+        normalizedUrl = new URL(uploadUrl).toString()
+      } catch {
+        if (!uploadUrl.startsWith("/")) {
+          throw new Error("Upload URL must be absolute or start with '/'")
+        }
+        normalizedUrl = uploadUrl
+      }
+
+      setCoverImage(normalizedUrl)
       toast.success("Image uploaded")
     } catch (error) {
       toast.error("Failed to upload image")
