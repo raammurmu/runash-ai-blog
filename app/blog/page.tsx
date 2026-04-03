@@ -64,9 +64,16 @@ const BlogPostCard = ({ post }: { post: BlogPost }) => {
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [activeBucket, setActiveBucket] = useState<"all" | "recent">("all")
   const [activeTopic, setActiveTopic] = useState("All topics")
   const posts = useMemo(() => getAllPosts(), [])
+  const recentLinks = useMemo(
+    () =>
+      posts.slice(0, 4).map((post) => ({
+        label: post.title,
+        href: `/post/${post.slug}`,
+      })),
+    [posts],
+  )
   const topics = useMemo(
     () => ["All topics", ...Array.from(new Set(posts.map((post) => post.category)))],
     [posts],
@@ -74,8 +81,7 @@ export default function BlogPage() {
   const filteredPosts = useMemo(() => {
     const normalizedSearch = searchQuery.trim().toLowerCase()
 
-    return posts.filter((post, index) => {
-      const matchesBucket = activeBucket === "all" || index < 3
+    return posts.filter((post) => {
       const matchesTopic = activeTopic === "All topics" || post.category === activeTopic
       const matchesSearch =
         normalizedSearch.length === 0 ||
@@ -83,16 +89,15 @@ export default function BlogPage() {
         post.excerpt.toLowerCase().includes(normalizedSearch) ||
         post.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch))
 
-      return matchesBucket && matchesTopic && matchesSearch
+      return matchesTopic && matchesSearch
     })
-  }, [activeBucket, activeTopic, posts, searchQuery])
+  }, [activeTopic, posts, searchQuery])
 
   return (
     <BlogShell
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
-      activeBucket={activeBucket}
-      onBucketChange={setActiveBucket}
+      recentLinks={recentLinks}
       activeTopic={activeTopic}
       topics={topics}
       onTopicChange={setActiveTopic}
