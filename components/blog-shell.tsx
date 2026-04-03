@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
+import { Menu } from "lucide-react"
+import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 interface BlogShellProps {
   searchQuery: string
@@ -28,60 +29,28 @@ export function BlogShell({
   children,
 }: BlogShellProps) {
   const railContent = (
-    <div className="space-y-8">
-      <section className="space-y-3">
-        <div className="flex items-center justify-between text-sm font-medium text-foreground/70">
-          <h2>Search</h2>
-          <span className="rounded-md border border-border/70 bg-background px-2 py-0.5 text-xs text-muted-foreground">⌘K</span>
-        </div>
-        <Input
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search posts"
-          className="h-10 rounded-lg border-border/70 bg-white"
-        />
-      </section>
-
-      <section className="space-y-2">
-        <Button
-          type="button"
-          variant={activeBucket === "all" ? "secondary" : "ghost"}
-          className="w-full justify-start rounded-lg"
-          onClick={() => onBucketChange("all")}
-        >
-          All posts
-        </Button>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium text-foreground/70">Recent</h2>
-        <Button
-          type="button"
-          variant={activeBucket === "recent" ? "secondary" : "ghost"}
-          className="w-full justify-start rounded-lg"
-          onClick={() => onBucketChange("recent")}
-        >
-          Latest updates
-        </Button>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium text-foreground/70">Topics</h2>
-        <div className="space-y-1">
-          {topics.map((topic) => (
-            <Button
-              key={topic}
-              type="button"
-              variant={activeTopic === topic ? "secondary" : "ghost"}
-              className="w-full justify-start rounded-lg text-left"
-              onClick={() => onTopicChange(topic)}
-            >
-              {topic}
-            </Button>
-          ))}
-        </div>
-      </section>
-    </div>
+    <BlogLeftRail
+      searchQuery={searchQuery}
+      onSearchChange={onSearchChange}
+      allPostsLink={{
+        label: "Browse all posts",
+        onClick: () => onBucketChange("all"),
+        active: activeBucket === "all",
+      }}
+      recentLinks={[
+        {
+          label: "Latest updates",
+          onClick: () => onBucketChange("recent"),
+          active: activeBucket === "recent",
+        },
+      ]}
+      topicLinks={topics.map((topic) => ({
+        label: topic,
+        onClick: () => onTopicChange(topic),
+        active: activeTopic === topic,
+      }))}
+      className="rounded-xl border-border/60 bg-gray-100 p-4 lg:p-5"
+    />
   )
 
   return (
@@ -98,38 +67,36 @@ export function BlogShell({
             <Link href="/search" className="hover:text-foreground">Search</Link>
           </nav>
 
-          <Button asChild size="sm" className="rounded-lg">
-            <Link href="/create">Write</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-lg md:hidden" aria-label="Open blog filters">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[86%] overflow-y-auto p-4 sm:max-w-sm">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Blog navigation</SheetTitle>
+                </SheetHeader>
+                {railContent}
+              </SheetContent>
+            </Sheet>
+
+            <Button asChild size="sm" className="rounded-lg">
+              <Link href="/create">Write</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
-        <div className="flex items-center justify-between rounded-xl border border-border/60 bg-gray-100 px-4 py-3 lg:hidden">
-          <p className="text-sm font-medium text-foreground/80">Filters</p>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button type="button" size="sm" variant="secondary" className="rounded-lg">
-                Open
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="top" className="max-h-[85vh] overflow-y-auto">
-              <SheetHeader>
-                <SheetTitle>Filter posts</SheetTitle>
-                <SheetDescription>Search, sort, and narrow the feed by topic.</SheetDescription>
-              </SheetHeader>
-              <div className="mt-6">{railContent}</div>
-            </SheetContent>
-          </Sheet>
-        </div>
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
+        <main className="order-1 min-w-0 flex-1 lg:order-2">
+          <div className="mx-auto w-full max-w-[760px]">{children}</div>
+        </main>
 
-        <aside className="hidden h-fit w-[280px] shrink-0 rounded-xl border border-border/60 bg-gray-100 p-5 lg:sticky lg:top-24 lg:block">
+        <aside className="order-2 hidden w-full lg:order-1 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[260px] lg:shrink-0">
           {railContent}
         </aside>
-
-        <main className="min-w-0 flex-1">
-          <div className="w-full max-w-[840px]">{children}</div>
-        </main>
       </div>
     </div>
   )
