@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Menu } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { Menu, Search } from "lucide-react"
 import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -28,6 +29,26 @@ export function BlogShell({
   onTopicChange,
   children,
 }: BlogShellProps) {
+  const pathname = usePathname()
+
+  const navLinks = [
+    {
+      href: "/",
+      label: "Home",
+      isActive: pathname === "/",
+    },
+    {
+      href: "/blog",
+      label: "Blog",
+      isActive: pathname.startsWith("/blog"),
+    },
+    {
+      href: "/category/ai",
+      label: "Categories",
+      isActive: pathname.startsWith("/category"),
+    },
+  ]
+
   const railContent = (
     <BlogLeftRail
       searchQuery={searchQuery}
@@ -58,13 +79,19 @@ export function BlogShell({
       <header className="border-b border-border/60 bg-gray-50/95 backdrop-blur supports-[backdrop-filter]:bg-gray-50/80">
         <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="text-base font-semibold tracking-tight text-foreground">
-            Runash AI
+            RunAsh AI Blog
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-            <Link href="/blog" className="text-foreground">Blog</Link>
-            <Link href="/category/ai" className="hover:text-foreground">Categories</Link>
-            <Link href="/search" className="hover:text-foreground">Search</Link>
+          <nav className="hidden items-center gap-6 text-sm md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={link.isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -82,8 +109,14 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="rounded-lg">
-              <Link href="/create">Write</Link>
+            <Button asChild size="sm" className="hidden rounded-full px-4 md:inline-flex">
+              <Link href="/blog">Read blog</Link>
+            </Button>
+
+            <Button asChild variant="outline" size="icon" className="rounded-full" aria-label="Search posts">
+              <Link href="/search">
+                <Search className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>
