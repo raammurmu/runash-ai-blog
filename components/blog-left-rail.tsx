@@ -24,7 +24,7 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-lg px-2.5 py-1.5 text-sm text-foreground/80 transition-colors hover:text-foreground",
+    "block rounded-md px-2 py-1.5 text-sm text-foreground/80 transition-colors hover:text-foreground",
     active && "bg-black/10 text-foreground",
   )
 
@@ -73,8 +73,8 @@ export function BlogLeftRail({
   className,
 }: BlogLeftRailProps) {
   return (
-    <aside className={cn("h-fit rounded-2xl border border-border/70 bg-[#efefef] p-5", className)}>
-      <div className="space-y-7">
+    <aside className={cn("h-fit", className)}>
+      <div className="space-y-6">
         <section className="space-y-2.5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
@@ -82,10 +82,13 @@ export function BlogLeftRail({
               value={onSearchChange ? searchQuery ?? "" : undefined}
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
-              placeholder="Search posts"
-              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-12"
+              placeholder="Search"
+              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-14"
             />
-            <Badge variant="outline" className="pointer-events-none absolute right-2 top-1/2 h-5 -translate-y-1/2 rounded-md px-1.5 text-[10px] text-muted-foreground">
+            <Badge
+              variant="outline"
+              className="pointer-events-none absolute right-2 top-1/2 h-5 -translate-y-1/2 rounded-md px-1.5 text-[10px] text-muted-foreground"
+            >
               K
             </Badge>
           </div>

@@ -3,9 +3,15 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, Search } from "lucide-react"
+import { ChevronDown, Menu, Search, Sun } from "lucide-react"
 import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 interface BlogShellProps {
@@ -50,11 +56,6 @@ export function BlogShell({
       label: "ChatGPT",
       isActive: false,
     },
-    {
-      href: "/blog",
-      label: "Learn",
-      isActive: pathname.startsWith("/blog"),
-    },
   ]
 
   const railContent = (
@@ -72,19 +73,19 @@ export function BlogShell({
         onClick: () => onTopicChange(topic),
         active: activeTopic === topic,
       }))}
-      className="rounded-xl border-border/70 bg-muted/50 p-4 lg:p-5"
+      className="px-3 py-4"
     />
   )
 
   return (
     <div className="min-h-screen bg-[#f3f3f3] text-foreground">
-      <header className="border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="text-base font-semibold tracking-tight text-foreground">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          <Link href="/" className="text-[2rem] font-semibold leading-none tracking-tight text-foreground">
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm md:flex">
+          <nav className="hidden items-center gap-5 text-sm md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -94,6 +95,25 @@ export function BlogShell({
                 {link.label}
               </Link>
             ))}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 gap-1 rounded-lg px-2 text-muted-foreground hover:text-foreground">
+                  Learn
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/blog">All posts</Link>
+                </DropdownMenuItem>
+                {topics.slice(0, 6).map((topic) => (
+                  <DropdownMenuItem key={topic} onClick={() => onTopicChange(topic)}>
+                    {topic}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -103,7 +123,7 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[86%] overflow-y-auto p-4 sm:max-w-sm">
+              <SheetContent side="left" className="w-[86%] overflow-y-auto bg-[#efefef] p-4 sm:max-w-sm">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -111,11 +131,17 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden rounded-full px-4 md:inline-flex">
+            <Button asChild size="sm" className="hidden h-9 rounded-full bg-[#171717] px-4 text-white hover:bg-black md:inline-flex">
               <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
-            <Button asChild variant="outline" size="icon" className="rounded-full" aria-label="Search posts">
+            <Button asChild variant="ghost" size="icon" className="hidden rounded-full md:inline-flex" aria-label="Theme settings">
+              <Link href="/settings">
+                <Sun className="h-4 w-4" />
+              </Link>
+            </Button>
+
+            <Button asChild variant="outline" size="icon" className="rounded-full md:hidden" aria-label="Search posts">
               <Link href="/search">
                 <Search className="h-4 w-4" />
               </Link>
@@ -124,14 +150,12 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-12 lg:px-10 lg:py-12 xl:gap-16">
-        <main className="order-1 min-w-0 flex-1 lg:order-2">
-          <div className="mx-auto w-full max-w-[820px]">{children}</div>
-        </main>
+      <div className="mx-auto flex w-full max-w-[1440px]">
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[320px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
 
-        <aside className="order-2 hidden w-full lg:order-1 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[280px] lg:shrink-0">
-          {railContent}
-        </aside>
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-12 lg:py-10">
+          <div className="mx-auto w-full max-w-[860px]">{children}</div>
+        </main>
       </div>
     </div>
   )
