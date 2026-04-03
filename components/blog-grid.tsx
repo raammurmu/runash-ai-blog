@@ -48,18 +48,18 @@ export function BlogGrid() {
   if (!mounted) return null // Prevent hydration flash
 
   return (
-    <section className="space-y-6 px-2 md:px-4 max-w-7xl mx-auto">
+    <section className="mx-auto max-w-7xl space-y-7 px-1 sm:px-2 md:px-4">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300 text-transparent bg-clip-text">
+          <h2 className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-2xl font-bold tracking-tight text-transparent dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300">
             Explore
           </h2>
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto sm:justify-end">
           {/* Tablet/Desktop Controls */}
-          <div className="hidden sm:flex items-center gap-2 w-full flex-wrap justify-end">
+          <div className="hidden w-full flex-wrap items-center justify-end gap-2 sm:flex">
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-500" />
               <Input
@@ -70,13 +70,13 @@ export function BlogGrid() {
               />
             </div>
 
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-full">
+            <div className="no-scrollbar flex max-w-full items-center gap-2 overflow-x-auto rounded-full border border-orange-100/80 bg-orange-50/40 px-2 py-1">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={cn(
-                    "px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all",
+                    "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-all",
                     activeCategory === cat
                       ? "bg-orange-100 text-orange-700 ring-1 ring-orange-300"
                       : "text-muted-foreground hover:text-orange-600"
@@ -108,7 +108,7 @@ export function BlogGrid() {
           </div>
 
           {/* Desktop View Switcher */}
-          <div className="hidden lg:flex rounded-lg border border-orange-100 p-1 bg-orange-50/30">
+          <div className="hidden rounded-lg border border-orange-100 bg-orange-50/30 p-1 lg:flex">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -204,7 +204,7 @@ export function BlogGrid() {
 
       {/* Results Grid */}
       <div className={cn(
-        "grid transition-all duration-300",
+        "grid items-stretch transition-all duration-300",
         view === "grid" ? "grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 gap-4"
       )}>
         {filteredPosts.length > 0 ? (

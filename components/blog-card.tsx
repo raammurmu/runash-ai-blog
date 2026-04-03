@@ -38,12 +38,14 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
   const Thumbnail = () => (
     <div
       className={cn(
-        "relative flex items-center justify-center transition-transform duration-500 group-hover:scale-105",
+        "relative flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]",
         post.gradient || "bg-gradient-to-br from-orange-400 to-amber-500",
-        viewMode === "list" ? "w-full md:w-56 h-40 md:h-auto" : "h-48",
+        viewMode === "list" ? "h-44 w-full md:h-auto md:w-64" : "h-52",
       )}
     >
-      <span className="text-6xl transform group-hover:rotate-12 transition-transform duration-300 drop-shadow-xl">{post.emoji}</span>
+      <span className="text-6xl transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105 drop-shadow-xl">
+        {post.emoji}
+      </span>
       {post.featured && (
         <div className="absolute top-3 right-3">
           <Badge className="bg-amber-400 text-amber-900 border-none">
@@ -51,8 +53,6 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
           </Badge>
         </div>
       )}
-    >
-      <span className="text-5xl drop-shadow-sm">{post.emoji}</span>
     </div>
   )
 
@@ -61,18 +61,18 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
       className={cn(
         "group overflow-hidden border-orange-100/50 hover:border-orange-200 transition-all duration-300",
         "hover:shadow-[0_8px_30px_rgb(255,237,213,0.5)] bg-card",
-        viewMode === "list" ? "flex flex-col md:flex-row min-h-[220px]" : "flex flex-col",
+        viewMode === "list" ? "flex min-h-[248px] flex-col md:flex-row" : "flex h-full flex-col",
       )}
     >
       <Link href={`/post/${post.slug}`} className={viewMode === "list" ? "contents" : "block"}>
         <Thumbnail />
       </Link>
 
-      <div className="flex flex-col flex-1">
-        <CardContent className="p-5 flex-1">
-          <div className="flex justify-between items-start gap-4 mb-2">
+      <div className="flex flex-1 flex-col">
+        <CardContent className="flex flex-1 flex-col p-5">
+          <div className="mb-3 flex items-start justify-between gap-4">
             <Link href={`/post/${post.slug}`} className="group/title">
-              <h3 className="text-xl font-bold leading-tight group-hover/title:text-orange-500 transition-colors line-clamp-2">
+              <h3 className="line-clamp-2 text-xl font-semibold leading-tight tracking-tight transition-colors group-hover/title:text-orange-500">
                 {post.title}
               </h3>
             </Link>
@@ -99,9 +99,9 @@ export function BlogCard({ post, viewMode = "grid" }: BlogCardProps) {
             </DropdownMenu>
           </div>
 
-          <p className="text-muted-foreground text-sm line-clamp-2 mb-4">{post.excerpt}</p>
+          <p className="mb-5 line-clamp-3 text-sm leading-6 text-muted-foreground">{post.excerpt}</p>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="text-xs text-muted-foreground">{formatPostDate(post.publishedAt)}</span>
             <span className="text-muted-foreground/50">•</span>
             <span className="text-xs text-muted-foreground">{post.category}</span>

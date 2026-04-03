@@ -45,14 +45,14 @@ export function Header() {
         isScrolled ? "site-header--scrolled" : "site-header--top"
       )}
     >
-      <div className="container mx-auto flex h-12 items-center justify-between gap-4 px-4">
+      <div className="container mx-auto flex h-14 items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 flex-1 items-center">
           <Link href="/" className="site-wordmark inline-flex items-center">
             RunAsh
           </Link>
         </div>
 
-        <nav className="hidden items-center justify-center gap-1 md:flex" aria-label="Primary">
+        <nav className="hidden items-center justify-center gap-0.5 md:flex" aria-label="Primary">
           {navItems.map((item) => (
             <Link key={item.label} href={item.href} className="site-nav-link">
               {item.label}
@@ -60,7 +60,7 @@ export function Header() {
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="site-nav-link gap-1 px-2">
+              <Button variant="ghost" className="site-nav-link h-8 gap-1 px-2.5">
                 Learn
                 <ChevronDown className="size-3.5" />
               </Button>

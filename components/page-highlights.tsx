@@ -40,13 +40,13 @@ export function PageHighlights() {
           return (
             <article
               key={item.title}
-              className="rounded-3xl border border-orange-100/70 bg-white/90 p-6 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-orange-900/40 dark:bg-gray-950/60"
+              className="flex h-full flex-col rounded-3xl border border-orange-100/70 bg-white/90 p-6 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-orange-900/40 dark:bg-gray-950/60"
             >
               <div className="mb-5 inline-flex rounded-xl bg-orange-100 p-2 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300">
                 <Icon className="h-5 w-5" />
               </div>
               <h3 className="text-xl font-semibold">{item.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{item.description}</p>
+              <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{item.description}</p>
               <Link href={item.href} className="mt-6 inline-flex items-center text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-300">
                 {item.linkLabel} <Rocket className="ml-1 h-4 w-4" />
               </Link>
