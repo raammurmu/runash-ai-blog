@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 interface BlogShellProps {
   searchQuery: string
@@ -103,13 +104,31 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
-        <aside className="w-full rounded-xl border border-border/60 bg-gray-100 p-4 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[260px] lg:shrink-0 lg:p-5">
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
+        <div className="flex items-center justify-between rounded-xl border border-border/60 bg-gray-100 px-4 py-3 lg:hidden">
+          <p className="text-sm font-medium text-foreground/80">Filters</p>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button type="button" size="sm" variant="secondary" className="rounded-lg">
+                Open
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="top" className="max-h-[85vh] overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>Filter posts</SheetTitle>
+                <SheetDescription>Search, sort, and narrow the feed by topic.</SheetDescription>
+              </SheetHeader>
+              <div className="mt-6">{railContent}</div>
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        <aside className="hidden h-fit w-[280px] shrink-0 rounded-xl border border-border/60 bg-gray-100 p-5 lg:sticky lg:top-24 lg:block">
           {railContent}
         </aside>
 
         <main className="min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-[760px]">{children}</div>
+          <div className="w-full max-w-[840px]">{children}</div>
         </main>
       </div>
     </div>
