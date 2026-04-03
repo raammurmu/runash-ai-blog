@@ -11,29 +11,29 @@ export function EditorialPostCard({ post }: EditorialPostCardProps) {
   const coverImage = post.image || "/images/blog-cover-gradient.svg"
 
   return (
-    <article className="space-y-6">
-      <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-3xl">
+    <article className="space-y-4 sm:space-y-5 lg:space-y-6">
+      <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-2xl sm:rounded-3xl">
         <Image
           src={coverImage}
           alt={post.title}
           width={1200}
           height={720}
-          className="h-72 w-full rounded-3xl object-cover"
+          className="h-48 w-full rounded-2xl object-cover sm:h-64 sm:rounded-3xl lg:h-72"
         />
       </Link>
 
-      <div className="space-y-4 px-1">
+      <div className="space-y-3 px-0.5 sm:space-y-4 sm:px-1">
         <p className="text-sm font-medium text-muted-foreground/80">{formatPublishedDate(post.publishedAt)}</p>
 
         <Link href={`/post/${post.slug}`}>
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight text-foreground transition-colors hover:text-primary sm:text-4xl">
+          <h2 className="text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors hover:text-primary sm:text-3xl lg:text-4xl">
             {post.title}
           </h2>
         </Link>
 
-        <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
+        <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">{post.excerpt}</p>
 
-        <p className="text-sm uppercase tracking-[0.14em] text-muted-foreground/90">{post.category}</p>
+        <p className="pt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground/90">{post.category}</p>
       </div>
     </article>
   )

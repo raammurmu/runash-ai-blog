@@ -2,14 +2,22 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
+import { usePathname } from "next/navigation"
+import { ChevronDown, Menu, Search, Sun } from "lucide-react"
+import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 interface BlogShellProps {
   searchQuery: string
   onSearchChange: (value: string) => void
-  activeBucket: "all" | "recent"
-  onBucketChange: (value: "all" | "recent") => void
+  recentLinks: { label: string; href: string }[]
   activeTopic: string
   topics: string[]
   onTopicChange: (value: string) => void
@@ -19,97 +27,134 @@ interface BlogShellProps {
 export function BlogShell({
   searchQuery,
   onSearchChange,
-  activeBucket,
-  onBucketChange,
+  recentLinks,
   activeTopic,
   topics,
   onTopicChange,
   children,
 }: BlogShellProps) {
+  const pathname = usePathname()
+
+  const navLinks = [
+    {
+      href: "/",
+      label: "Home",
+      isActive: pathname === "/",
+    },
+    {
+      href: "/search?q=api",
+      label: "API",
+      isActive: pathname.startsWith("/search"),
+    },
+    {
+      href: "/search?q=codex",
+      label: "Codex",
+      isActive: false,
+    },
+    {
+      href: "/search?q=chatgpt",
+      label: "ChatGPT",
+      isActive: false,
+    },
+  ]
+
   const railContent = (
-    <div className="space-y-8">
-      <section className="space-y-3">
-        <div className="flex items-center justify-between text-sm font-medium text-foreground/70">
-          <h2>Search</h2>
-          <span className="rounded-md border border-border/70 bg-background px-2 py-0.5 text-xs text-muted-foreground">⌘K</span>
-        </div>
-        <Input
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search posts"
-          className="h-10 rounded-lg border-border/70 bg-white"
-        />
-      </section>
-
-      <section className="space-y-2">
-        <Button
-          type="button"
-          variant={activeBucket === "all" ? "secondary" : "ghost"}
-          className="w-full justify-start rounded-lg"
-          onClick={() => onBucketChange("all")}
-        >
-          All posts
-        </Button>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium text-foreground/70">Recent</h2>
-        <Button
-          type="button"
-          variant={activeBucket === "recent" ? "secondary" : "ghost"}
-          className="w-full justify-start rounded-lg"
-          onClick={() => onBucketChange("recent")}
-        >
-          Latest updates
-        </Button>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium text-foreground/70">Topics</h2>
-        <div className="space-y-1">
-          {topics.map((topic) => (
-            <Button
-              key={topic}
-              type="button"
-              variant={activeTopic === topic ? "secondary" : "ghost"}
-              className="w-full justify-start rounded-lg text-left"
-              onClick={() => onTopicChange(topic)}
-            >
-              {topic}
-            </Button>
-          ))}
-        </div>
-      </section>
-    </div>
+    <BlogLeftRail
+      searchQuery={searchQuery}
+      onSearchChange={onSearchChange}
+      allPostsLink={{
+        label: "All posts",
+        href: "/blog",
+        active: true,
+      }}
+      recentLinks={recentLinks}
+      topicLinks={topics.map((topic) => ({
+        label: topic,
+        onClick: () => onTopicChange(topic),
+        active: activeTopic === topic,
+      }))}
+      className="px-3 py-4"
+    />
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-border/60 bg-gray-50/95 backdrop-blur supports-[backdrop-filter]:bg-gray-50/80">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="text-base font-semibold tracking-tight text-foreground">
-            Runash AI
+    <div className="min-h-screen bg-[#f3f3f3] text-foreground">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
+          <Link href="/" className="text-[2.15rem] font-semibold leading-none tracking-tight text-foreground">
+            OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-            <Link href="/blog" className="text-foreground">Blog</Link>
-            <Link href="/category/ai" className="hover:text-foreground">Categories</Link>
-            <Link href="/search" className="hover:text-foreground">Search</Link>
+          <nav className="hidden items-center gap-4 text-sm md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={link.isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 gap-1 rounded-lg px-2 text-muted-foreground hover:text-foreground">
+                  Learn
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/blog">All posts</Link>
+                </DropdownMenuItem>
+                {topics.slice(0, 6).map((topic) => (
+                  <DropdownMenuItem key={topic} onClick={() => onTopicChange(topic)}>
+                    {topic}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
-          <Button asChild size="sm" className="rounded-lg">
-            <Link href="/create">Write</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-lg md:hidden" aria-label="Open blog filters">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[86%] overflow-y-auto bg-[#efefef] p-4 sm:max-w-sm">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Blog navigation</SheetTitle>
+                </SheetHeader>
+                {railContent}
+              </SheetContent>
+            </Sheet>
+
+            <Button asChild size="sm" className="hidden h-9 rounded-full bg-[#171717] px-4 text-white hover:bg-black md:inline-flex">
+              <Link href="/search?q=api">API Dashboard ↗</Link>
+            </Button>
+
+            <Button asChild variant="ghost" size="icon" className="hidden rounded-full md:inline-flex" aria-label="Theme settings">
+              <Link href="/settings">
+                <Sun className="h-4 w-4" />
+              </Link>
+            </Button>
+
+            <Button asChild variant="outline" size="icon" className="rounded-full md:hidden" aria-label="Search posts">
+              <Link href="/search">
+                <Search className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-10 lg:px-8 lg:py-10">
-        <aside className="w-full rounded-xl border border-border/60 bg-gray-100 p-4 lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[260px] lg:shrink-0 lg:p-5">
-          {railContent}
-        </aside>
+      <div className="mx-auto flex w-full max-w-[1440px]">
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[300px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
 
-        <main className="min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-[760px]">{children}</div>
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
+          <div className="mx-auto w-full max-w-[860px]">{children}</div>
         </main>
       </div>
     </div>

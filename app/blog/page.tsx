@@ -2,98 +2,105 @@
 
 import Link from "next/link"
 import { useMemo, useState } from "react"
-import { ArrowRight, Calendar, Clock, User } from "lucide-react"
 
-import { Header } from "@/components/header"
-import { Sidebar } from "@/components/sidebar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { BlogShell } from "@/components/blog-shell"
+import { Separator } from "@/components/ui/separator"
 import { formatPostDate, getAllPosts } from "@/lib/blog-data"
 import type { BlogPost } from "@/lib/types"
 
 const BlogPostCard = ({ post }: { post: BlogPost }) => {
   return (
-    <Card className="overflow-hidden border-orange-200/50 dark:border-orange-900/30">
-      <div className="aspect-video overflow-hidden">
-        <img
-          src={post.image || "/placeholder.svg?height=300&width=400"}
-          alt={post.title}
-          className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-        />
+    <article className="space-y-3">
+      <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-lg">
+        <div className="aspect-[16/5.85] overflow-hidden rounded-lg bg-muted">
+          <img
+            src={post.image || "/placeholder.svg?height=300&width=400"}
+            alt={post.title}
+            className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.01]"
+          />
+        </div>
+      </Link>
+
+      <div className="space-y-1.5">
+        <span className="block text-sm leading-none text-muted-foreground">{formatPostDate(post.publishedAt, false)}</span>
+
+        <h2 className="text-balance text-[2rem] font-normal leading-[1.18] tracking-tight sm:text-[2.05rem]">
+          <Link href={`/post/${post.slug}`} className="hover:text-foreground/80">
+            {post.title}
+          </Link>
+        </h2>
+
+        {post.excerpt && <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">{post.excerpt}</p>}
+
+        <p className="pt-1 text-sm text-muted-foreground">{post.category}</p>
       </div>
-      <CardContent className="p-6">
-        <div className="mb-3">
-          <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
-            {post.category}
-          </span>
-        </div>
-
-        <h2 className="mb-3 text-2xl font-bold">{post.title}</h2>
-        <p className="mb-5 text-gray-600 dark:text-gray-400">{post.excerpt}</p>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              <span>{post.author.name}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>{formatPostDate(post.publishedAt)}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>{post.readTime}</span>
-            </div>
-          </div>
-
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="w-fit text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300"
-          >
-            <Link href={`/post/${post.slug}`}>
-              Read More <ArrowRight className="ml-1 h-3 w-3" />
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    </article>
   )
 }
 
 export default function BlogPage() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeTopic, setActiveTopic] = useState("All posts")
   const posts = useMemo(() => getAllPosts(), [])
+  const recentLinks = useMemo(
+    () =>
+      posts.slice(0, 5).map((post) => ({
+        label: post.title,
+        href: `/post/${post.slug}`,
+      })),
+    [posts],
+  )
+  const topics = useMemo(
+    () => ["General", ...Array.from(new Set(posts.map((post) => post.category)))],
+    [posts],
+  )
+  const filteredPosts = useMemo(() => {
+    const normalizedSearch = searchQuery.trim().toLowerCase()
+
+    return posts.filter((post) => {
+      const matchesTopic = activeTopic === "All posts" || activeTopic === "General" || post.category === activeTopic
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        post.title.toLowerCase().includes(normalizedSearch) ||
+        post.excerpt.toLowerCase().includes(normalizedSearch) ||
+        post.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch))
+
+      return matchesTopic && matchesSearch
+    })
+  }, [activeTopic, posts, searchQuery])
 
   return (
-    <div className="site-surface flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+    <BlogShell
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      recentLinks={recentLinks}
+      activeTopic={activeTopic}
+      topics={topics}
+      onTopicChange={setActiveTopic}
+    >
+      <main className="bg-transparent">
+        <div className="mx-auto w-full max-w-[860px]">
+          <section className="pb-10 pt-14 sm:pb-12 sm:pt-16">
+            <div className="mx-auto max-w-2xl text-center">
+              <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">OpenAI Developer Blog</h1>
+              <p className="mt-4 text-base text-muted-foreground sm:text-xl">Insights for developers building with OpenAI</p>
+            </div>
+          </section>
 
-        <main className="site-gradient-bg flex-1 px-4 py-8 lg:px-8">
-          <div className="mx-auto w-full max-w-5xl">
-            <section className="py-6 lg:py-10">
-              <div className="mx-auto max-w-3xl text-center">
-                <h1 className="text-balance text-4xl font-bold tracking-tight md:text-5xl">RunAsh Blog</h1>
-                <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                  Insights, product updates, and practical guides from the RunAsh AI team.
-                </p>
-              </div>
-            </section>
+          <section className="pb-12">
+            <div className="space-y-16">
+              {filteredPosts.map((post) => (
+                <BlogPostCard key={post.id} post={post} />
+              ))}
+            </div>
+          </section>
 
-            <section className="pb-10">
-              <div className="space-y-6">
-                {posts.map((post) => (
-                  <BlogPostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
-          </div>
-        </main>
-      </div>
-    </div>
+          <Separator className="mb-5" />
+          <footer className="pb-8 text-sm text-muted-foreground">
+            <p>© {new Date().getFullYear()} OpenAI Developers</p>
+          </footer>
+        </div>
+      </main>
+    </BlogShell>
   )
 }
