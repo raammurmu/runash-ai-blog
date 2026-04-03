@@ -20,10 +20,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getAllCategories } from "@/lib/blog-data"
 
 const navItems = [
-  { label: "Home", href: "https://runash.in" },
   { label: "API", href: "/search?q=api" },
-  { label: "eDitX", href: "/search?q=codex" },
-  { label: "RunAshChat", href: "/search?q=chatgpt" },
+  { label: "RunAsh Chat", href: "/search?q=chatgpt" },
+  { label: "EditX", href: "/search?q=codex" },
 ]
 
 export function Header() {
@@ -41,18 +40,18 @@ export function Header() {
   return (
     <header
       className={cn(
-        "site-header sticky top-0 z-[60] w-full border-b border-transparent transition-all duration-200",
+        "site-header sticky top-0 z-[60] w-full border-b border-border/60 bg-background/95 transition-all duration-200 backdrop-blur supports-[backdrop-filter]:bg-background/80",
         isScrolled ? "site-header--scrolled" : "site-header--top"
       )}
     >
-      <div className="container mx-auto flex h-12 items-center justify-between gap-4 px-4">
+      <div className="container mx-auto flex h-11 items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 flex-1 items-center">
           <Link href="/" className="site-wordmark inline-flex items-center">
             RunAsh
           </Link>
         </div>
 
-        <nav className="hidden items-center justify-center gap-1 md:flex" aria-label="Primary">
+        <nav className="hidden items-center justify-center gap-0.5 md:flex" aria-label="Primary">
           {navItems.map((item) => (
             <Link key={item.label} href={item.href} className="site-nav-link">
               {item.label}
@@ -60,7 +59,7 @@ export function Header() {
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="site-nav-link gap-1 px-2">
+              <Button variant="ghost" className="site-nav-link h-8 gap-1 px-2">
                 Learn
                 <ChevronDown className="size-3.5" />
               </Button>
@@ -80,12 +79,12 @@ export function Header() {
           </DropdownMenu>
         </nav>
 
-        <div className="flex flex-1 items-center justify-end gap-2">
+        <div className="flex flex-1 items-center justify-end gap-1.5">
           <PageTranslateControl />
           <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
             <Link href="/create">
               <Plus className="mr-1.5 size-3.5" />
-              Create
+              Start creating
             </Link>
           </Button>
 
