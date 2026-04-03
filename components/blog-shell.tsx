@@ -36,14 +36,24 @@ export function BlogShell({
       isActive: pathname === "/",
     },
     {
-      href: "/blog",
-      label: "Blog",
-      isActive: pathname.startsWith("/blog"),
+      href: "/search?q=api",
+      label: "API",
+      isActive: pathname.startsWith("/search"),
     },
     {
-      href: "/category/ai",
-      label: "Categories",
-      isActive: pathname.startsWith("/category"),
+      href: "/search?q=codex",
+      label: "Codex",
+      isActive: false,
+    },
+    {
+      href: "/search?q=chatgpt",
+      label: "ChatGPT",
+      isActive: false,
+    },
+    {
+      href: "/blog",
+      label: "Learn",
+      isActive: pathname.startsWith("/blog"),
     },
   ]
 
@@ -67,11 +77,11 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f3f3f3] text-foreground">
       <header className="border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="text-base font-semibold tracking-tight text-foreground">
-            RunAsh AI Blog
+            OpenAI Developers
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm md:flex">
@@ -102,7 +112,7 @@ export function BlogShell({
             </Sheet>
 
             <Button asChild size="sm" className="hidden rounded-full px-4 md:inline-flex">
-              <Link href="/blog">Read blog</Link>
+              <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
             <Button asChild variant="outline" size="icon" className="rounded-full" aria-label="Search posts">
