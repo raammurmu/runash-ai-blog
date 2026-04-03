@@ -33,7 +33,7 @@ export function EditorialPostCard({ post }: EditorialPostCardProps) {
 
         <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">{post.excerpt}</p>
 
-        <p className="text-sm uppercase tracking-[0.14em] text-muted-foreground/90">{post.category}</p>
+        <p className="pt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground/90">{post.category}</p>
       </div>
     </article>
   )
