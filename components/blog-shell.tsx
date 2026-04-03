@@ -80,12 +80,12 @@ export function BlogShell({
   return (
     <div className="min-h-screen bg-[#f3f3f3] text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <Link href="/" className="text-[2rem] font-semibold leading-none tracking-tight text-foreground">
+        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
+          <Link href="/" className="text-[2.15rem] font-semibold leading-none tracking-tight text-foreground">
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-5 text-sm md:flex">
+          <nav className="hidden items-center gap-4 text-sm md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -151,9 +151,9 @@ export function BlogShell({
       </header>
 
       <div className="mx-auto flex w-full max-w-[1440px]">
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[320px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[300px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
 
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-12 lg:py-10">
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
           <div className="mx-auto w-full max-w-[860px]">{children}</div>
         </main>
       </div>

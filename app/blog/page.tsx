@@ -10,27 +10,27 @@ import type { BlogPost } from "@/lib/types"
 
 const BlogPostCard = ({ post }: { post: BlogPost }) => {
   return (
-    <article className="space-y-3 sm:space-y-4">
+    <article className="space-y-3">
       <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-lg">
-        <div className="aspect-[16/6.2] overflow-hidden rounded-lg sm:aspect-[16/5.9]">
+        <div className="aspect-[16/5.85] overflow-hidden rounded-lg bg-muted">
           <img
             src={post.image || "/placeholder.svg?height=300&width=400"}
             alt={post.title}
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
+            className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.01]"
           />
         </div>
       </Link>
 
-      <div className="space-y-2.5">
-        <span className="block text-sm text-muted-foreground">{formatPostDate(post.publishedAt, false)}</span>
+      <div className="space-y-1.5">
+        <span className="block text-sm leading-none text-muted-foreground">{formatPostDate(post.publishedAt, false)}</span>
 
-        <h2 className="text-[1.85rem] font-medium leading-tight tracking-tight sm:text-[2.05rem]">
-          <Link href={`/post/${post.slug}`} className="hover:text-orange-600 dark:hover:text-orange-400">
+        <h2 className="text-balance text-[2rem] font-normal leading-[1.18] tracking-tight sm:text-[2.05rem]">
+          <Link href={`/post/${post.slug}`} className="hover:text-foreground/80">
             {post.title}
           </Link>
         </h2>
 
-        {post.excerpt && <p className="max-w-3xl text-base text-muted-foreground">{post.excerpt}</p>}
+        {post.excerpt && <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">{post.excerpt}</p>}
 
         <p className="pt-1 text-sm text-muted-foreground">{post.category}</p>
       </div>
@@ -78,9 +78,9 @@ export default function BlogPage() {
       topics={topics}
       onTopicChange={setActiveTopic}
     >
-      <main className="bg-transparent px-1 py-1 sm:px-0">
-        <div className="mx-auto w-full max-w-5xl">
-          <section className="py-8 sm:py-10 lg:py-12">
+      <main className="bg-transparent">
+        <div className="mx-auto w-full max-w-[860px]">
+          <section className="pb-10 pt-14 sm:pb-12 sm:pt-16">
             <div className="mx-auto max-w-2xl text-center">
               <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">OpenAI Developer Blog</h1>
               <p className="mt-4 text-base text-muted-foreground sm:text-xl">Insights for developers building with OpenAI</p>
@@ -88,15 +88,15 @@ export default function BlogPage() {
           </section>
 
           <section className="pb-12">
-            <div className="space-y-14">
+            <div className="space-y-16">
               {filteredPosts.map((post) => (
                 <BlogPostCard key={post.id} post={post} />
               ))}
             </div>
           </section>
 
-          <Separator className="mb-6" />
-          <footer className="pb-10 text-sm text-muted-foreground">
+          <Separator className="mb-5" />
+          <footer className="pb-8 text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} OpenAI Developers</p>
           </footer>
         </div>

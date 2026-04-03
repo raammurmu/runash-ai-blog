@@ -24,21 +24,21 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-2 py-1.5 text-sm text-foreground/80 transition-colors hover:text-foreground",
+    "block rounded-md px-2 py-1.5 text-[0.95rem] leading-snug text-foreground/80 transition-colors hover:text-foreground",
     active && "bg-black/10 text-foreground",
   )
 
   if (href) {
     return (
       <Link href={href} className={baseClass}>
-        {label}
+        <span className="line-clamp-2">{label}</span>
       </Link>
     )
   }
 
   return (
     <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
-      {label}
+      <span className="line-clamp-2">{label}</span>
     </button>
   )
 }
@@ -52,14 +52,14 @@ function TopicRailItem({ label, href, onClick, active }: RailLink) {
   if (href) {
     return (
       <Link href={href} className={baseClass}>
-        {label}
+        <span className="line-clamp-2">{label}</span>
       </Link>
     )
   }
 
   return (
     <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
-      {label}
+      <span className="line-clamp-2">{label}</span>
     </button>
   )
 }
@@ -74,7 +74,7 @@ export function BlogLeftRail({
 }: BlogLeftRailProps) {
   return (
     <aside className={cn("h-fit", className)}>
-      <div className="space-y-6">
+      <div className="space-y-7">
         <section className="space-y-2.5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
@@ -83,7 +83,7 @@ export function BlogLeftRail({
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search"
-              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-14"
+              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-14 text-sm"
             />
             <Badge
               variant="outline"
