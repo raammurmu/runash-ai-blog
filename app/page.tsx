@@ -29,11 +29,11 @@ export default function HomePage() {
             </section>
 
             <section className="pb-8 lg:pb-10">
-              <PageHighlights />
+              
             </section>
 
             <Suspense fallback={<div>Loading posts...</div>}>
-              <BlogGrid />
+              
             </Suspense>
           </div>
         </main>
