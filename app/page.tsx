@@ -23,8 +23,7 @@ export default function HomePage() {
                 badge="Blog"
                 title="RunAsh AI Blog"
                 description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
-                 primaryCta={{ label: "Browse All posts", href: "/blog" }}
-                secondaryCta={{ label: "Publish article", href: "/create" }} 
+                primaryCta={{ label: "Browse All posts", href: "/blog" }}
               />
             </section>
 

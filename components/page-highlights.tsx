@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BarChart3, PenSquare, Rocket, Search } from "lucide-react"
+import { BarChart3, Rocket, Search } from "lucide-react"
 
 const highlights = [
   {
@@ -8,13 +8,6 @@ const highlights = [
     icon: Search,
     href: "/search",
     linkLabel: "Try search",
-  },
-  {
-    title: "Creator-first writing",
-    description: "Draft, preview, and publish with a focused author workflow designed for quick editorial turnaround.",
-    icon: PenSquare,
-    href: "/create",
-    linkLabel: "Start writing",
   },
   {
     title: "Performance insights",
