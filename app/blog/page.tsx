@@ -10,7 +10,7 @@ import type { BlogPost } from "@/lib/types"
 
 const BlogPostCard = ({ post }: { post: BlogPost }) => {
   return (
-    <article className="space-y-3">
+    <article className="space-y-3.5">
       <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-lg">
         <div className="aspect-[16/5.85] overflow-hidden rounded-lg bg-muted">
           <img
@@ -24,7 +24,7 @@ const BlogPostCard = ({ post }: { post: BlogPost }) => {
       <div className="space-y-1.5">
         <span className="block text-sm leading-none text-muted-foreground">{formatPostDate(post.publishedAt, false)}</span>
 
-        <h2 className="text-balance text-[2rem] font-normal leading-[1.18] tracking-tight sm:text-[2.05rem]">
+        <h2 className="text-balance text-[2rem] font-normal leading-[1.2] tracking-tight sm:text-[2.05rem]">
           <Link href={`/post/${post.slug}`} className="hover:text-foreground/80">
             {post.title}
           </Link>
@@ -80,7 +80,7 @@ export default function BlogPage() {
     >
       <main className="bg-transparent">
         <div className="mx-auto w-full max-w-[860px]">
-          <section className="pb-10 pt-14 sm:pb-12 sm:pt-16">
+          <section className="pb-10 pt-11 sm:pb-12 sm:pt-14">
             <div className="mx-auto max-w-2xl text-center">
               <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">OpenAI Developer Blog</h1>
               <p className="mt-4 text-base text-muted-foreground sm:text-xl">Insights for developers building with OpenAI</p>
@@ -88,7 +88,7 @@ export default function BlogPage() {
           </section>
 
           <section className="pb-12">
-            <div className="space-y-16">
+            <div className="space-y-14">
               {filteredPosts.map((post) => (
                 <BlogPostCard key={post.id} post={post} />
               ))}

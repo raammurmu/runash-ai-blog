@@ -24,7 +24,7 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-2 py-1.5 text-[0.95rem] leading-snug text-foreground/80 transition-colors hover:text-foreground",
+    "block rounded-md px-2 py-1.5 text-[1rem] leading-snug text-foreground/80 transition-colors hover:text-foreground",
     active && "bg-black/10 text-foreground",
   )
 
@@ -45,7 +45,7 @@ function RailItem({ label, href, onClick, active }: RailLink) {
 
 function TopicRailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-1.5 py-1 text-sm text-foreground/75 transition-colors hover:text-foreground",
+    "block rounded-md px-1.5 py-1 text-[0.98rem] text-foreground/75 transition-colors hover:text-foreground",
     active && "text-foreground",
   )
 
@@ -85,12 +85,14 @@ export function BlogLeftRail({
               placeholder="Search"
               className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-14 text-sm"
             />
-            <Badge
-              variant="outline"
-              className="pointer-events-none absolute right-2 top-1/2 h-5 -translate-y-1/2 rounded-md px-1.5 text-[10px] text-muted-foreground"
-            >
-              K
-            </Badge>
+            <div className="pointer-events-none absolute right-2 top-1/2 flex h-5 -translate-y-1/2 items-center gap-1">
+              <Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px] text-muted-foreground">
+                ⌘
+              </Badge>
+              <Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px] text-muted-foreground">
+                K
+              </Badge>
+            </div>
           </div>
         </section>
 
@@ -101,7 +103,7 @@ export function BlogLeftRail({
         )}
 
         <section className="space-y-2">
-          <h2 className="text-xs font-medium text-foreground">Recent</h2>
+          <h2 className="text-sm font-medium text-foreground">Recent</h2>
           <div className="space-y-0.5">
             {recentLinks.map((link) => (
               <RailItem key={link.label} {...link} />
@@ -110,7 +112,7 @@ export function BlogLeftRail({
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xs font-medium text-foreground">Topics</h2>
+          <h2 className="text-sm font-medium text-foreground">Topics</h2>
           <div className="space-y-0.5">
             {topicLinks.map((link) => (
               <TopicRailItem key={link.label} {...link} />

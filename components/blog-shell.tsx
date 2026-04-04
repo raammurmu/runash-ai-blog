@@ -78,14 +78,14 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-[#f3f3f3] text-foreground">
+    <div className="min-h-screen bg-[#efefef] text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-          <Link href="/" className="text-[2.15rem] font-semibold leading-none tracking-tight text-foreground">
+        <div className="mx-auto flex w-full max-w-[1420px] items-center justify-between px-3 py-2.5 sm:px-5 lg:px-7">
+          <Link href="/" className="text-[1.95rem] font-semibold leading-none tracking-tight text-foreground">
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-4 text-sm md:flex">
+          <nav className="hidden items-center gap-6 text-sm md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -131,7 +131,7 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden h-9 rounded-full bg-[#171717] px-4 text-white hover:bg-black md:inline-flex">
+            <Button asChild size="sm" className="hidden h-9 rounded-full bg-[#171717] px-5 text-white hover:bg-black md:inline-flex">
               <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
@@ -150,11 +150,11 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1440px]">
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[300px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
+      <div className="mx-auto flex w-full max-w-[1420px]">
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[280px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
 
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
-          <div className="mx-auto w-full max-w-[860px]">{children}</div>
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-9 lg:py-8">
+          <div className="mx-auto w-full max-w-[840px]">{children}</div>
         </main>
       </div>
     </div>
