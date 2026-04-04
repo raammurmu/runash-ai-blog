@@ -1,10 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 import { BlogFeed } from "@/components/blog-feed"
-import { Header } from "@/components/header"
-import { Sidebar } from "@/components/sidebar"
+import { BlogShell } from "@/components/blog-shell"
 import type { BlogPost } from "@/lib/types"
 
 interface BlogPageClientProps {
@@ -12,31 +11,59 @@ interface BlogPageClientProps {
 }
 
 export function BlogPageClient({ posts }: BlogPageClientProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeTopic, setActiveTopic] = useState("All")
+
+  const topics = useMemo(() => {
+    const categories = Array.from(new Set(posts.map((post) => post.category).filter(Boolean))).sort((a, b) =>
+      a.localeCompare(b),
+    )
+
+    return ["All", ...categories]
+  }, [posts])
+
+  const filteredPosts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase()
+
+    return posts.filter((post) => {
+      const matchesTopic = activeTopic === "All" || post.category === activeTopic
+
+      if (!normalizedQuery) {
+        return matchesTopic
+      }
+
+      const haystack = [post.title, post.excerpt, post.category, post.tags.join(" ")].join(" ").toLowerCase()
+
+      return matchesTopic && haystack.includes(normalizedQuery)
+    })
+  }, [activeTopic, posts, searchQuery])
+
+  const recentLinks = useMemo(
+    () =>
+      posts.slice(0, 6).map((post) => ({
+        label: post.title,
+        href: `/post/${post.slug}`,
+      })),
+    [posts],
+  )
 
   return (
-    <div className="site-surface flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+    <BlogShell
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      recentLinks={recentLinks}
+      activeTopic={activeTopic}
+      topics={topics}
+      onTopicChange={setActiveTopic}
+    >
+      <section className="space-y-3 pb-7">
+        <h1 className="text-pretty text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">RunAsh Blog</h1>
+        <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
+          Product updates, engineering notes, and live-commerce insights from the RunAsh AI team.
+        </p>
+      </section>
 
-        <main className="site-gradient-bg flex-1 px-4 py-8 lg:px-8">
-          <div className="mx-auto w-full max-w-5xl">
-            <section className="py-6 lg:py-10">
-              <div className="mx-auto max-w-3xl text-center">
-                <h1 className="text-balance text-4xl font-bold tracking-tight md:text-5xl">RunAsh Blog</h1>
-                <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                  Insights, product updates, and practical guides from the RunAsh AI team.
-                </p>
-              </div>
-            </section>
-
-            <section className="pb-10">
-              <BlogFeed posts={posts} />
-            </section>
-          </div>
-        </main>
-      </div>
-    </div>
+      <BlogFeed posts={filteredPosts} />
+    </BlogShell>
   )
 }

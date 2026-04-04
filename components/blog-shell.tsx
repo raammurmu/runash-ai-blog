@@ -64,8 +64,8 @@ export function BlogShell({
       onSearchChange={onSearchChange}
       allPostsLink={{
         label: "All posts",
-        href: "/blog",
-        active: true,
+        href: "/",
+        active: pathname === "/",
       }}
       recentLinks={recentLinks}
       topicLinks={topics.map((topic) => ({
@@ -105,7 +105,7 @@ export function BlogShell({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/blog">All posts</Link>
+                  <Link href="/">All posts</Link>
                 </DropdownMenuItem>
                 {topics.slice(0, 6).map((topic) => (
                   <DropdownMenuItem key={topic} onClick={() => onTopicChange(topic)}>
