@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ChevronDown, Menu, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -46,8 +47,16 @@ export function Header() {
     >
       <div className="container mx-auto flex h-11 items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 flex-1 items-center">
-          <Link href="/" className="site-wordmark inline-flex items-center">
-            RunAsh
+          <Link href="/" className="site-wordmark inline-flex items-center gap-2">
+            <Image
+              src="/placeholder-logo.svg"
+              alt="RunAsh logo"
+              width={22}
+              height={22}
+              className="rounded-sm"
+              priority
+            />
+            <span>RunAsh</span>
           </Link>
         </div>
 
