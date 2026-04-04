@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
 import { MobileBottomNav } from "@/components/mobile-bottom-nav"
+import { AIAssistant } from "@/components/ai-assistant"
 
 export const metadata: Metadata = {
   title: "RunAsh Blog",
@@ -35,10 +36,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <MobileBottomNav />
+          <AIAssistant />
           <Toaster />
         </ThemeProvider>
       </body>
     </html>
   )
 }
-
