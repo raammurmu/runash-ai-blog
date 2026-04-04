@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronDown, Menu, Plus } from "lucide-react"
+import { ChevronDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageTranslateControl } from "@/components/page-translate-control"
@@ -90,13 +90,6 @@ export function Header() {
 
         <div className="flex flex-1 items-center justify-end gap-1.5">
           <PageTranslateControl />
-          <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
-            <Link href="/create">
-              <Plus className="mr-1.5 size-3.5" />
-              Start creating
-            </Link>
-          </Button>
-
           <div className="site-theme-toggle-wrap">
             <ThemeToggle />
           </div>
