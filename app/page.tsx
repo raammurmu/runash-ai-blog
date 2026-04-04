@@ -1,3 +1,8 @@
+import { BlogPageClient } from "@/components/blog-page-client"
+import { getAllPosts } from "@/lib/blog-data"
+
 export default function HomePage() {
-  return <main className="min-h-screen" />
+  const posts = getAllPosts()
+
+  return <BlogPageClient posts={posts} />
 }
