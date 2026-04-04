@@ -90,7 +90,7 @@ export function Footer() {
               <Link href="/" className="group flex items-center gap-3">
                 <div className="relative h-9 w-9 overflow-hidden rounded-md border border-orange-200/70 bg-white shadow-sm dark:border-orange-900/40 dark:bg-gray-900">
                 <Image
-                  src="/logo.png"
+                  src="/placeholder-logo.svg"
                   alt="RunAsh logo"
                   fill
                   sizes="36px"
