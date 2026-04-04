@@ -27,7 +27,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-10 md:px-6 md:pt-14">
         <div className="mx-auto w-full max-w-[820px]">
           <Link
-            href="/blog"
+            href="/"
             className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ChevronLeft className="h-4 w-4" />

@@ -158,7 +158,7 @@ export function Footer() {
                   {latestPosts.map((post) => (
                     <Link
                       key={post.id}
-                      href={`/blog/${post.slug}`}
+                      href={`/post/${post.slug}`}
                       className="block text-sm text-gray-600 transition-colors hover:text-orange-700 dark:text-gray-300 dark:hover:text-orange-300"
                     >
                       <div className="mb-1 text-[11px] uppercase tracking-wide text-orange-600/80 dark:text-orange-300/80">
