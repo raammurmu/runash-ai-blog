@@ -18,7 +18,7 @@ export function RelatedPosts({ currentPostId, category }: { currentPostId: strin
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-2xl font-semibold tracking-tight text-foreground/90">More in {category}</h3>
         <Link
-          href="/blog"
+          href="/"
           className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           View all <ChevronRight className="h-4 w-4" />
