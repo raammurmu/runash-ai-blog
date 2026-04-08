@@ -15,11 +15,11 @@ type HeroSectionProps = {
 
 const HERO_CHIPS = [
   "Agents",
-  "Voice",
-  "Fine-tuning",
-  "Reasoning",
-  "Embeddings",
-  "Safety",
+  "RunAshChat",
+  "Livex",
+  "Codec",
+  "",
+  "",
 ]
 
 export function HeroSection({
