@@ -73,7 +73,7 @@ export function BlogShell({
         onClick: () => onTopicChange(topic),
         active: activeTopic === topic,
       }))}
-      className="px-3 py-4 sm:px-4"
+      className="px-3 py-3 sm:px-4"
     />
   )
 
@@ -123,7 +123,7 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-[#efefef] p-3 sm:p-4 sm:max-w-sm">
+              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-[#efefef] p-3 sm:max-w-sm sm:p-4">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
