@@ -73,7 +73,7 @@ export function BlogShell({
         onClick: () => onTopicChange(topic),
         active: activeTopic === topic,
       }))}
-      className="px-3 py-4"
+      className="px-3 py-4 sm:px-4"
     />
   )
 
@@ -123,7 +123,7 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[86%] overflow-y-auto bg-[#efefef] p-4 sm:max-w-sm">
+              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-[#efefef] p-3 sm:p-4 sm:max-w-sm">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -150,11 +150,14 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1420px]">
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[280px] border-r border-border/60 bg-[#efefef] lg:block">{railContent}</aside>
+      <div className="mx-auto flex w-full max-w-[1560px]">
+        {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-[#efefef] lg:block xl:w-[320px]">
+          {railContent}
+        </aside>
 
-        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-9 lg:py-8">
-          <div className="mx-auto w-full max-w-[840px]">{children}</div>
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
+          <div className="mx-auto w-full max-w-[900px] xl:max-w-[980px]">{children}</div>
         </main>
       </div>
     </div>
