@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { BLOG_HEADER_NAV_LINKS, NAV_CONTRACT } from "@/components/nav-config"
 
 interface BlogShellProps {
   searchQuery: string
@@ -35,28 +36,12 @@ export function BlogShell({
 }: BlogShellProps) {
   const pathname = usePathname()
 
-  const navLinks = [
-    {
-      href: "/",
-      label: "Home",
-      isActive: pathname === "/",
-    },
-    {
-      href: "/search?q=api",
-      label: "API",
-      isActive: pathname.startsWith("/search"),
-    },
-    {
-      href: "/search?q=codex",
-      label: "Codex",
-      isActive: false,
-    },
-    {
-      href: "/search?q=chatgpt",
-      label: "ChatGPT",
-      isActive: false,
-    },
-  ]
+  const navLinks = BLOG_HEADER_NAV_LINKS.map((link) => ({
+    ...link,
+    isActive:
+      (link.href === "/" && pathname === "/") ||
+      (link.href === "/search?q=api" && pathname.startsWith("/search")),
+  }))
 
   const railContent = (
     <BlogLeftRail
@@ -78,19 +63,19 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-[#efefef] text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex w-full max-w-[1420px] items-center justify-between px-3 py-2.5 sm:px-5 lg:px-7">
-          <Link href="/" className="text-base font-semibold leading-tight tracking-tight text-foreground sm:text-[1.05rem]">
+    <div className="min-h-screen bg-muted/35 text-foreground">
+      <header className={NAV_CONTRACT.headerShell}>
+        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-7`}>
+          <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-3 text-[13px] font-medium md:flex">
+          <nav className={`${NAV_CONTRACT.desktopNav} text-[13px] font-medium`}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={link.isActive ? "text-foreground" : "text-muted-foreground/85 hover:text-foreground"}
+                className={link.isActive ? NAV_CONTRACT.navLink : `${NAV_CONTRACT.navLink} text-muted-foreground`}
               >
                 {link.label}
               </Link>
@@ -98,7 +83,7 @@ export function BlogShell({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-7 gap-1 rounded-full border border-border/60 bg-muted/40 px-2.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground">
+                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-[13px] font-medium`}>
                   Learn
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
@@ -119,11 +104,11 @@ export function BlogShell({
           <div className="flex items-center gap-2">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-lg md:hidden" aria-label="Open blog filters">
+                <Button variant="outline" size="icon" className={`${NAV_CONTRACT.mobileIconButton} md:hidden`} aria-label="Open blog filters">
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-[#efefef] p-3 sm:max-w-sm sm:p-4">
+              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-background p-3 sm:max-w-sm sm:p-4">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -131,17 +116,17 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden h-8 rounded-full bg-[#171717] px-3.5 text-xs font-medium text-white hover:bg-black md:inline-flex">
+            <Button asChild size="sm" className={`site-utility-button hidden md:inline-flex ${NAV_CONTRACT.actionButton}`}>
               <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
-            <Button asChild variant="ghost" size="icon" className="hidden h-8 w-8 rounded-full border-0 text-muted-foreground hover:bg-transparent hover:text-foreground md:inline-flex" aria-label="Theme settings">
+            <Button asChild variant="ghost" size="icon" className={`hidden border-0 md:inline-flex ${NAV_CONTRACT.utilityIconButton}`} aria-label="Theme settings">
               <Link href="/settings">
                 <Sun className="h-4 w-4" />
               </Link>
             </Button>
 
-            <Button asChild variant="outline" size="icon" className="rounded-full md:hidden" aria-label="Search posts">
+            <Button asChild variant="outline" size="icon" className={`${NAV_CONTRACT.mobileIconButton} md:hidden`} aria-label="Search posts">
               <Link href="/search">
                 <Search className="h-4 w-4" />
               </Link>
@@ -152,7 +137,7 @@ export function BlogShell({
 
       <div className="mx-auto flex w-full max-w-[1560px]">
         {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-[#efefef] lg:block xl:w-[320px]">
+        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-muted/35 lg:block xl:w-[320px]">
           {railContent}
         </aside>
 
