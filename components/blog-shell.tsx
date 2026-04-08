@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 import { ChevronDown, Menu, Search, Sun } from "lucide-react"
 import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
+import { logClientInteraction } from "@/lib/client-logger"
+import { BLOG_UI_LAYOUT, BLOG_UI_SURFACES } from "@/lib/ui-conventions"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +37,10 @@ export function BlogShell({
   children,
 }: BlogShellProps) {
   const pathname = usePathname()
+  const handleTopicChange = (topic: string, source: "rail" | "menu") => {
+    logClientInteraction("topic_filter_changed", { topic, source })
+    onTopicChange(topic)
+  }
 
   const navLinks = BLOG_HEADER_NAV_LINKS.map((link) => ({
     ...link,
@@ -55,7 +61,7 @@ export function BlogShell({
       recentLinks={recentLinks}
       topicLinks={topics.map((topic) => ({
         label: topic,
-        onClick: () => onTopicChange(topic),
+        onClick: () => handleTopicChange(topic, "rail"),
         active: activeTopic === topic,
       }))}
       className="px-3 py-3 sm:px-4"
@@ -93,7 +99,7 @@ export function BlogShell({
                   <Link href="/">All posts</Link>
                 </DropdownMenuItem>
                 {topics.slice(0, 6).map((topic) => (
-                  <DropdownMenuItem key={topic} onClick={() => onTopicChange(topic)}>
+                  <DropdownMenuItem key={topic} onClick={() => handleTopicChange(topic, "menu")}>
                     {topic}
                   </DropdownMenuItem>
                 ))}
@@ -135,14 +141,14 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1560px]">
+      <div className={BLOG_UI_LAYOUT.shellFrame}>
         {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
         <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-muted/35 lg:block xl:w-[320px]">
           {railContent}
         </aside>
 
-        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
-          <div className="mx-auto w-full max-w-[900px] xl:max-w-[980px]">{children}</div>
+        <main className={BLOG_UI_LAYOUT.shellMainPadding}>
+          <div className={BLOG_UI_LAYOUT.shellContentWidth}>{children}</div>
         </main>
       </div>
     </div>

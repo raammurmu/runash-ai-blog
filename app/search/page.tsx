@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
 import Link from "next/link"
+import { logClientInteraction } from "@/lib/client-logger"
+import { BLOG_UI_LAYOUT } from "@/lib/ui-conventions"
 
 export default function SearchPage() {
   const params = useSearchParams()
@@ -38,6 +40,7 @@ export default function SearchPage() {
         const data: ApiSearchResponse = await res.json()
         if (!cancelled) setResults(data.results)
       } catch {
+        logClientInteraction("search_request_failed", { queryLength: currentQ.length }, "warn")
         if (!cancelled) setResults([])
       } finally {
         if (!cancelled) setLoading(false)
@@ -52,13 +55,15 @@ export default function SearchPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    router.push(`/search?q=${encodeURIComponent(q.trim())}`)
+    const sanitizedQuery = q.trim()
+    logClientInteraction("search_submitted", { queryLength: sanitizedQuery.length })
+    router.push(`/search?q=${encodeURIComponent(sanitizedQuery)}`)
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-5xl px-6 py-8">
+      <main className={BLOG_UI_LAYOUT.pageContainer}>
         <h1 className="mb-4 text-2xl font-bold">Search</h1>
         <form onSubmit={handleSubmit} className="mb-6 flex gap-2">
           <div className="relative flex-1">

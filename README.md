@@ -55,6 +55,14 @@ Ensure the blog entry includes the title, excerpt, and content HTML string. Keep
 * **Dimensions:** 1300 x 650 pixels.
 * **Templates:** Use our [Figma Template](https://www.figma.com/file/sXrf9VtkkbWI7kCIesMkDY/HF-Blog-Template?node-id=351%3A39) to maintain brand consistency.
 
+### Blog UI conventions
+
+For layout consistency across blog pages:
+
+- Reuse shared UI layout classes from `lib/ui-conventions.ts` (for page containers, shell widths, and shell paddings).
+- Prefer semantic design tokens (`bg-background`, `bg-muted`, `text-foreground`, etc.) over one-off hex colors when an equivalent utility exists.
+- Keep interaction logs lightweight and structured via `lib/client-logger.ts`; avoid logging user-generated text or sensitive commerce/payment data.
+
 ---
 
 ## 🔐 Upload Storage Environment Variables
