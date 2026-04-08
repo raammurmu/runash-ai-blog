@@ -81,16 +81,16 @@ export function BlogShell({
     <div className="min-h-screen bg-[#efefef] text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         <div className="mx-auto flex w-full max-w-[1420px] items-center justify-between px-3 py-2.5 sm:px-5 lg:px-7">
-          <Link href="/" className="text-[1.95rem] font-semibold leading-none tracking-tight text-foreground">
+          <Link href="/" className="text-base font-semibold leading-tight tracking-tight text-foreground sm:text-[1.05rem]">
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm md:flex">
+          <nav className="hidden items-center gap-3 text-[13px] font-medium md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={link.isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"}
+                className={link.isActive ? "text-foreground" : "text-muted-foreground/85 hover:text-foreground"}
               >
                 {link.label}
               </Link>
@@ -98,7 +98,7 @@ export function BlogShell({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-1 rounded-lg px-2 text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="sm" className="h-7 gap-1 rounded-full border border-border/60 bg-muted/40 px-2.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground">
                   Learn
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
@@ -131,11 +131,11 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden h-9 rounded-full bg-[#171717] px-5 text-white hover:bg-black md:inline-flex">
+            <Button asChild size="sm" className="hidden h-8 rounded-full bg-[#171717] px-3.5 text-xs font-medium text-white hover:bg-black md:inline-flex">
               <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
-            <Button asChild variant="ghost" size="icon" className="hidden rounded-full md:inline-flex" aria-label="Theme settings">
+            <Button asChild variant="ghost" size="icon" className="hidden h-8 w-8 rounded-full border-0 text-muted-foreground hover:bg-transparent hover:text-foreground md:inline-flex" aria-label="Theme settings">
               <Link href="/settings">
                 <Sun className="h-4 w-4" />
               </Link>
