@@ -69,14 +69,14 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-muted/35 text-foreground">
+    <div className={`min-h-screen text-foreground ${BLOG_UI_SURFACES.mutedCanvas}`}>
       <header className={NAV_CONTRACT.headerShell}>
-        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-7`}>
+        <div className={`${NAV_CONTRACT.headerInner} ${BLOG_UI_LAYOUT.shellHeaderInner}`}>
           <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
             OpenAI Developers
           </Link>
 
-          <nav className={`${NAV_CONTRACT.desktopNav} text-[13px] font-medium`}>
+          <nav className={`${NAV_CONTRACT.desktopNav} text-xs font-medium`}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -89,7 +89,7 @@ export function BlogShell({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-[13px] font-medium`}>
+                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-xs font-medium`}>
                   Learn
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
@@ -143,7 +143,9 @@ export function BlogShell({
 
       <div className={BLOG_UI_LAYOUT.shellFrame}>
         {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-muted/35 lg:block xl:w-[320px]">
+        <aside
+          className={`hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 lg:block xl:w-[320px] ${BLOG_UI_SURFACES.mutedCanvas}`}
+        >
           {railContent}
         </aside>
 

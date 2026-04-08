@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface RailLink {
@@ -24,43 +25,47 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block min-h-8 rounded-md px-2 py-0.5 text-[0.84rem] leading-snug text-foreground/70 transition-colors hover:text-foreground",
+    "min-h-8 justify-start rounded-md px-2 py-1 text-xs leading-snug text-foreground/70 transition-colors hover:text-foreground",
     active && "bg-accent/55 text-accent-foreground ring-1 ring-inset ring-border/45",
   )
 
   if (href) {
     return (
-      <Link href={href} className={baseClass}>
-        <span className="line-clamp-2">{label}</span>
-      </Link>
+      <Button variant="ghost" asChild className={baseClass}>
+        <Link href={href}>
+          <span className="line-clamp-2 text-left">{label}</span>
+        </Link>
+      </Button>
     )
   }
 
   return (
-    <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
+    <Button type="button" variant="ghost" onClick={onClick} className={cn(baseClass, "w-full")}>
       <span className="line-clamp-2">{label}</span>
-    </button>
+    </Button>
   )
 }
 
 function TopicRailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block min-h-8 rounded-md px-1.5 py-0.5 text-[0.8rem] leading-snug text-foreground/65 transition-colors hover:text-foreground",
+    "min-h-8 justify-start rounded-md px-1.5 py-1 text-xs leading-snug text-foreground/65 transition-colors hover:text-foreground",
     active && "bg-accent/45 text-accent-foreground ring-1 ring-inset ring-border/35",
   )
 
   if (href) {
     return (
-      <Link href={href} className={baseClass}>
-        <span className="line-clamp-2">{label}</span>
-      </Link>
+      <Button variant="ghost" asChild className={baseClass}>
+        <Link href={href}>
+          <span className="line-clamp-2 text-left">{label}</span>
+        </Link>
+      </Button>
     )
   }
 
   return (
-    <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
+    <Button type="button" variant="ghost" onClick={onClick} className={cn(baseClass, "w-full")}>
       <span className="line-clamp-2">{label}</span>
-    </button>
+    </Button>
   )
 }
 
@@ -83,18 +88,18 @@ export function BlogLeftRail({
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search"
-              className="h-7 rounded-md border-border/35 bg-muted/20 pl-8 pr-11 text-[11px]"
+              className="h-8 border-border/40 bg-muted/20 pl-8 pr-11 text-xs"
             />
             <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
               <Badge
                 variant="outline"
-                className="h-4 rounded-sm border-border/25 bg-muted/25 px-1 text-[9px] text-muted-foreground/70"
+                className="h-4 rounded-sm border-border/25 bg-muted/25 px-1 text-[10px] text-muted-foreground/70"
               >
                 ⌘
               </Badge>
               <Badge
                 variant="outline"
-                className="h-4 rounded-sm border-border/25 bg-muted/25 px-1 text-[9px] text-muted-foreground/70"
+                className="h-4 rounded-sm border-border/25 bg-muted/25 px-1 text-[10px] text-muted-foreground/70"
               >
                 K
               </Badge>
@@ -109,7 +114,7 @@ export function BlogLeftRail({
         )}
 
         <section className="space-y-1">
-          <h2 className="text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-foreground/60">Recent</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-foreground/60">Recent</h2>
           <div className="space-y-0.5">
             {recentLinks.map((link) => (
               <RailItem key={link.label} {...link} />
@@ -118,7 +123,7 @@ export function BlogLeftRail({
         </section>
 
         <section className="space-y-1">
-          <h2 className="text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-foreground/60">Topics</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-foreground/60">Topics</h2>
           <div className="space-y-0.5">
             {topicLinks.map((link) => (
               <TopicRailItem key={link.label} {...link} />

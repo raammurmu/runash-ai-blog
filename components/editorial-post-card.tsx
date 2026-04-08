@@ -31,11 +31,11 @@ export function EditorialPostCard({ post }: EditorialPostCardProps) {
           </h2>
         </Link>
 
-        <p className="max-w-[62ch] text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+        <p className="max-w-prose text-sm leading-relaxed text-muted-foreground">
           {post.excerpt}
         </p>
 
-        <p className="pt-0.5 text-[11px] uppercase tracking-[0.12em] text-muted-foreground/90 sm:text-xs">
+        <p className="pt-1 text-xs uppercase tracking-wide text-muted-foreground/90">
           {post.category}
         </p>
       </div>
