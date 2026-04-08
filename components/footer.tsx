@@ -90,7 +90,7 @@ export function Footer() {
               <Link href="/" className="group flex items-center gap-3">
                 <div className="relative h-9 w-9 overflow-hidden rounded-md border border-orange-200/70 bg-white shadow-sm dark:border-orange-900/40 dark:bg-gray-900">
                 <Image
-                  src="/logo.png"
+                  src="/placeholder-logo.svg"
                   alt="RunAsh logo"
                   fill
                   sizes="36px"
@@ -158,7 +158,7 @@ export function Footer() {
                   {latestPosts.map((post) => (
                     <Link
                       key={post.id}
-                      href={`/blog/${post.slug}`}
+                      href={`/post/${post.slug}`}
                       className="block text-sm text-gray-600 transition-colors hover:text-orange-700 dark:text-gray-300 dark:hover:text-orange-300"
                     >
                       <div className="mb-1 text-[11px] uppercase tracking-wide text-orange-600/80 dark:text-orange-300/80">

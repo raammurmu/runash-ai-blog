@@ -253,22 +253,22 @@
   }
 
   .site-wordmark {
-    @apply bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-base font-semibold tracking-tight text-transparent transition-opacity hover:opacity-85 dark:from-orange-400 dark:via-orange-300 dark:to-yellow-300;
+    @apply text-foreground transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .site-nav-link {
-    @apply rounded-md px-2.5 py-1 text-sm font-medium text-gray-600 transition-colors hover:bg-orange-100/60 hover:text-orange-700 dark:text-gray-300 dark:hover:bg-orange-900/30 dark:hover:text-orange-300;
+    @apply rounded-md px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .site-utility-button {
-    @apply rounded-md bg-gradient-to-r from-orange-600 to-yellow-600 text-white shadow-none transition-colors hover:from-orange-700 hover:to-yellow-700 dark:from-orange-500 dark:to-yellow-500 dark:hover:from-orange-600 dark:hover:to-yellow-600;
+    @apply rounded-md bg-primary text-primary-foreground shadow-none transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   .site-theme-toggle-wrap {
-    @apply rounded-md border border-orange-200/70 bg-white/50 dark:border-orange-900/40 dark:bg-gray-900/40;
+    @apply rounded-md border border-border bg-background/70;
   }
 
   .site-theme-toggle-wrap button {
-    @apply h-8 w-8 rounded-md px-0 text-gray-600 hover:bg-orange-100/70 hover:text-orange-700 dark:text-gray-300 dark:hover:bg-orange-900/30 dark:hover:text-orange-300;
+    @apply h-8 w-8 rounded-md px-0 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 }

@@ -8,12 +8,12 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { label: "All posts", href: "/blog", icon: BookOpen },
+  { label: "All posts", href: "/", icon: BookOpen },
   { label: "Search", href: "/search", icon: Search },
   { label: "Topics", href: "/category/product", icon: Tags },
 ]
 
-const BLOG_ROUTE_PREFIXES = ["/blog", "/post", "/category", "/tag", "/search", "/author"]
+const BLOG_ROUTE_PREFIXES = ["/post", "/category", "/tag", "/search", "/author"]
 
 export function MobileBottomNav() {
   const pathname = usePathname()
@@ -27,7 +27,7 @@ export function MobileBottomNav() {
 
       <div className="relative flex h-16 items-center justify-around px-2 pb-safe">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href === "/blog" && pathname.startsWith("/blog/"))
+          const isActive = pathname === item.href || (item.href === "/" && pathname === "/")
           const Icon = item.icon
 
           return (

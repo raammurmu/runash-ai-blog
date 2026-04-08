@@ -1,6 +1,8 @@
+import { BLOG_UI_LAYOUT } from "@/lib/ui-conventions"
+
 export default function LoadingAuthor() {
   return (
-    <div className="container mx-auto max-w-5xl px-6 py-8">
+    <div className={BLOG_UI_LAYOUT.pageContainer}>
       <div className="flex items-center gap-4">
         <div className="h-16 w-16 rounded-full bg-muted animate-pulse" />
         <div className="flex-1 space-y-2">
