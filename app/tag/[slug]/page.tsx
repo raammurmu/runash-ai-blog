@@ -3,6 +3,7 @@ import { getPostsByTag, getAllTags } from "@/lib/blog-data"
 import { Header } from "@/components/header"
 import { BlogCard } from "@/components/blog-card"
 import { Badge } from "@/components/ui/badge"
+import { BLOG_UI_LAYOUT } from "@/lib/ui-conventions"
 
 interface Props {
   params: { slug: string }
@@ -18,7 +19,7 @@ export default async function TagPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-5xl px-6 py-8">
+      <main className={BLOG_UI_LAYOUT.pageContainer}>
         <div className="mb-4 flex items-center gap-2">
           <h1 className="text-2xl font-bold">Tag</h1>
           <Badge variant="secondary">#{tag.name}</Badge>

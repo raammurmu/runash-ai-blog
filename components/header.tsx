@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ChevronDown, Menu, Plus } from "lucide-react"
+import Image from "next/image"
+import { ChevronDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageTranslateControl } from "@/components/page-translate-control"
@@ -18,12 +19,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { getAllCategories } from "@/lib/blog-data"
-
-const navItems = [
-  { label: "API", href: "/search?q=api" },
-  { label: "RunAsh Chat", href: "/search?q=chatgpt" },
-  { label: "EditX", href: "/search?q=codex" },
-]
+import { NAV_CONTRACT, SITE_HEADER_NAV_ITEMS } from "@/components/nav-config"
 
 export function Header() {
   const [isScrolled, setIsScrolled] = React.useState(false)
@@ -40,26 +36,34 @@ export function Header() {
   return (
     <header
       className={cn(
-        "site-header sticky top-0 z-[60] w-full border-b border-border/60 bg-background/95 transition-all duration-200 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        `${NAV_CONTRACT.headerShell} site-header transition-all duration-200`,
         isScrolled ? "site-header--scrolled" : "site-header--top"
       )}
     >
-      <div className="container mx-auto flex h-11 items-center justify-between gap-3 px-4">
+      <div className={`${NAV_CONTRACT.headerInner} container h-11 max-w-screen-2xl`}>
         <div className="flex min-w-0 flex-1 items-center">
-          <Link href="/" className="site-wordmark inline-flex items-center">
-            RunAsh
+          <Link href="/" className="site-wordmark inline-flex items-center gap-2">
+            <Image
+              src="/placeholder-logo.svg"
+              alt="RunAsh logo"
+              width={22}
+              height={22}
+              className="rounded-sm"
+              priority
+            />
+            <span className={NAV_CONTRACT.brandText}>RunAsh</span>
           </Link>
         </div>
 
-        <nav className="hidden items-center justify-center gap-0.5 md:flex" aria-label="Primary">
-          {navItems.map((item) => (
-            <Link key={item.label} href={item.href} className="site-nav-link">
+        <nav className={`${NAV_CONTRACT.desktopNav} justify-center`} aria-label="Primary">
+          {SITE_HEADER_NAV_ITEMS.map((item) => (
+            <Link key={item.label} href={item.href} className={NAV_CONTRACT.navLink}>
               {item.label}
             </Link>
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="site-nav-link h-8 gap-1 px-2">
+              <Button variant="ghost" className={NAV_CONTRACT.learnTrigger}>
                 Learn
                 <ChevronDown className="size-3.5" />
               </Button>
@@ -81,20 +85,18 @@ export function Header() {
 
         <div className="flex flex-1 items-center justify-end gap-1.5">
           <PageTranslateControl />
-          <Button className="site-utility-button h-8 px-3 text-xs font-medium" asChild>
-            <Link href="/create">
-              <Plus className="mr-1.5 size-3.5" />
-              Start creating
-            </Link>
-          </Button>
-
           <div className="site-theme-toggle-wrap">
             <ThemeToggle />
           </div>
 
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="h-8 w-8 md:hidden" aria-label="Open navigation menu">
+              <Button
+                variant="outline"
+                size="icon"
+                className={`${NAV_CONTRACT.mobileIconButton} md:hidden`}
+                aria-label="Open navigation menu"
+              >
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
@@ -103,7 +105,7 @@ export function Header() {
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <div className="mt-5 space-y-3">
-                {navItems.map((item) => (
+                {SITE_HEADER_NAV_ITEMS.map((item) => (
                   <Button
                     key={item.label}
                     asChild

@@ -55,13 +55,13 @@ Ensure the blog entry includes the title, excerpt, and content HTML string. Keep
 * **Dimensions:** 1300 x 650 pixels.
 * **Templates:** Use our [Figma Template](https://www.figma.com/file/sXrf9VtkkbWI7kCIesMkDY/HF-Blog-Template?node-id=351%3A39) to maintain brand consistency.
 
-### Community Posts
+### Blog UI conventions
 
-If your post is not an official RunAsh collaboration, please use our [Community Blog Editor](https://blog.runash.in/create). It includes a real-time preview and helper tools for:
+For layout consistency across blog pages:
 
-* Image table formatting
-* Tip boxes
-* Reference styling
+- Reuse shared UI layout classes from `lib/ui-conventions.ts` (for page containers, shell widths, and shell paddings).
+- Prefer semantic design tokens (`bg-background`, `bg-muted`, `text-foreground`, etc.) over one-off hex colors when an equivalent utility exists.
+- Keep interaction logs lightweight and structured via `lib/client-logger.ts`; avoid logging user-generated text or sensitive commerce/payment data.
 
 ---
 
@@ -94,7 +94,7 @@ Notes:
 2. Open a **Pull Request**.
 3. Once merged, the article goes live automatically.
 
-**Questions?** Reach out to the team or check our [Assistant Space](https://blog.runash.in/create).
+**Questions?** Reach out to the team for publishing support.
 
 ---
 

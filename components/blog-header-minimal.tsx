@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { PageTranslateControl } from "@/components/page-translate-control"
 
 const navItems = [
@@ -6,7 +7,7 @@ const navItems = [
   { label: "API", href: "/search?q=api" },
   { label: "Codex", href: "/search?q=codex" },
   { label: "ChatGPT", href: "/search?q=chatgpt" },
-  { label: "Learn", href: "/blog" },
+  { label: "Learn", href: "/" },
 ]
 
 export function BlogHeaderMinimal() {
@@ -14,8 +15,9 @@ export function BlogHeaderMinimal() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-14 w-full max-w-[1440px] items-center gap-4 px-4 lg:px-10">
         <div className="flex min-w-0 flex-1">
-          <Link href="/" className="text-sm font-semibold tracking-tight text-foreground hover:text-foreground/80">
-            RunAsh Blog
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground hover:text-foreground/80">
+            <Image src="/placeholder-logo.svg" alt="RunAsh logo" width={24} height={24} className="rounded-sm" priority />
+            <span>RunAsh Blog</span>
           </Link>
         </div>
 

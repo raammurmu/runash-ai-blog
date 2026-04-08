@@ -4,6 +4,7 @@ import { Header } from "@/components/header"
 import { BlogCard } from "@/components/blog-card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { BLOG_UI_LAYOUT } from "@/lib/ui-conventions"
 
 interface Props {
   params: { username: string }
@@ -18,7 +19,7 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-5xl px-6 py-8">
+      <main className={BLOG_UI_LAYOUT.pageContainer}>
         <section className="mb-8 rounded-2xl border p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
             <Avatar className="h-16 w-16">
