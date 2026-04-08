@@ -20,9 +20,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getAllCategories } from "@/lib/blog-data"
 
 const navItems = [
-  { label: "API", href: "/search?q=api" },
-  { label: "RunAsh Chat", href: "/search?q=chatgpt" },
-  { label: "EditX", href: "/search?q=codex" },
+  { label: "Livex", href: "/search?q=livex" },
+  { label: "RunAshChat", href: "/search?q=runashchat" },
+  { label: "Codec", href: "/search?q=codec" },
 ]
 
 export function Header() {
