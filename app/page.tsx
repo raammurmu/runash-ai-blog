@@ -1,7 +1,6 @@
 "use client"
 
 import { useMemo, useState } from "react"
-
 import { BlogFeed } from "@/components/blog-feed"
 import { BlogShell } from "@/components/blog-shell"
 import { getAllPosts, getRecentPosts } from "@/lib/blog-data"
