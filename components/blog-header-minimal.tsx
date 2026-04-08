@@ -4,10 +4,10 @@ import { PageTranslateControl } from "@/components/page-translate-control"
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "API", href: "/search?q=api" },
-  { label: "Codex", href: "/search?q=codex" },
-  { label: "ChatGPT", href: "/search?q=chatgpt" },
-  { label: "Learn", href: "/" },
+  { label: "Livex", href: "/search?q=livex" },
+  { label: "Codec", href: "/search?q=codec" },
+  { label: "RunAshChat", href: "/search?q=runashchat" },
+  { label: "Learn", href: "/learn" },
 ]
 
 export function BlogHeaderMinimal() {
@@ -36,10 +36,10 @@ export function BlogHeaderMinimal() {
         <div className="flex flex-1 items-center justify-end gap-2">
           <PageTranslateControl />
           <Link
-            href="/search?q=api"
+            href="https://runash.in/login"
             className="inline-flex h-9 items-center rounded-full bg-slate-900 px-4 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
           >
-            API Dashboard
+           Dashboard
           </Link>
         </div>
       </div>
