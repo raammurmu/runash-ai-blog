@@ -11,6 +11,7 @@ export function EditorialPostCard({ post }: EditorialPostCardProps) {
   const coverImage = post.image || "/images/blog-cover-gradient.svg"
 
   return (
+    // Visual assumption: lead image remains first so cards scan consistently across mobile + desktop layouts.
     <article className="space-y-2.5 sm:space-y-3.5 lg:space-y-4">
       <Link href={`/post/${post.slug}`} className="block overflow-hidden rounded-xl sm:rounded-2xl">
         <Image
