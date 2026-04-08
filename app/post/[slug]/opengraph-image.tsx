@@ -1,65 +1,124 @@
 import { ImageResponse } from 'next/og';
-import { blogPosts } from "@/lib/blog-data";
+import { blogPosts } from '@/lib/blog-data';
 
 export const runtime = 'edge';
 export const alt = 'RunAsh Blog Post';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+type ImageParams = { slug?: string };
+
+export default async function Image({
+  params,
+}: {
+  params: ImageParams | Promise<ImageParams>;
+}) {
+  const resolvedParams = await params;
+  const post = resolvedParams?.slug
+    ? blogPosts.find((p) => p.slug === resolvedParams.slug)
+    : undefined;
+
+  const title = post?.title ?? 'RunAsh AI Blog';
+  const category = post?.category ?? 'Editorial';
+  const date = post?.date ?? 'Latest insights';
 
   return new ImageResponse(
     (
-      // The RunAsh Card Design
       <div
         style={{
           height: '100%',
           width: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-          backgroundImage: 'radial-gradient(circle at top left, #fff7ed 0%, #ffffff 100%)',
-          padding: '80px',
+          position: 'relative',
+          overflow: 'hidden',
+          color: '#f8fafc',
+          backgroundColor: '#0f172a',
+          backgroundImage:
+            'radial-gradient(circle at 12% 18%, rgba(99,102,241,0.52), transparent 38%), radial-gradient(circle at 86% 16%, rgba(14,165,233,0.35), transparent 40%), radial-gradient(circle at 72% 88%, rgba(249,115,22,0.24), transparent 34%), linear-gradient(135deg, #020617 0%, #0f172a 36%, #1e293b 100%)',
+          padding: '64px 72px',
+          fontFamily: 'Inter, ui-sans-serif, system-ui',
         }}
       >
-        {/* Decorative Orange Blobs */}
-        <div style={{ position: 'absolute', top: -100, right: -100, width: 400, height: 400, borderRadius: 200, background: 'linear-gradient(to bottom right, #f97316, #f59e0b)', opacity: 0.1 }} />
-        
-        {/* Main Content Card */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'white',
-          border: '1px solid #ffedd5',
-          borderRadius: '40px',
-          padding: '60px',
-          boxShadow: '0 20px 50px rgba(251, 146, 60, 0.1)',
-          width: '100%',
-          height: '100%',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-            <span style={{ fontSize: '40px', marginRight: '20px' }}>{post?.emoji || '🚀'}</span>
-            <div style={{ background: 'linear-gradient(to right, #f97316, #f59e0b)', padding: '8px 20px', borderRadius: '100px', color: 'white', fontSize: '24px', fontWeight: 'bold' }}>
-              {post?.category}
-            </div>
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage:
+              'linear-gradient(120deg, rgba(248,250,252,0.06) 0%, rgba(248,250,252,0) 35%), repeating-linear-gradient(0deg, rgba(148,163,184,0.07) 0px, rgba(148,163,184,0.07) 1px, transparent 1px, transparent 42px)',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
+            top: 56,
+            right: 64,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '1px solid rgba(226,232,240,0.32)',
+            borderRadius: 999,
+            padding: '8px 18px',
+            fontSize: 24,
+            fontWeight: 700,
+            letterSpacing: 0.5,
+            color: 'rgba(226,232,240,0.95)',
+            background: 'rgba(15,23,42,0.34)',
+          }}
+        >
+          RunAsh AI
+        </div>
+
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              fontSize: 28,
+              color: 'rgba(226,232,240,0.86)',
+              fontWeight: 500,
+              marginBottom: 26,
+            }}
+          >
+            <span style={{ textTransform: 'uppercase', letterSpacing: 1.8 }}>
+              {category}
+            </span>
+            <span style={{ margin: '0 14px', opacity: 0.7 }}>•</span>
+            <span>{date}</span>
           </div>
 
-          <h1 style={{ fontSize: '72px', fontWeight: '900', color: '#1a1a1a', lineHeight: 1.1, marginBottom: '30px', fontFamily: 'Inter' }}>
-            {post?.title}
+          <h1
+            style={{
+              margin: 0,
+              maxWidth: 980,
+              fontSize: 76,
+              lineHeight: 1.05,
+              fontWeight: 800,
+              letterSpacing: -1.6,
+              color: '#f8fafc',
+            }}
+          >
+            {title}
           </h1>
 
-          <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '30px', backgroundColor: '#fed7aa', display: 'flex', alignItems: 'center', justifyItems: 'center', color: '#9a3412', fontSize: '24px', fontWeight: 'bold', marginRight: '20px' }}>
-                {post?.author.name[0]}
-              </div>
-              <span style={{ fontSize: '28px', color: '#4b5563', fontWeight: '500' }}>{post?.author.name}</span>
-            </div>
-            <div style={{ fontSize: '28px', color: '#f97316', fontWeight: '800' }}>RunAsh AI</div>
-          </div>
+          <div
+            style={{
+              marginTop: 'auto',
+              width: '100%',
+              height: 1,
+              background:
+                'linear-gradient(90deg, rgba(226,232,240,0.46) 0%, rgba(226,232,240,0.08) 70%, rgba(226,232,240,0) 100%)',
+            }}
+          />
         </div>
       </div>
     ),
