@@ -73,7 +73,7 @@ export function BlogShell({
       <header className={NAV_CONTRACT.headerShell}>
         <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-6`}>
           <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
-            OpenAI Developers
+            RunAsh AI 
           </Link>
 
           <nav className={`${NAV_CONTRACT.desktopNav} text-[13px] font-medium`}>
@@ -123,7 +123,7 @@ export function BlogShell({
             </Sheet>
 
             <Button asChild size="sm" className={`site-utility-button hidden md:inline-flex ${NAV_CONTRACT.actionButton}`}>
-              <Link href="/search?q=api">API Dashboard ↗</Link>
+              <Link href="/search?q=api">Dashboard ↗</Link>
             </Button>
 
             <Button asChild variant="ghost" size="icon" className={`hidden border-0 md:inline-flex ${NAV_CONTRACT.utilityIconButton}`} aria-label="Theme settings">
