@@ -1,9 +1,12 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
+import { PanelLeft } from "lucide-react"
 
 import { BlogFeed } from "@/components/blog-feed"
-import { BlogShell } from "@/components/blog-shell"
+import { Header } from "@/components/header"
+import { Sidebar } from "@/components/sidebar"
+import { Button } from "@/components/ui/button"
 import type { BlogPost } from "@/lib/types"
 
 interface BlogPageClientProps {
@@ -11,59 +14,52 @@ interface BlogPageClientProps {
 }
 
 export function BlogPageClient({ posts }: BlogPageClientProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeTopic, setActiveTopic] = useState("All")
-
-  const topics = useMemo(() => {
-    const categories = Array.from(new Set(posts.map((post) => post.category).filter(Boolean))).sort((a, b) =>
-      a.localeCompare(b),
-    )
-
-    return ["All", ...categories]
-  }, [posts])
-
-  const filteredPosts = useMemo(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase()
-
-    return posts.filter((post) => {
-      const matchesTopic = activeTopic === "All" || post.category === activeTopic
-
-      if (!normalizedQuery) {
-        return matchesTopic
-      }
-
-      const haystack = [post.title, post.excerpt, post.category, post.tags.join(" ")].join(" ").toLowerCase()
-
-      return matchesTopic && haystack.includes(normalizedQuery)
-    })
-  }, [activeTopic, posts, searchQuery])
-
-  const recentLinks = useMemo(
-    () =>
-      posts.slice(0, 6).map((post) => ({
-        label: post.title,
-        href: `/post/${post.slug}`,
-      })),
-    [posts],
-  )
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileRailOpen, setMobileRailOpen] = useState(false)
 
   return (
-    <BlogShell
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
-      recentLinks={recentLinks}
-      activeTopic={activeTopic}
-      topics={topics}
-      onTopicChange={setActiveTopic}
-    >
-      <section className="space-y-3 pb-7">
-        <h1 className="text-pretty text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">RunAsh Blog</h1>
-        <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
-          Product updates, engineering notes, and live-commerce insights from the RunAsh AI team.
-        </p>
-      </section>
+    <div className="site-surface flex min-h-screen flex-col">
+      <Header />
+      <div className="sticky top-11 z-50 border-b border-border/60 bg-background/95 px-4 py-2 backdrop-blur md:hidden">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1.5 rounded-md px-2.5 text-xs"
+            onClick={() => setMobileRailOpen(true)}
+          >
+            <PanelLeft className="size-3.5" />
+            Browse
+          </Button>
+          <span className="text-xs font-medium tracking-wide text-muted-foreground">Latest posts</span>
+        </div>
+      </div>
+      <div className="flex flex-1">
+        <Sidebar
+          isCollapsed={sidebarCollapsed}
+          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          isMobileOpen={mobileRailOpen}
+          setMobileOpen={setMobileRailOpen}
+        />
 
-      <BlogFeed posts={filteredPosts} />
-    </BlogShell>
+        <main className="site-gradient-bg flex-1 px-4 py-6 sm:py-8 lg:px-8">
+          <div className="mx-auto w-full max-w-5xl">
+            <section className="py-4 sm:py-6 lg:py-10">
+              <div className="mx-auto max-w-3xl text-center">
+                <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">RunAsh Blog</h1>
+                <p className="mt-3 text-base text-gray-600 dark:text-gray-400 sm:mt-4 sm:text-lg">
+                  Insights, product updates, and practical guides from the RunAsh AI team.
+                </p>
+              </div>
+            </section>
+
+            <section className="pb-8 sm:pb-10">
+              <BlogFeed posts={posts} />
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
   )
 }
