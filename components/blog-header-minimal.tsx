@@ -7,7 +7,7 @@ const navItems = [
   { label: "API", href: "/search?q=api" },
   { label: "Codex", href: "/search?q=codex" },
   { label: "ChatGPT", href: "/search?q=chatgpt" },
-  { label: "Learn", href: "/blog" },
+  { label: "Learn", href: "/" },
 ]
 
 export function BlogHeaderMinimal() {
