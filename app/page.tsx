@@ -54,8 +54,7 @@ export default function HomePage() {
             RunAsh AI Blog
           </h1>
           <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            Product updates, launch notes, and practical guides for building live commerce with AI hosts, realtime
-            streaming, and conversion-ready storefronts.
+            Product updates, launch notes, and practical guides.
           </p>
         </header>
 
