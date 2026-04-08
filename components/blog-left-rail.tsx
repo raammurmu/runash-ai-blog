@@ -24,8 +24,8 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-2 py-1.5 text-[1rem] leading-snug text-foreground/80 transition-colors hover:text-foreground",
-    active && "bg-black/10 text-foreground",
+    "block rounded-md px-2 py-1 text-[0.92rem] leading-snug text-foreground/75 transition-colors hover:text-foreground",
+    active && "rounded-lg bg-muted text-foreground",
   )
 
   if (href) {
@@ -45,7 +45,7 @@ function RailItem({ label, href, onClick, active }: RailLink) {
 
 function TopicRailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block rounded-md px-1.5 py-1 text-[0.98rem] text-foreground/75 transition-colors hover:text-foreground",
+    "block rounded-md px-1.5 py-0.5 text-[0.86rem] leading-snug text-foreground/70 transition-colors hover:text-foreground",
     active && "text-foreground",
   )
 
@@ -74,22 +74,28 @@ export function BlogLeftRail({
 }: BlogLeftRailProps) {
   return (
     <aside className={cn("h-fit", className)}>
-      <div className="space-y-7">
-        <section className="space-y-2.5">
+      <div className="space-y-4.5">
+        <section className="space-y-1.5">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/60" />
             <Input
               value={onSearchChange ? searchQuery ?? "" : undefined}
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search"
-              className="h-9 rounded-lg border-border/60 bg-background pl-9 pr-14 text-sm"
+              className="h-8 rounded-md border-border/40 bg-muted/20 pl-8 pr-12 text-xs"
             />
-            <div className="pointer-events-none absolute right-2 top-1/2 flex h-5 -translate-y-1/2 items-center gap-1">
-              <Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px] text-muted-foreground">
+            <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
+              <Badge
+                variant="outline"
+                className="h-4 rounded-sm border-border/40 bg-background/80 px-1 text-[9px] text-muted-foreground"
+              >
                 ⌘
               </Badge>
-              <Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px] text-muted-foreground">
+              <Badge
+                variant="outline"
+                className="h-4 rounded-sm border-border/40 bg-background/80 px-1 text-[9px] text-muted-foreground"
+              >
                 K
               </Badge>
             </div>
@@ -97,23 +103,23 @@ export function BlogLeftRail({
         </section>
 
         {allPostsLink && (
-          <section className="space-y-2">
+          <section className="space-y-1">
             <RailItem {...allPostsLink} />
           </section>
         )}
 
-        <section className="space-y-2">
-          <h2 className="text-sm font-medium text-foreground">Recent</h2>
-          <div className="space-y-0.5">
+        <section className="space-y-1.5">
+          <h2 className="text-[0.72rem] font-semibold uppercase tracking-wide text-foreground/70">Recent</h2>
+          <div className="space-y-0">
             {recentLinks.map((link) => (
               <RailItem key={link.label} {...link} />
             ))}
           </div>
         </section>
 
-        <section className="space-y-2">
-          <h2 className="text-sm font-medium text-foreground">Topics</h2>
-          <div className="space-y-0.5">
+        <section className="space-y-1.5">
+          <h2 className="text-[0.72rem] font-semibold uppercase tracking-wide text-foreground/70">Topics</h2>
+          <div className="space-y-0">
             {topicLinks.map((link) => (
               <TopicRailItem key={link.label} {...link} />
             ))}
