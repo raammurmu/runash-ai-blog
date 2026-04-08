@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 import { ChevronDown, Menu, Search, Sun } from "lucide-react"
 import { BlogLeftRail } from "@/components/blog-left-rail"
 import { Button } from "@/components/ui/button"
+import { logClientInteraction } from "@/lib/client-logger"
+import { BLOG_UI_LAYOUT, BLOG_UI_SURFACES } from "@/lib/ui-conventions"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +36,10 @@ export function BlogShell({
   children,
 }: BlogShellProps) {
   const pathname = usePathname()
+  const handleTopicChange = (topic: string, source: "rail" | "menu") => {
+    logClientInteraction("topic_filter_changed", { topic, source })
+    onTopicChange(topic)
+  }
 
   const navLinks = [
     {
@@ -70,7 +76,7 @@ export function BlogShell({
       recentLinks={recentLinks}
       topicLinks={topics.map((topic) => ({
         label: topic,
-        onClick: () => onTopicChange(topic),
+        onClick: () => handleTopicChange(topic, "rail"),
         active: activeTopic === topic,
       }))}
       className="px-3 py-4 sm:px-4"
@@ -78,14 +84,14 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-[#efefef] text-foreground">
+    <div className={`min-h-screen ${BLOG_UI_SURFACES.mutedCanvas} text-foreground`}>
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex w-full max-w-[1420px] items-center justify-between px-3 py-2.5 sm:px-5 lg:px-7">
+        <div className={BLOG_UI_LAYOUT.shellHeaderInner}>
           <Link href="/" className="text-base font-semibold leading-tight tracking-tight text-foreground sm:text-[1.05rem]">
             OpenAI Developers
           </Link>
 
-          <nav className="hidden items-center gap-3 text-[13px] font-medium md:flex">
+          <nav className="hidden items-center gap-3 text-sm font-medium md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -108,7 +114,7 @@ export function BlogShell({
                   <Link href="/">All posts</Link>
                 </DropdownMenuItem>
                 {topics.slice(0, 6).map((topic) => (
-                  <DropdownMenuItem key={topic} onClick={() => onTopicChange(topic)}>
+                  <DropdownMenuItem key={topic} onClick={() => handleTopicChange(topic, "menu")}>
                     {topic}
                   </DropdownMenuItem>
                 ))}
@@ -123,7 +129,7 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-[#efefef] p-3 sm:p-4 sm:max-w-sm">
+              <SheetContent side="left" className={`w-[92%] overflow-y-auto ${BLOG_UI_SURFACES.mutedCanvas} p-3 sm:max-w-sm sm:p-4`}>
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -131,7 +137,7 @@ export function BlogShell({
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden h-8 rounded-full bg-[#171717] px-3.5 text-xs font-medium text-white hover:bg-black md:inline-flex">
+            <Button asChild size="sm" className={`hidden h-8 rounded-full px-3.5 text-xs font-medium md:inline-flex ${BLOG_UI_SURFACES.emphasisButton}`}>
               <Link href="/search?q=api">API Dashboard ↗</Link>
             </Button>
 
@@ -150,14 +156,14 @@ export function BlogShell({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1560px]">
+      <div className={BLOG_UI_LAYOUT.shellFrame}>
         {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-[#efefef] lg:block xl:w-[320px]">
+        <aside className={`hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} lg:block xl:w-[320px]`}>
           {railContent}
         </aside>
 
-        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
-          <div className="mx-auto w-full max-w-[900px] xl:max-w-[980px]">{children}</div>
+        <main className={BLOG_UI_LAYOUT.shellMainPadding}>
+          <div className={BLOG_UI_LAYOUT.shellContentWidth}>{children}</div>
         </main>
       </div>
     </div>

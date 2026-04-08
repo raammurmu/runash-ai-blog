@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { getPostsByCategory, getAllCategories } from "@/lib/blog-data"
 import { Header } from "@/components/header"
 import { BlogCard } from "@/components/blog-card"
+import { BLOG_UI_LAYOUT } from "@/lib/ui-conventions"
 
 interface Props {
   params: { slug: string }
@@ -17,7 +18,7 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto max-w-5xl px-6 py-8">
+      <main className={BLOG_UI_LAYOUT.pageContainer}>
         <h1 className="mb-4 text-2xl font-bold">{category.name}</h1>
         <p className="mb-6 text-muted-foreground">{category.description}</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
