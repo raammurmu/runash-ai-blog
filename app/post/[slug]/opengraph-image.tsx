@@ -17,10 +17,11 @@ export default async function Image({
   const post = resolvedParams?.slug
     ? blogPosts.find((p) => p.slug === resolvedParams.slug)
     : undefined;
+  const isFallback = Boolean(resolvedParams?.slug && !post);
 
-  const title = post?.title ?? 'RunAsh AI Blog';
-  const category = post?.category ?? 'Editorial';
-  const date = post?.date ?? 'Latest insights';
+  const title = post?.title ?? (isFallback ? 'Post not found' : 'RunAsh AI Blog');
+  const category = post?.category ?? (isFallback ? 'Unavailable slug' : 'Editorial');
+  const date = post?.date ?? 'runash.ai/blog';
 
   return new ImageResponse(
     (
@@ -32,10 +33,10 @@ export default async function Image({
           position: 'relative',
           overflow: 'hidden',
           color: '#f8fafc',
-          backgroundColor: '#0f172a',
+          backgroundColor: '#091022',
           backgroundImage:
-            'radial-gradient(circle at 12% 18%, rgba(99,102,241,0.52), transparent 38%), radial-gradient(circle at 86% 16%, rgba(14,165,233,0.35), transparent 40%), radial-gradient(circle at 72% 88%, rgba(249,115,22,0.24), transparent 34%), linear-gradient(135deg, #020617 0%, #0f172a 36%, #1e293b 100%)',
-          padding: '64px 72px',
+            'radial-gradient(circle at 14% 18%, rgba(139,92,246,0.38), transparent 45%), radial-gradient(circle at 88% 22%, rgba(56,189,248,0.32), transparent 42%), radial-gradient(circle at 72% 90%, rgba(45,212,191,0.2), transparent 40%), linear-gradient(130deg, #0a1024 0%, #141e3a 48%, #1f2a4a 100%)',
+          padding: '60px 68px',
           fontFamily: 'Inter, ui-sans-serif, system-ui',
         }}
       >
@@ -44,26 +45,53 @@ export default async function Image({
             position: 'absolute',
             inset: 0,
             backgroundImage:
-              'linear-gradient(120deg, rgba(248,250,252,0.06) 0%, rgba(248,250,252,0) 35%), repeating-linear-gradient(0deg, rgba(148,163,184,0.07) 0px, rgba(148,163,184,0.07) 1px, transparent 1px, transparent 42px)',
+              'linear-gradient(130deg, rgba(255,255,255,0.08), rgba(255,255,255,0) 38%), repeating-linear-gradient(-45deg, rgba(226,232,240,0.05) 0px, rgba(226,232,240,0.05) 1px, transparent 1px, transparent 28px)',
           }}
         />
 
         <div
           style={{
             position: 'absolute',
-            top: 56,
-            right: 64,
+            top: -110,
+            right: -80,
+            width: 300,
+            height: 300,
+            borderRadius: 9999,
+            border: '1px solid rgba(226,232,240,0.14)',
+            background:
+              'radial-gradient(circle at 30% 30%, rgba(226,232,240,0.24), rgba(226,232,240,0.02) 62%)',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
+            bottom: -140,
+            left: -60,
+            width: 340,
+            height: 340,
+            borderRadius: 9999,
+            border: '1px solid rgba(148,163,184,0.12)',
+            opacity: 0.7,
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
+            top: 44,
+            right: 56,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             border: '1px solid rgba(226,232,240,0.32)',
             borderRadius: 999,
-            padding: '8px 18px',
-            fontSize: 24,
-            fontWeight: 700,
-            letterSpacing: 0.5,
+            padding: '8px 16px',
+            fontSize: 20,
+            fontWeight: 600,
+            letterSpacing: 0.3,
             color: 'rgba(226,232,240,0.95)',
-            background: 'rgba(15,23,42,0.34)',
+            background: 'rgba(15,23,42,0.22)',
           }}
         >
           RunAsh AI
@@ -83,32 +111,45 @@ export default async function Image({
             style={{
               display: 'flex',
               alignItems: 'center',
-              fontSize: 28,
-              color: 'rgba(226,232,240,0.86)',
+              fontSize: 24,
+              color: 'rgba(226,232,240,0.82)',
               fontWeight: 500,
-              marginBottom: 26,
+              marginBottom: 20,
             }}
           >
             <span style={{ textTransform: 'uppercase', letterSpacing: 1.8 }}>
               {category}
             </span>
-            <span style={{ margin: '0 14px', opacity: 0.7 }}>•</span>
+            <span style={{ margin: '0 12px', opacity: 0.65 }}>•</span>
             <span>{date}</span>
           </div>
 
           <h1
             style={{
               margin: 0,
-              maxWidth: 980,
-              fontSize: 76,
-              lineHeight: 1.05,
+              maxWidth: 1000,
+              fontSize: 74,
+              lineHeight: 1.06,
               fontWeight: 800,
-              letterSpacing: -1.6,
+              letterSpacing: -1.3,
               color: '#f8fafc',
             }}
           >
             {title}
           </h1>
+
+          {isFallback ? (
+            <p
+              style={{
+                marginTop: 18,
+                fontSize: 26,
+                color: 'rgba(226,232,240,0.88)',
+              }}
+            >
+              We couldn&apos;t find this article. Explore the latest posts on
+              the RunAsh AI blog.
+            </p>
+          ) : null}
 
           <div
             style={{
