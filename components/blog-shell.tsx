@@ -65,7 +65,7 @@ export function BlogShell({
       allPostsLink={{
         label: "All posts",
         href: "/",
-        active: pathname === "/",
+        active: true,
       }}
       recentLinks={recentLinks}
       topicLinks={topics.map((topic) => ({

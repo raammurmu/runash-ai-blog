@@ -75,10 +75,10 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
       <ScrollArea className="flex-1">
         <nav className="flex flex-col gap-1 px-3 pb-4">
           <SidebarTextLink
-            href="/blog"
+            href="/"
             label="All posts"
             isCollapsed={isCollapsed}
-            isActive={pathname === "/blog"}
+            isActive={pathname === "/"}
             onSelect={() => setMobileOpen?.(false)}
           />
 
@@ -89,10 +89,10 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
             {recentPosts.map((post) => (
               <SidebarTextLink
                 key={post.slug}
-                href={`/blog/${post.slug}`}
+                href={`/post/${post.slug}`}
                 label={post.title}
                 isCollapsed={isCollapsed}
-                isActive={pathname === `/blog/${post.slug}`}
+                isActive={pathname === `/post/${post.slug}`}
                 onSelect={() => setMobileOpen?.(false)}
               />
             ))}
