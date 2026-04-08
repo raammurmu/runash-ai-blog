@@ -69,9 +69,9 @@ export function BlogShell({
   )
 
   return (
-    <div className="min-h-screen bg-muted/35 text-foreground">
+    <div className={`min-h-screen text-foreground ${BLOG_UI_SURFACES.mutedCanvas}`}>
       <header className={NAV_CONTRACT.headerShell}>
-        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-7`}>
+        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-6`}>
           <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
             OpenAI Developers
           </Link>
@@ -142,8 +142,7 @@ export function BlogShell({
       </header>
 
       <div className={BLOG_UI_LAYOUT.shellFrame}>
-        {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-muted/35 lg:block xl:w-[320px]">
+        <aside className={`hidden min-h-[calc(100vh-57px)] border-r border-border/50 ${BLOG_UI_SURFACES.mutedCanvas} lg:block`}>
           {railContent}
         </aside>
 

@@ -13,7 +13,7 @@ export const SITE_HEADER_NAV_ITEMS = [
 
 export const NAV_CONTRACT = {
   headerShell:
-    "sticky top-0 z-40 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90",
+    "sticky top-0 z-40 w-full border-b border-border/50 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/85",
   headerInner: "mx-auto flex w-full items-center justify-between gap-3 px-4",
   brandText: "site-wordmark text-base font-semibold leading-tight tracking-tight",
   desktopNav: "hidden items-center gap-1 md:flex",
