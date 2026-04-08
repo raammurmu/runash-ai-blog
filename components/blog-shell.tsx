@@ -58,7 +58,7 @@ export function BlogShell({
         onClick: () => onTopicChange(topic),
         active: activeTopic === topic,
       }))}
-      className="px-3 py-4 sm:px-4"
+      className="px-3 py-3 sm:px-4"
     />
   )
 
