@@ -76,7 +76,7 @@ export function BlogShell({
             RunAsh AI 
           </Link>
 
-          <nav className={`${NAV_CONTRACT.desktopNav} text-[13px] font-medium`}>
+          <nav className={`${NAV_CONTRACT.desktopNav} text-xs font-medium`}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -89,7 +89,7 @@ export function BlogShell({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-[13px] font-medium`}>
+                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-xs font-medium`}>
                   Learn
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>

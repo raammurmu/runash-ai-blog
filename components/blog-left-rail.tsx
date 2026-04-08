@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface RailLink {
@@ -32,16 +33,18 @@ function RailItem({ label, href, onClick, active }: RailLink) {
 
   if (href) {
     return (
-      <Link href={href} className={baseClass}>
-        <span className="line-clamp-2">{label}</span>
-      </Link>
+      <Button variant="ghost" asChild className={baseClass}>
+        <Link href={href}>
+          <span className="line-clamp-2 text-left">{label}</span>
+        </Link>
+      </Button>
     )
   }
 
   return (
-    <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
+    <Button type="button" variant="ghost" onClick={onClick} className={cn(baseClass, "w-full")}>
       <span className="line-clamp-2">{label}</span>
-    </button>
+    </Button>
   )
 }
 
@@ -55,16 +58,18 @@ function TopicRailItem({ label, href, onClick, active }: RailLink) {
 
   if (href) {
     return (
-      <Link href={href} className={baseClass}>
-        <span className="line-clamp-2">{label}</span>
-      </Link>
+      <Button variant="ghost" asChild className={baseClass}>
+        <Link href={href}>
+          <span className="line-clamp-2 text-left">{label}</span>
+        </Link>
+      </Button>
     )
   }
 
   return (
-    <button type="button" onClick={onClick} className={cn(baseClass, "w-full text-left")}>
+    <Button type="button" variant="ghost" onClick={onClick} className={cn(baseClass, "w-full")}>
       <span className="line-clamp-2">{label}</span>
-    </button>
+    </Button>
   )
 }
 
