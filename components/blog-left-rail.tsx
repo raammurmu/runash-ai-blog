@@ -26,10 +26,10 @@ interface BlogLeftRailProps {
 
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block min-h-7 rounded-md px-2 py-0.5 text-[0.79rem] leading-snug text-foreground/70 transition-colors hover:text-foreground",
+    "min-h-7 w-full justify-start rounded-md px-2 py-1 text-[0.79rem] leading-snug text-foreground/70 transition-colors hover:bg-muted/35 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring/45 focus-visible:ring-offset-0",
     active && "text-foreground",
     active && "rounded-lg bg-muted text-foreground",
-    active && "ring-1 ring-inset ring-border/45",
+    active && "bg-muted/55 ring-1 ring-inset ring-border/45",
   )
 
   if (href) {
@@ -51,10 +51,10 @@ function RailItem({ label, href, onClick, active }: RailLink) {
 
 function TopicRailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
-    "block min-h-7 rounded-md px-1.5 py-0.5 text-[0.76rem] leading-snug text-foreground/65 transition-colors hover:text-foreground",
+    "min-h-7 w-full justify-start rounded-md px-2 py-1 text-[0.76rem] leading-snug text-foreground/65 transition-colors hover:bg-muted/35 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring/45 focus-visible:ring-offset-0",
     active && "text-foreground",
     active && "rounded-lg bg-muted text-foreground",
-    active && "ring-1 ring-inset ring-border/35",
+    active && "bg-muted/55 ring-1 ring-inset ring-border/35",
   )
 
   if (href) {
@@ -137,10 +137,62 @@ export function BlogLeftRail({
   return (
     <aside className={cn("h-fit", className)}>
       <div className="space-y-3.5">
-        {sections.map((section, index) => (
-          <div key={index} className="space-y-3.5">
-            {section}
-            {index < sections.length - 1 ? <Separator className="bg-border/45" /> : null}
+        <section className="space-y-1">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
+            <Input
+              value={onSearchChange ? searchQuery ?? "" : undefined}
+              defaultValue={onSearchChange ? undefined : ""}
+              onChange={(e) => onSearchChange?.(e.target.value)}
+              placeholder="Search"
+              className="h-7 rounded-md border-border/35 bg-muted/20 pl-8 pr-11 text-[10.5px] text-foreground/85 placeholder:text-muted-foreground/60"
+            />
+            <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
+              <Badge
+                variant="outline"
+                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+              >
+                ⌘
+              </Badge>
+              <Badge
+                variant="outline"
+                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+              >
+                K
+              </Badge>
+            </div>
+          </div>
+        </section>
+
+        {allPostsLink && (
+          <>
+            <Separator className="my-1.5 bg-border/25" />
+            <section className="space-y-1">
+              <RailItem {...allPostsLink} />
+            </section>
+            <Separator className="my-1.5 bg-border/25" />
+          </>
+        )}
+
+        {!allPostsLink && <Separator className="my-1.5 bg-border/25" />}
+
+        <section className="space-y-1">
+          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
+          <div className="space-y-0.5">
+            {recentLinks.map((link) => (
+              <RailItem key={link.label} {...link} />
+            ))}
+          </div>
+        </section>
+
+        <Separator className="my-1.5 bg-border/25" />
+
+        <section className="space-y-1">
+          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
+          <div className="space-y-0.5">
+            {topicLinks.map((link) => (
+              <TopicRailItem key={link.label} {...link} />
+            ))}
           </div>
         ))}
       </div>
