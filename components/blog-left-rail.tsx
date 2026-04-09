@@ -5,7 +5,9 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
 interface RailLink {
   label: string
@@ -81,59 +83,71 @@ export function BlogLeftRail({
   topicLinks,
   className,
 }: BlogLeftRailProps) {
+  const sections: ReactNode[] = [
+    <section key="search" className="space-y-1">
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
+        <Input
+          value={onSearchChange ? searchQuery ?? "" : undefined}
+          defaultValue={onSearchChange ? undefined : ""}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          placeholder="Search"
+          className="h-7 rounded-md border-border/35 bg-muted/20 pl-8 pr-11 text-[10.5px] text-foreground/85 placeholder:text-muted-foreground/60"
+        />
+        <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
+          <Badge
+            variant="outline"
+            className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+          >
+            ⌘
+          </Badge>
+          <Badge
+            variant="outline"
+            className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+          >
+            K
+          </Badge>
+        </div>
+      </div>
+    </section>,
+  ]
+
+  if (allPostsLink) {
+    sections.push(
+      <section key="all-posts" className="space-y-1">
+        <RailItem {...allPostsLink} />
+      </section>,
+    )
+  }
+
+  sections.push(
+    <section key="recent" className="space-y-1">
+      <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
+      <div className="space-y-px">
+        {recentLinks.map((link) => (
+          <RailItem key={link.label} {...link} />
+        ))}
+      </div>
+    </section>,
+    <section key="topics" className="space-y-1">
+      <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
+      <div className="space-y-px">
+        {topicLinks.map((link) => (
+          <TopicRailItem key={link.label} {...link} />
+        ))}
+      </div>
+    </section>,
+  )
+
   return (
     <aside className={cn("h-fit", className)}>
       <div className="space-y-3.5">
-        <section className="space-y-1">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
-            <Input
-              value={onSearchChange ? searchQuery ?? "" : undefined}
-              defaultValue={onSearchChange ? undefined : ""}
-              onChange={(e) => onSearchChange?.(e.target.value)}
-              placeholder="Search"
-              className="h-7 rounded-md border-border/35 bg-muted/20 pl-8 pr-11 text-[10.5px] text-foreground/85 placeholder:text-muted-foreground/60"
-            />
-            <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
-              <Badge
-                variant="outline"
-                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
-              >
-                ⌘
-              </Badge>
-              <Badge
-                variant="outline"
-                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
-              >
-                K
-              </Badge>
-            </div>
+        {sections.map((section, index) => (
+          <div key={index} className="space-y-3.5">
+            {section}
+            {index < sections.length - 1 ? <Separator className="bg-border/45" /> : null}
           </div>
-        </section>
-
-        {allPostsLink && (
-          <section className="space-y-1">
-            <RailItem {...allPostsLink} />
-          </section>
-        )}
-
-        <section className="space-y-1">
-          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
-          <div className="space-y-px">
-            {recentLinks.map((link) => (
-              <RailItem key={link.label} {...link} />
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-1">
-          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
-          <div className="space-y-px">
-            {topicLinks.map((link) => (
-              <TopicRailItem key={link.label} {...link} />
-            ))}
-          </div>
-        </section>
+        ))}
       </div>
     </aside>
   )
