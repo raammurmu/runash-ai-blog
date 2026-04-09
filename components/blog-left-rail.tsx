@@ -5,6 +5,7 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 interface RailLink {
@@ -112,10 +113,16 @@ export function BlogLeftRail({
         </section>
 
         {allPostsLink && (
-          <section className="space-y-1">
-            <RailItem {...allPostsLink} />
-          </section>
+          <>
+            <Separator className="my-1.5 bg-border/25" />
+            <section className="space-y-1">
+              <RailItem {...allPostsLink} />
+            </section>
+            <Separator className="my-1.5 bg-border/25" />
+          </>
         )}
+
+        {!allPostsLink && <Separator className="my-1.5 bg-border/25" />}
 
         <section className="space-y-1">
           <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
@@ -125,6 +132,8 @@ export function BlogLeftRail({
             ))}
           </div>
         </section>
+
+        <Separator className="my-1.5 bg-border/25" />
 
         <section className="space-y-1">
           <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
