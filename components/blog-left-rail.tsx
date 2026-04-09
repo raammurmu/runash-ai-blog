@@ -23,6 +23,13 @@ interface BlogLeftRailProps {
   className?: string
 }
 
+interface RailSectionProps {
+  heading?: React.ReactNode
+  children: React.ReactNode
+  separatorBefore?: boolean
+  separatorAfter?: boolean
+}
+
 function RailItem({ label, href, onClick, active }: RailLink) {
   const baseClass = cn(
     "block min-h-7 rounded-md px-2 py-0.5 text-[0.79rem] leading-snug text-foreground/70 transition-colors hover:text-foreground",
@@ -73,6 +80,17 @@ function TopicRailItem({ label, href, onClick, active }: RailLink) {
   )
 }
 
+function RailSection({ heading, children, separatorBefore, separatorAfter }: RailSectionProps) {
+  return (
+    <section className="space-y-1">
+      {separatorBefore && <div className="h-px bg-border/35" aria-hidden="true" />}
+      {heading}
+      {children}
+      {separatorAfter && <div className="h-px bg-border/35" aria-hidden="true" />}
+    </section>
+  )
+}
+
 export function BlogLeftRail({
   searchQuery,
   onSearchChange,
@@ -84,7 +102,7 @@ export function BlogLeftRail({
   return (
     <aside className={cn("h-fit", className)}>
       <div className="space-y-3.5">
-        <section className="space-y-1">
+        <RailSection>
           <div className="relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
             <Input
@@ -109,31 +127,33 @@ export function BlogLeftRail({
               </Badge>
             </div>
           </div>
-        </section>
+        </RailSection>
 
         {allPostsLink && (
-          <section className="space-y-1">
+          <RailSection>
             <RailItem {...allPostsLink} />
-          </section>
+          </RailSection>
         )}
 
-        <section className="space-y-1">
-          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
+        <RailSection
+          heading={<h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>}
+        >
           <div className="space-y-px">
             {recentLinks.map((link) => (
               <RailItem key={link.label} {...link} />
             ))}
           </div>
-        </section>
+        </RailSection>
 
-        <section className="space-y-1">
-          <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
+        <RailSection
+          heading={<h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>}
+        >
           <div className="space-y-px">
             {topicLinks.map((link) => (
               <TopicRailItem key={link.label} {...link} />
             ))}
           </div>
-        </section>
+        </RailSection>
       </div>
     </aside>
   )
