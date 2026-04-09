@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import Link from "next/link"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -22,6 +23,13 @@ interface BlogLeftRailProps {
   recentLinks: RailLink[]
   topicLinks: RailLink[]
   className?: string
+}
+
+interface RailSectionProps {
+  heading?: string
+  children: ReactNode
+  separatorBefore?: boolean
+  separatorAfter?: boolean
 }
 
 function RailItem({ label, href, onClick, active }: RailLink) {
@@ -74,6 +82,23 @@ function TopicRailItem({ label, href, onClick, active }: RailLink) {
   )
 }
 
+function RailSection({ heading, children, separatorBefore, separatorAfter }: RailSectionProps) {
+  return (
+    <section className="space-y-1">
+      {separatorBefore && <div className="h-px bg-border/35" aria-hidden="true" />}
+      {heading === "Recent" ? (
+        <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
+      ) : heading === "Topics" ? (
+        <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
+      ) : heading ? (
+        <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">{heading}</h2>
+      ) : null}
+      {children}
+      {separatorAfter && <div className="h-px bg-border/35" aria-hidden="true" />}
+    </section>
+  )
+}
+
 export function BlogLeftRail({
   searchQuery,
   onSearchChange,
@@ -85,7 +110,7 @@ export function BlogLeftRail({
   return (
     <aside className={cn("h-fit", className)}>
       <div className="space-y-3.5">
-        <section className="space-y-1">
+        <RailSection>
           <div className="relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
             <Input
@@ -110,7 +135,7 @@ export function BlogLeftRail({
               </Badge>
             </div>
           </div>
-        </section>
+        </RailSection>
 
         {allPostsLink && (
           <>
@@ -131,7 +156,7 @@ export function BlogLeftRail({
               <RailItem key={link.label} {...link} />
             ))}
           </div>
-        </section>
+        </RailSection>
 
         <Separator className="my-1.5 bg-border/25" />
 
@@ -142,7 +167,7 @@ export function BlogLeftRail({
               <TopicRailItem key={link.label} {...link} />
             ))}
           </div>
-        </section>
+        </RailSection>
       </div>
     </aside>
   )
