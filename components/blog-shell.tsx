@@ -49,6 +49,9 @@ export function BlogShell({
       (link.href === "/search?q=api" && pathname.startsWith("/search")),
   }))
 
+  const railSectionChainClass =
+    "px-3 py-3 sm:px-4 [&_section+section]:mt-3 [&_section+section]:border-t [&_section+section]:border-border/45 [&_section+section]:pt-3"
+
   const railContent = (
     <BlogLeftRail
       searchQuery={searchQuery}
@@ -64,7 +67,7 @@ export function BlogShell({
         onClick: () => handleTopicChange(topic, "rail"),
         active: activeTopic === topic,
       }))}
-      className="px-3 py-3 sm:px-4"
+      className={railSectionChainClass}
     />
   )
 
@@ -114,7 +117,10 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-background p-3 sm:max-w-sm sm:p-4">
+              <SheetContent
+                side="left"
+                className={`w-[92%] overflow-y-auto border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} p-0 sm:max-w-sm`}
+              >
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -142,7 +148,9 @@ export function BlogShell({
       </header>
 
       <div className={BLOG_UI_LAYOUT.shellFrame}>
-        <aside className={`hidden min-h-[calc(100vh-57px)] border-r border-border/50 ${BLOG_UI_SURFACES.mutedCanvas} lg:block`}>
+        <aside
+          className={`hidden min-h-[calc(100vh-57px)] border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} lg:block lg:w-[300px] lg:shrink-0 xl:w-[320px]`}
+        >
           {railContent}
         </aside>
 
