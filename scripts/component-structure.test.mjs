@@ -8,26 +8,51 @@ const homePage = read('app/page.tsx')
 const blogShell = read('components/blog-shell.tsx')
 const leftRail = read('components/blog-left-rail.tsx')
 const editorialCard = read('components/editorial-post-card.tsx')
+const navConfig = read('components/nav-config.ts')
 
 test('BlogShell renders expected nav labels and responsive desktop/mobile affordances', () => {
   for (const label of ['Home', 'API', 'Codex', 'ChatGPT']) {
-    assert.ok(blogShell.includes(`label: "${label}"`), `missing nav label: ${label}`)
+    assert.ok(navConfig.includes(`label: "${label}"`), `missing nav label: ${label}`)
   }
 
-  assert.ok(blogShell.includes('className="hidden items-center gap-3 text-[13px] font-medium md:flex"'))
+  assert.ok(blogShell.includes('className={`${NAV_CONTRACT.desktopNav} text-xs font-medium`}'))
   assert.ok(blogShell.includes('aria-label="Open blog filters"'))
-  assert.ok(blogShell.includes('className="rounded-lg md:hidden"'))
+  assert.ok(blogShell.includes('className={`${NAV_CONTRACT.mobileIconButton} md:hidden`}'))
   assert.ok(blogShell.includes('aria-label="Search posts"'))
-  assert.ok(blogShell.includes('className="rounded-full md:hidden"'))
-  assert.ok(blogShell.includes('className="hidden min-h-[calc(100vh-57px)] w-[292px]'))
+  assert.ok(blogShell.includes('className={`hidden min-h-[calc(100vh-57px)] border-r border-border/50'))
 })
 
 test('BlogLeftRail keeps Recent/Topics sections and supports active topic semantics', () => {
-  assert.ok(leftRail.includes('>Recent<'))
-  assert.ok(leftRail.includes('>Topics<'))
-  assert.ok(leftRail.includes('{allPostsLink && ('))
+  assert.ok(leftRail.includes('import { Separator } from "@/components/ui/separator"'))
+  assert.ok(leftRail.includes('<section key="search"'))
+  assert.ok(leftRail.includes('<section key="recent"'))
+  assert.ok(leftRail.includes('<section key="topics"'))
+  assert.ok(leftRail.includes('index < sections.length - 1 ? <Separator className="bg-border/45" /> : null'))
+
+  const searchSectionIndex = leftRail.indexOf('<section key="search"')
+  const recentSectionIndex = leftRail.indexOf('<section key="recent"')
+  const topicsSectionIndex = leftRail.indexOf('<section key="topics"')
+  assert.ok(searchSectionIndex >= 0)
+  assert.ok(recentSectionIndex > searchSectionIndex)
+  assert.ok(topicsSectionIndex > recentSectionIndex)
+
   assert.ok(leftRail.includes('active && "text-foreground"'))
   assert.ok(leftRail.includes('active && "rounded-lg bg-muted text-foreground"'))
+  assert.equal(leftRail.includes('rounded-lg bg-muted text-foreground",\n    !active'), false)
+  assert.ok(leftRail.includes('<Button variant="ghost" asChild className={baseClass}>'))
+  assert.ok(leftRail.includes('<Button type="button" variant="ghost" onClick={onClick} className={cn(baseClass, "w-full")}>'))
+})
+
+test('BlogShell reuses one rail definition for both mobile sheet and desktop aside to keep section order consistent', () => {
+  const railContentIndex = blogShell.indexOf('const railContent = (')
+  const mobileUseIndex = blogShell.indexOf('{railContent}')
+  const desktopUseIndex = blogShell.lastIndexOf('{railContent}')
+
+  assert.ok(railContentIndex >= 0)
+  assert.ok(mobileUseIndex > railContentIndex)
+  assert.ok(desktopUseIndex > mobileUseIndex)
+  assert.ok(blogShell.includes('<SheetContent side="left"'))
+  assert.ok(blogShell.includes('className={`hidden min-h-[calc(100vh-57px)] border-r border-border/50'))
 })
 
 test('HomePage filtering combines topic + search query matching', () => {
