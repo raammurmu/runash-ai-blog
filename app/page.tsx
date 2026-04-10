@@ -56,7 +56,7 @@ export default function HomePage() {
       topics={topics}
       onTopicChange={setActiveTopic}
     >
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_300px]">
         <section className="space-y-9 sm:space-y-10">
           <header className="space-y-3 sm:space-y-4">
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.35rem]">
@@ -71,7 +71,7 @@ export default function HomePage() {
           <BlogFeed posts={filteredPosts} />
         </section>
 
-        <aside className="order-first space-y-6 rounded-2xl border border-border/60 bg-background/60 p-4 sm:p-5 lg:order-none lg:sticky lg:top-20 lg:h-fit lg:border-l lg:border-t lg:pl-5 xl:pl-6">
+        <aside className="hidden space-y-7 border-l border-border/60 pl-6 xl:block">
           <section className="space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Featured posts</h2>
             <ul className="space-y-2.5 text-sm">
@@ -88,17 +88,6 @@ export default function HomePage() {
           <section className="space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Trending topics</h2>
             <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTopic("All")}
-                className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
-                  activeTopic === "All"
-                    ? "border-foreground/70 bg-foreground/10 text-foreground"
-                    : "border-border text-muted-foreground hover:border-foreground/35 hover:text-foreground"
-                }`}
-              >
-                All
-              </button>
               {featuredTopics.map((topic) => (
                 <button
                   key={topic}
