@@ -58,10 +58,7 @@ export default function HomePage() {
             Product updates, launch notes, and practical guides.
           </p>
         </header>
-         <div className="flex flex-1">
-        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-          
-         </div>
+         <Sidebar/>
         
         <BlogFeed posts={filteredPosts} />
       </section>
