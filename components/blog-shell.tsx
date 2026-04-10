@@ -49,6 +49,9 @@ export function BlogShell({
       (link.href === "/search?q=api" && pathname.startsWith("/search")),
   }))
 
+  const railSectionChainClass =
+    "px-3 py-3 sm:px-4 [&_section+section]:mt-3 [&_section+section]:border-t [&_section+section]:border-border/45 [&_section+section]:pt-3"
+
   const railContent = (
     <BlogLeftRail
       searchQuery={searchQuery}
@@ -64,19 +67,19 @@ export function BlogShell({
         onClick: () => handleTopicChange(topic, "rail"),
         active: activeTopic === topic,
       }))}
-      className="px-3 py-3 sm:px-4"
+      className={railSectionChainClass}
     />
   )
 
   return (
-    <div className="min-h-screen bg-muted/35 text-foreground">
+    <div className={`min-h-screen text-foreground ${BLOG_UI_SURFACES.mutedCanvas}`}>
       <header className={NAV_CONTRACT.headerShell}>
-        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-7`}>
+        <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-6`}>
           <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
-            OpenAI Developers
+            RunAsh AI 
           </Link>
 
-          <nav className={`${NAV_CONTRACT.desktopNav} text-[13px] font-medium`}>
+          <nav className={`${NAV_CONTRACT.desktopNav} text-xs font-medium`}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -89,7 +92,7 @@ export function BlogShell({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-[13px] font-medium`}>
+                <Button variant="ghost" size="sm" className={`${NAV_CONTRACT.learnTrigger} text-xs font-medium`}>
                   Learn
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
@@ -114,7 +117,10 @@ export function BlogShell({
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] overflow-y-auto bg-background p-3 sm:max-w-sm sm:p-4">
+              <SheetContent
+                side="left"
+                className={`w-[92%] overflow-y-auto border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} p-0 sm:max-w-sm`}
+              >
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
@@ -123,7 +129,7 @@ export function BlogShell({
             </Sheet>
 
             <Button asChild size="sm" className={`site-utility-button hidden md:inline-flex ${NAV_CONTRACT.actionButton}`}>
-              <Link href="/search?q=api">API Dashboard ↗</Link>
+              <Link href="/search?q=api">Dashboard ↗</Link>
             </Button>
 
             <Button asChild variant="ghost" size="icon" className={`hidden border-0 md:inline-flex ${NAV_CONTRACT.utilityIconButton}`} aria-label="Theme settings">
@@ -142,8 +148,9 @@ export function BlogShell({
       </header>
 
       <div className={BLOG_UI_LAYOUT.shellFrame}>
-        {/* Developer note: sizing targets were inferred from the reference and kept to a simple 320/980 split at xl+ to preserve layout stability. */}
-        <aside className="hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 bg-muted/35 lg:block xl:w-[320px]">
+        <aside
+          className={`hidden min-h-[calc(100vh-57px)] border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} lg:block lg:w-[300px] lg:shrink-0 xl:w-[320px]`}
+        >
           {railContent}
         </aside>
 
