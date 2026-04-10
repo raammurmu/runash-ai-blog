@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">RunAsh logo</title>
+  <desc id="desc">Orange rounded square outline with stylized R mark.</desc>
+  <rect x="142" y="142" width="740" height="740" rx="150" fill="none" stroke="#F15A05" stroke-width="40" />
+  <path
+    d="M365 330h168c108 0 180 69 180 164 0 90-68 153-168 154h-60l117 154h-95L365 613V330Zm160 243c59 0 98-35 98-82 0-49-39-83-98-83h-71v165h71Z"
+    fill="#F15A05"
+  />
+</svg>

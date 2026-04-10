@@ -47,7 +47,7 @@ export function Header() {
         <div className="flex min-w-0 flex-1 items-center">
           <Link href="/" className="site-wordmark inline-flex items-center gap-2">
             <Image
-              src="/placeholder-logo.svg"
+              src="/runash-logo.svg"
               alt="RunAsh logo"
               width={22}
               height={22}
