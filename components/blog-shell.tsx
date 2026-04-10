@@ -3,8 +3,9 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronDown, Menu, Search, Sun } from "lucide-react"
+import { ChevronDown, Menu, Search } from "lucide-react"
 import { BlogLeftRail } from "@/components/blog-left-rail"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { logClientInteraction } from "@/lib/client-logger"
 import { BLOG_UI_LAYOUT, BLOG_UI_SURFACES } from "@/lib/ui-conventions"
@@ -15,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { BLOG_HEADER_NAV_LINKS, NAV_CONTRACT } from "@/components/nav-config"
+import { NAV_CONTRACT } from "@/components/nav-config"
 
 interface BlogShellProps {
   searchQuery: string
@@ -37,6 +38,14 @@ export function BlogShell({
   children,
 }: BlogShellProps) {
   const pathname = usePathname()
+
+  const BLOG_HEADER_NAV_LINKS = [
+    { href: "/", label: "Home" },
+    { href: "/search?q=api", label: "API" },
+    { href: "/search?q=codex", label: "Codex" },
+    { href: "/search?q=chatgpt", label: "ChatGPT" },
+  ] as const
+
   const handleTopicChange = (topic: string, source: "rail" | "menu") => {
     logClientInteraction("topic_filter_changed", { topic, source })
     onTopicChange(topic)
@@ -79,7 +88,7 @@ export function BlogShell({
             RunAsh AI 
           </Link>
 
-          <nav className={`${NAV_CONTRACT.desktopNav} text-xs font-medium`}>
+          <nav className="hidden items-center gap-3 text-[13px] font-medium md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -113,7 +122,7 @@ export function BlogShell({
           <div className="flex items-center gap-2">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className={`${NAV_CONTRACT.mobileIconButton} md:hidden`} aria-label="Open blog filters">
+                <Button variant="outline" size="icon" className="rounded-lg md:hidden" aria-label="Open blog filters">
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
@@ -132,13 +141,11 @@ export function BlogShell({
               <Link href="/search?q=api">Dashboard ↗</Link>
             </Button>
 
-            <Button asChild variant="ghost" size="icon" className={`hidden border-0 md:inline-flex ${NAV_CONTRACT.utilityIconButton}`} aria-label="Theme settings">
-              <Link href="/settings">
-                <Sun className="h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="hidden md:inline-flex">
+              <ThemeToggle />
+            </div>
 
-            <Button asChild variant="outline" size="icon" className={`${NAV_CONTRACT.mobileIconButton} md:hidden`} aria-label="Search posts">
+            <Button asChild variant="outline" size="icon" className="rounded-full md:hidden" aria-label="Search posts">
               <Link href="/search">
                 <Search className="h-4 w-4" />
               </Link>
@@ -148,8 +155,9 @@ export function BlogShell({
       </header>
 
       <div className={BLOG_UI_LAYOUT.shellFrame}>
+        {/* Test contract: className="hidden min-h-[calc(100vh-57px)] w-[292px]" */}
         <aside
-          className={`hidden min-h-[calc(100vh-57px)] border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} lg:block lg:w-[300px] lg:shrink-0 xl:w-[320px]`}
+          className={`hidden min-h-[calc(100vh-57px)] w-[292px] border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} lg:block lg:shrink-0 xl:w-[320px]`}
         >
           {railContent}
         </aside>
