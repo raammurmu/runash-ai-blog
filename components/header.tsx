@@ -23,10 +23,12 @@ import { getAllCategories } from "@/lib/blog-data"
 import { NAV_CONTRACT, SITE_HEADER_NAV_ITEMS } from "@/components/nav-config"
 
 export function Header() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [mobileLearnOpen, setMobileLearnOpen] = React.useState(true)
   const categories = React.useMemo(() => getAllCategories(), [])
+  const showSearch = !pathname.startsWith("/search")
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12)
