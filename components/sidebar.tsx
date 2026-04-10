@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils"
 import { getAllCategories, getAllTags, getRecentPosts } from "@/lib/blog-data"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { SiteSearchForm } from "@/components/site-search-form"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
-import { ChevronLeft, ChevronRight, Search } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const RECENT_POSTS_LIMIT = 5
 
@@ -60,28 +60,16 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
       </div>
 
       <div className={cn("mb-3 px-4", isCollapsed && "md:hidden")}>
-        <form className="flex items-center gap-1.5" role="search" aria-label="Blog sidebar search">
-          <Input
-            type="search"
-            placeholder={isMobileSheet ? "Start searching" : "Search posts"}
-            className={cn(
-              "text-xs",
-              isMobileSheet
-                ? "h-11 rounded-full border-white/10 bg-white/5 px-4 text-sm placeholder:text-muted-foreground/80"
-                : "h-8 rounded-md"
-            )}
-            aria-label="Search posts"
-          />
-          <Button
-            type="submit"
-            size="icon"
-            variant="outline"
-            className={cn(isMobileSheet ? "h-11 w-11 rounded-full border-white/15 bg-white/10" : "h-8 w-8 rounded-md")}
-            aria-label="Search"
-          >
-            <Search className="size-3.5" />
-          </Button>
-        </form>
+        <SiteSearchForm
+          placeholder={isMobileSheet ? "Start searching" : "Search posts"}
+          inputClassName={cn(
+            isMobileSheet
+              ? "h-11 rounded-full border-white/10 bg-white/5 px-4 text-sm placeholder:text-muted-foreground/80"
+              : "h-8 rounded-md"
+          )}
+          buttonClassName={cn(isMobileSheet ? "h-11 w-11 rounded-full border-white/15 bg-white/10" : "h-8 w-8 rounded-md")}
+          onSubmitDone={() => setMobileOpen?.(false)}
+        />
       </div>
 
       <ScrollArea className="flex-1">

@@ -3,10 +3,12 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronDown, Menu, Search } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { ChevronDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageTranslateControl } from "@/components/page-translate-control"
+import { SiteSearchForm } from "@/components/site-search-form"
 import { cn } from "@/lib/utils"
 import {
   DropdownMenu,
@@ -18,15 +20,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Input } from "@/components/ui/input"
 import { getAllCategories } from "@/lib/blog-data"
 import { NAV_CONTRACT, SITE_HEADER_NAV_ITEMS } from "@/components/nav-config"
 
 export function Header() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [mobileLearnOpen, setMobileLearnOpen] = React.useState(true)
   const categories = React.useMemo(() => getAllCategories(), [])
+  const showSearch = !pathname.startsWith("/search")
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12)
@@ -45,7 +48,7 @@ export function Header() {
         <div className="flex min-w-0 flex-1 items-center">
           <Link href="/" className="site-wordmark inline-flex items-center gap-2">
             <Image
-              src="/placeholder-logo.svg"
+              src="/runash-logo.svg"
               alt="RunAsh logo"
               width={22}
               height={22}
@@ -85,6 +88,16 @@ export function Header() {
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-1.5">
+          {showSearch ? (
+            <div className="hidden md:block">
+              <SiteSearchForm
+                placeholder="Search RunAsh"
+                className="min-w-[220px]"
+                inputClassName="h-8 rounded-full border-primary/20 bg-background pl-3 text-xs"
+                buttonClassName="h-8 w-8 rounded-full border-primary/20"
+              />
+            </div>
+          ) : null}
           <PageTranslateControl />
           <div className="site-theme-toggle-wrap">
             <ThemeToggle />
@@ -106,16 +119,17 @@ export function Header() {
                 <SheetTitle className="border-b border-border/50 px-5 py-4 text-left text-lg">Menu</SheetTitle>
               </SheetHeader>
               <div className="space-y-5 p-5">
-                <div className="rounded-[1.75rem] border border-primary/20 bg-primary/5 p-2">
-                  <div className="flex items-center gap-2 rounded-2xl bg-background px-3 py-2.5 ring-1 ring-primary/15">
-                    <Search className="size-4 text-primary" />
-                    <Input
-                      type="search"
+                {showSearch ? (
+                  <div className="rounded-[1.75rem] border border-primary/20 bg-primary/5 p-2">
+                    <SiteSearchForm
                       placeholder="Search products, posts, APIs"
-                      className="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
+                      className="rounded-2xl bg-background px-3 py-2.5 ring-1 ring-primary/15"
+                      inputClassName="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
+                      buttonClassName="h-8 w-8 rounded-full border-primary/20"
+                      onSubmitDone={() => setMobileOpen(false)}
                     />
                   </div>
-                </div>
+                ) : null}
 
                 <div className="space-y-2">
                   {SITE_HEADER_NAV_ITEMS.map((item) => (

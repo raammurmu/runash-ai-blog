@@ -16,7 +16,7 @@ export function BlogHeaderMinimal() {
       <div className="mx-auto flex h-14 w-full max-w-[1440px] items-center gap-4 px-4 lg:px-10">
         <div className="flex min-w-0 flex-1">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground hover:text-foreground/80">
-            <Image src="/placeholder-logo.svg" alt="RunAsh logo" width={24} height={24} className="rounded-sm" priority />
+            <Image src="/runash-logo.svg" alt="RunAsh logo" width={24} height={24} className="rounded-sm" priority />
             <span>RunAsh Blog</span>
           </Link>
         </div>
