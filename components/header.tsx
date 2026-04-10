@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
 import { ChevronDown, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -88,16 +87,14 @@ export function Header() {
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-1.5">
-          {showSearch ? (
-            <div className="hidden md:block">
-              <SiteSearchForm
-                placeholder="Search RunAsh"
-                className="min-w-[220px]"
-                inputClassName="h-8 rounded-full border-primary/20 bg-background pl-3 text-xs"
-                buttonClassName="h-8 w-8 rounded-full border-primary/20"
-              />
-            </div>
-          ) : null}
+          <div className="hidden md:block">
+            <SiteSearchForm
+              placeholder="Search RunAsh"
+              className="min-w-[220px]"
+              inputClassName="h-8 rounded-full border-primary/20 bg-background pl-3 text-xs"
+              buttonClassName="h-8 w-8 rounded-full border-primary/20"
+            />
+          </div>
           <PageTranslateControl />
           <div className="site-theme-toggle-wrap">
             <ThemeToggle />
@@ -119,17 +116,15 @@ export function Header() {
                 <SheetTitle className="border-b border-border/50 px-5 py-4 text-left text-lg">Menu</SheetTitle>
               </SheetHeader>
               <div className="space-y-5 p-5">
-                {showSearch ? (
-                  <div className="rounded-[1.75rem] border border-primary/20 bg-primary/5 p-2">
-                    <SiteSearchForm
-                      placeholder="Search products, posts, APIs"
-                      className="rounded-2xl bg-background px-3 py-2.5 ring-1 ring-primary/15"
-                      inputClassName="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
-                      buttonClassName="h-8 w-8 rounded-full border-primary/20"
-                      onSubmitDone={() => setMobileOpen(false)}
-                    />
-                  </div>
-                ) : null}
+                <div className="rounded-[1.75rem] border border-primary/20 bg-primary/5 p-2">
+                  <SiteSearchForm
+                    placeholder="Search products, posts, APIs"
+                    className="rounded-2xl bg-background px-3 py-2.5 ring-1 ring-primary/15"
+                    inputClassName="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
+                    buttonClassName="h-8 w-8 rounded-full border-primary/20"
+                    onSubmitDone={() => setMobileOpen(false)}
+                  />
+                </div>
 
                 <div className="space-y-2">
                   {SITE_HEADER_NAV_ITEMS.map((item) => (
