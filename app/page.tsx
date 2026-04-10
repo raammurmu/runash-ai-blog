@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { BlogFeed } from "@/components/blog-feed"
 import { BlogShell } from "@/components/blog-shell"
 import { getAllPosts, getRecentPosts } from "@/lib/blog-data"
+import { Sidebar } from "@/components/sidebar"
 
 export default function HomePage() {
   const allPosts = useMemo(() => getAllPosts(), [])
@@ -51,13 +52,27 @@ export default function HomePage() {
       <section className="space-y-9 sm:space-y-10">
         <header className="space-y-3 sm:space-y-4">
           <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.35rem]">
-            RunAsh AI Blog
+            Blog
           </h1>
           <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
             Product updates, launch notes, and practical guides.
           </p>
         </header>
-
+         <div className="flex flex-1">
+        <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+          <div className="mx-auto w-full max-w-6xl">
+            <section className="py-6 lg:py-10">
+              <HeroSection
+                badge="RunAsh Blog"
+                title="Agentic Live Commerce"
+                description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
+                primaryCta={{ label: "Browse All posts", href: "/blog" }}
+                secondaryCta={{ label: "Publish article", href: "/create" }}
+              />
+            </section>
+          </div>
+         </div>
+        
         <BlogFeed posts={filteredPosts} />
       </section>
     </BlogShell>
