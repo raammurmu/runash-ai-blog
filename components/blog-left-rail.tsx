@@ -87,24 +87,24 @@ export function BlogLeftRail({
       <div className="space-y-3.5">
         <section className="space-y-1">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-primary/80" />
             <Input
               value={onSearchChange ? searchQuery ?? "" : undefined}
               defaultValue={onSearchChange ? undefined : ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
-              placeholder="Search"
-              className="h-7 rounded-md border-border/35 bg-muted/20 pl-8 pr-11 text-[10.5px] text-foreground/85 placeholder:text-muted-foreground/60"
+              placeholder="Search posts, topics, tags"
+              className="h-9 rounded-lg border-primary/15 bg-background/70 pl-9 pr-12 text-xs text-foreground/90 placeholder:text-muted-foreground/70 focus-visible:ring-primary/40"
             />
             <div className="pointer-events-none absolute right-2 top-1/2 flex h-4 -translate-y-1/2 items-center gap-1">
               <Badge
                 variant="outline"
-                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+                className="h-4 rounded-sm border-primary/20 bg-primary/5 px-1 text-[9px] font-normal text-muted-foreground/80"
               >
                 ⌘
               </Badge>
               <Badge
                 variant="outline"
-                className="h-4 rounded-sm border-border/20 bg-muted/15 px-1 text-[9px] font-normal text-muted-foreground/60"
+                className="h-4 rounded-sm border-primary/20 bg-primary/5 px-1 text-[9px] font-normal text-muted-foreground/80"
               >
                 K
               </Badge>

@@ -84,8 +84,8 @@ export function BlogShell({
     <div className={`min-h-screen text-foreground ${BLOG_UI_SURFACES.mutedCanvas}`}>
       <header className={NAV_CONTRACT.headerShell}>
         <div className={`${NAV_CONTRACT.headerInner} max-w-[1420px] py-2.5 sm:px-5 lg:px-6`}>
-          <Link href="/" className={`${NAV_CONTRACT.brandText} sm:text-[1.05rem]`}>
-            RunAsh AI 
+          <Link href="/" className={`${NAV_CONTRACT.brandText} brand-gradient-text sm:text-[1.05rem]`}>
+            RunAsh AI
           </Link>
 
           <nav className="hidden items-center gap-3 text-[13px] font-medium md:flex">
@@ -128,11 +128,15 @@ export function BlogShell({
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className={`w-[92%] overflow-y-auto border-r border-border/60 ${BLOG_UI_SURFACES.mutedCanvas} p-0 sm:max-w-sm`}
+                className={`w-[92%] overflow-y-auto border-r border-primary/20 bg-background p-0 sm:max-w-sm`}
               >
                 <SheetHeader className="sr-only">
                   <SheetTitle>Blog navigation</SheetTitle>
                 </SheetHeader>
+                <div className="border-b border-primary/15 px-4 py-4">
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-primary">Explore</p>
+                  <p className="pt-1 text-sm text-muted-foreground">Search, recent posts, and topics.</p>
+                </div>
                 {railContent}
               </SheetContent>
             </Sheet>
