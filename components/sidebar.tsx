@@ -26,6 +26,7 @@ interface SidebarProps {
 
 export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname()
+  const isMobileSheet = typeof isMobileOpen === "boolean"
 
   const recentPosts = React.useMemo(() => getRecentPosts(RECENT_POSTS_LIMIT), [])
 
@@ -62,11 +63,22 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
         <form className="flex items-center gap-1.5" role="search" aria-label="Blog sidebar search">
           <Input
             type="search"
-            placeholder="Search posts"
-            className="h-8 rounded-md text-xs"
+            placeholder={isMobileSheet ? "Start searching" : "Search posts"}
+            className={cn(
+              "text-xs",
+              isMobileSheet
+                ? "h-11 rounded-full border-white/10 bg-white/5 px-4 text-sm placeholder:text-muted-foreground/80"
+                : "h-8 rounded-md"
+            )}
             aria-label="Search posts"
           />
-          <Button type="submit" size="icon" variant="outline" className="h-8 w-8 rounded-md" aria-label="Search">
+          <Button
+            type="submit"
+            size="icon"
+            variant="outline"
+            className={cn(isMobileSheet ? "h-11 w-11 rounded-full border-white/15 bg-white/10" : "h-8 w-8 rounded-md")}
+            aria-label="Search"
+          >
             <Search className="size-3.5" />
           </Button>
         </form>
@@ -78,6 +90,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
             href="/"
             label="All posts"
             isCollapsed={isCollapsed}
+            isMobileSheet={isMobileSheet}
             isActive={pathname === "/"}
             onSelect={() => setMobileOpen?.(false)}
           />
@@ -92,6 +105,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
                 href={`/post/${post.slug}`}
                 label={post.title}
                 isCollapsed={isCollapsed}
+                isMobileSheet={isMobileSheet}
                 isActive={pathname === `/post/${post.slug}`}
                 onSelect={() => setMobileOpen?.(false)}
               />
@@ -108,6 +122,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
                 href={item.href}
                 label={item.label}
                 isCollapsed={isCollapsed}
+                isMobileSheet={isMobileSheet}
                 isActive={pathname === item.href}
                 onSelect={() => setMobileOpen?.(false)}
               />
@@ -121,7 +136,10 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen, setMobileOpen }: 
   return (
     <TooltipProvider delayDuration={0}>
       <Sheet open={isMobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-[85%] overflow-hidden rounded-r-[30px] border-none p-0 md:hidden">
+        <SheetContent
+          side="left"
+          className="w-[92%] overflow-hidden rounded-r-[30px] border-r border-border/60 bg-[#17181d] p-0 text-foreground md:hidden sm:max-w-sm"
+        >
           <SheetHeader className="sr-only">
             <SheetTitle>Navigation Menu</SheetTitle>
           </SheetHeader>
@@ -145,12 +163,14 @@ function SidebarTextLink({
   href,
   label,
   isCollapsed,
+  isMobileSheet,
   isActive,
   onSelect,
 }: {
   href: string
   label: string
   isCollapsed: boolean
+  isMobileSheet?: boolean
   isActive: boolean
   onSelect?: () => void
 }) {
@@ -161,9 +181,14 @@ function SidebarTextLink({
       className={cn(
         "h-9 w-full rounded-md text-xs font-normal transition-colors",
         isCollapsed ? "mx-auto w-10 justify-center p-0" : "justify-start px-3",
+        isMobileSheet && !isCollapsed && "h-10 rounded-xl border border-white/10 bg-white/5 px-3.5 text-sm",
         isActive
-          ? "bg-muted/55 text-foreground"
-          : "text-muted-foreground hover:bg-muted/45 hover:text-foreground",
+          ? isMobileSheet
+            ? "border-white/20 bg-white/15 text-foreground"
+            : "bg-muted/55 text-foreground"
+          : isMobileSheet
+            ? "text-muted-foreground hover:bg-white/10 hover:text-foreground"
+            : "text-muted-foreground hover:bg-muted/45 hover:text-foreground",
       )}
       asChild
     >
