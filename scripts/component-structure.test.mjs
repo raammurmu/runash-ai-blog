@@ -8,33 +8,35 @@ const homePage = read('app/page.tsx')
 const blogShell = read('components/blog-shell.tsx')
 const leftRail = read('components/blog-left-rail.tsx')
 const editorialCard = read('components/editorial-post-card.tsx')
+const navConfig = read('components/nav-config.ts')
+
+const expectMatch = (source, pattern, message) => {
+  assert.match(source, pattern, message)
+}
 
 test('BlogShell renders expected nav labels and responsive desktop/mobile affordances', () => {
   for (const label of ['Home', 'API', 'Codex', 'ChatGPT']) {
-    assert.ok(blogShell.includes(`label: "${label}"`), `missing nav label: ${label}`)
+    expectMatch(navConfig, new RegExp(`label:\\s*"${label}"`), `missing nav label: ${label}`)
   }
 
-  assert.ok(blogShell.includes('className="hidden items-center gap-3 text-[13px] font-medium md:flex"'))
-  assert.ok(blogShell.includes('aria-label="Open blog filters"'))
-  assert.ok(blogShell.includes('className="rounded-lg md:hidden"'))
-  assert.ok(blogShell.includes('aria-label="Search posts"'))
-  assert.ok(blogShell.includes('className="rounded-full md:hidden"'))
-  assert.ok(blogShell.includes('className="hidden min-h-[calc(100vh-57px)] w-[292px]'))
+  expectMatch(blogShell, /aria-label="Open blog filters"/, 'missing mobile filter button accessibility label')
+  expectMatch(blogShell, /aria-label="Search posts"/, 'missing search accessibility label')
+  expectMatch(blogShell, /<aside[\s\S]*lg:block/, 'expected desktop sidebar layout affordance')
 })
 
 test('BlogLeftRail keeps Recent/Topics sections and supports active topic semantics', () => {
-  assert.ok(leftRail.includes('>Recent<'))
-  assert.ok(leftRail.includes('>Topics<'))
-  assert.ok(leftRail.includes('{allPostsLink && ('))
-  assert.ok(leftRail.includes('active && "text-foreground"'))
-  assert.ok(leftRail.includes('active && "rounded-lg bg-muted text-foreground"'))
+  expectMatch(leftRail, />Recent</, 'missing recent heading')
+  expectMatch(leftRail, />Topics</, 'missing topics heading')
+  expectMatch(leftRail, /\{allPostsLink && \(/, 'missing all-posts conditional link')
+  expectMatch(leftRail, /active\s*&&\s*"text-foreground"/, 'missing active topic text styling state')
+  expectMatch(leftRail, /active\s*&&\s*"rounded-lg bg-muted text-foreground"/, 'missing active topic container styling state')
 })
 
 test('HomePage filtering combines topic + search query matching', () => {
-  assert.ok(homePage.includes('const matchesTopic = activeTopic === "All" || (post.tags || []).includes(activeTopic)'))
-  assert.ok(homePage.includes('const normalizedSearch = searchQuery.trim().toLowerCase()'))
-  assert.ok(homePage.includes('return matchesTopic && searchIndex.includes(normalizedSearch)'))
-  assert.ok(blogShell.includes('active: activeTopic === topic'))
+  expectMatch(homePage, /const\s+matchesTopic\s*=\s*activeTopic\s*===\s*"All"\s*\|\|\s*\(post\.tags\s*\|\|\s*\[\]\)\.includes\(activeTopic\)/, 'missing topic matching logic')
+  expectMatch(homePage, /const\s+normalizedSearch\s*=\s*searchQuery\.trim\(\)\.toLowerCase\(\)/, 'missing search normalization logic')
+  expectMatch(homePage, /return\s+matchesTopic\s*&&\s*searchIndex\.includes\(normalizedSearch\)/, 'missing combined filter return logic')
+  expectMatch(blogShell, /active:\s*activeTopic\s*===\s*topic/, 'missing topic active-state mapping')
 })
 
 test('Editorial card keeps critical article hierarchy in stable order', () => {

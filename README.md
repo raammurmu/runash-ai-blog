@@ -24,13 +24,13 @@ We welcome contributions! Please follow these steps to ensure your post is forma
 
 ### 1. Branching & Post Entries
 
-* Create a branch: `feature/YourName-Title`.
+* Create a branch using your team's branch naming convention.
 * Add a new entry in `lib/blog-data.tsx` with a unique `id`, `slug`, and `publishedAt`.
 
 ### 2. Handling Assets (Thumbnails & Images)
 
-* **Thumbnail:** Create a folder in `/assets` with the same name as your `.md` file. Place your thumbnail here.
-* **Other Images:** To keep the repo light, please host post images in the [RunAsh Documentation Images Repo](https://www.google.com/search?q=https://docs.runash.in).
+* **Thumbnail & Post Media:** Store static blog assets under `/public` (for example `/public/images/posts/...`) and reference them from the post entry in `lib/blog-data.tsx`.
+* **Other Images:** To keep the repo light, please host larger post images in the [RunAsh Documentation Images Repo](https://docs.runash.in).
 * **Optimization:** Always compress images using [TinyPNG](https://tinypng.com) before uploading.
 
 ### 3. Content Configuration

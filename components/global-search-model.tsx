@@ -24,6 +24,29 @@ type RecentItem = {
   emoji: string
 }
 
+const RECENT_SEARCHES_STORAGE_KEY = "runash_recent_searches"
+
+function isRecentItem(value: unknown): value is RecentItem {
+  if (!value || typeof value !== "object") return false
+  const item = value as Record<string, unknown>
+  return (
+    typeof item.id === "string" &&
+    typeof item.title === "string" &&
+    typeof item.slug === "string" &&
+    typeof item.emoji === "string"
+  )
+}
+
+function parseRecentSearches(raw: string): RecentItem[] {
+  try {
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(isRecentItem).slice(0, 5)
+  } catch {
+    return []
+  }
+}
+
 export function GlobalSearchModal({
   open,
   onOpenChange,
@@ -36,8 +59,8 @@ export function GlobalSearchModal({
 
   // Load history on mount
   React.useEffect(() => {
-    const saved = localStorage.getItem("findley_recent_searches")
-    if (saved) setRecentSearches(JSON.parse(saved))
+    const saved = localStorage.getItem(RECENT_SEARCHES_STORAGE_KEY)
+    if (saved) setRecentSearches(parseRecentSearches(saved))
   }, [])
 
   // Save to history helper
@@ -47,13 +70,13 @@ export function GlobalSearchModal({
       ...recentSearches.filter((r) => r.id !== item.id),
     ].slice(0, 5) // Keep last 5 items
     setRecentSearches(updated)
-    localStorage.setItem("findley_recent_searches", JSON.stringify(updated))
+    localStorage.setItem(RECENT_SEARCHES_STORAGE_KEY, JSON.stringify(updated))
   }
 
   const clearHistory = (e: React.MouseEvent) => {
     e.stopPropagation()
     setRecentSearches([])
-    localStorage.removeItem("findley_recent_searches")
+    localStorage.removeItem(RECENT_SEARCHES_STORAGE_KEY)
   }
 
   const handleSelect = (post: any) => {
