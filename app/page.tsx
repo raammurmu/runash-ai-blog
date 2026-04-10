@@ -60,17 +60,7 @@ export default function HomePage() {
         </header>
          <div className="flex flex-1">
         <Sidebar isCollapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-          <div className="mx-auto w-full max-w-6xl">
-            <section className="py-6 lg:py-10">
-              <HeroSection
-                badge="RunAsh Blog"
-                title="Agentic Live Commerce"
-                description="Discover launch updates, founder notes, tutorials, and experiments shaping the future of live commerce."
-                primaryCta={{ label: "Browse All posts", href: "/blog" }}
-                secondaryCta={{ label: "Publish article", href: "/create" }}
-              />
-            </section>
-          </div>
+          
          </div>
         
         <BlogFeed posts={filteredPosts} />
