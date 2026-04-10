@@ -5,6 +5,7 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 interface RailLink {
@@ -84,7 +85,7 @@ export function BlogLeftRail({
   return (
     <aside className={cn("h-fit", className)}>
       <div className="space-y-3.5">
-        <section className="space-y-1">
+        <section key="search" className="space-y-1">
           <div className="relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground/60" />
             <Input
@@ -110,14 +111,16 @@ export function BlogLeftRail({
             </div>
           </div>
         </section>
-
-        {allPostsLink && (
-          <section className="space-y-1">
-            <RailItem {...allPostsLink} />
-          </section>
-        )}
-
-        <section className="space-y-1">
+        <Separator className="bg-border/45" />
+        {allPostsLink ? (
+          <>
+            <section key="all-posts" className="space-y-1">
+              <RailItem {...allPostsLink} />
+            </section>
+            <Separator className="bg-border/45" />
+          </>
+        ) : null}
+        <section key="recent" className="space-y-1">
           <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Recent</h2>
           <div className="space-y-px">
             {recentLinks.map((link) => (
@@ -125,8 +128,8 @@ export function BlogLeftRail({
             ))}
           </div>
         </section>
-
-        <section className="space-y-1">
+        <Separator className="bg-border/45" />
+        <section key="topics" className="space-y-1">
           <h2 className="px-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-foreground/58">Topics</h2>
           <div className="space-y-px">
             {topicLinks.map((link) => (
