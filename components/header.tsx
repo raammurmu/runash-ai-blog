@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronDown, Menu } from "lucide-react"
+import { ChevronDown, Menu, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageTranslateControl } from "@/components/page-translate-control"
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Input } from "@/components/ui/input"
 import { getAllCategories } from "@/lib/blog-data"
 import { NAV_CONTRACT, SITE_HEADER_NAV_ITEMS } from "@/components/nav-config"
 
@@ -100,32 +101,53 @@ export function Header() {
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[85%]">
+            <SheetContent side="right" className="w-[92%] border-l border-border/60 bg-[#17181d] p-0 text-foreground sm:max-w-sm">
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle className="border-b border-border/50 px-5 py-4 text-left text-lg">Menu</SheetTitle>
               </SheetHeader>
-              <div className="mt-5 space-y-3">
-                {SITE_HEADER_NAV_ITEMS.map((item) => (
-                  <Button
-                    key={item.label}
-                    asChild
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <Link href={item.href}>{item.label}</Link>
-                  </Button>
-                ))}
+              <div className="space-y-5 p-5">
+                <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-2">
+                  <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2.5">
+                    <Search className="size-4 text-muted-foreground" />
+                    <Input
+                      type="search"
+                      placeholder="Start searching"
+                      className="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {SITE_HEADER_NAV_ITEMS.map((item) => (
+                    <Button
+                      key={item.label}
+                      asChild
+                      variant="ghost"
+                      className="h-11 w-full justify-start rounded-2xl border border-white/10 bg-white/5 px-4 text-sm hover:bg-white/10"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Link href={item.href}>{item.label}</Link>
+                    </Button>
+                  ))}
+                </div>
 
                 <Collapsible open={mobileLearnOpen} onOpenChange={setMobileLearnOpen}>
                   <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between">
+                    <Button
+                      variant="ghost"
+                      className="h-11 w-full justify-between rounded-2xl border border-white/10 bg-white/5 px-4 text-sm hover:bg-white/10"
+                    >
                       Learn
                       <ChevronDown className={cn("size-4 transition-transform", mobileLearnOpen && "rotate-180")} />
                     </Button>
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="space-y-1 pl-2">
-                    <Button asChild variant="ghost" className="w-full justify-start" onClick={() => setMobileOpen(false)}>
+                  <CollapsibleContent className="space-y-2 pt-2">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      className="h-10 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3.5 text-sm"
+                      onClick={() => setMobileOpen(false)}
+                    >
                       <Link href="https://docs.runash.in">Documentation</Link>
                     </Button>
                     {categories.map((category) => (
@@ -133,7 +155,7 @@ export function Header() {
                         key={category.slug}
                         asChild
                         variant="ghost"
-                        className="w-full justify-start text-muted-foreground"
+                        className="h-10 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3.5 text-sm text-muted-foreground"
                         onClick={() => setMobileOpen(false)}
                       >
                         <Link href={`/category/${category.slug}`}>{category.name}</Link>
@@ -141,6 +163,14 @@ export function Header() {
                     ))}
                   </CollapsibleContent>
                 </Collapsible>
+
+                <div className="border-t border-border/50 pt-5">
+                  <Button asChild className="h-11 w-full rounded-full bg-white text-black hover:bg-white/90">
+                    <Link href="/search?q=api" onClick={() => setMobileOpen(false)}>
+                      API Dashboard ↗
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
