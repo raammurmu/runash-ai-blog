@@ -52,7 +52,7 @@ export function Header() {
               className="rounded-sm"
               priority
             />
-            <span className={NAV_CONTRACT.brandText}>RunAsh</span>
+            <span className={`${NAV_CONTRACT.brandText} brand-gradient-text`}>RunAsh</span>
           </Link>
         </div>
 
@@ -101,17 +101,17 @@ export function Header() {
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[92%] border-l border-border/60 bg-[#17181d] p-0 text-foreground sm:max-w-sm">
+            <SheetContent side="right" className="w-[92%] border-l border-primary/20 bg-background p-0 text-foreground sm:max-w-sm">
               <SheetHeader>
                 <SheetTitle className="border-b border-border/50 px-5 py-4 text-left text-lg">Menu</SheetTitle>
               </SheetHeader>
               <div className="space-y-5 p-5">
-                <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-2">
-                  <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2.5">
-                    <Search className="size-4 text-muted-foreground" />
+                <div className="rounded-[1.75rem] border border-primary/20 bg-primary/5 p-2">
+                  <div className="flex items-center gap-2 rounded-2xl bg-background px-3 py-2.5 ring-1 ring-primary/15">
+                    <Search className="size-4 text-primary" />
                     <Input
                       type="search"
-                      placeholder="Start searching"
+                      placeholder="Search products, posts, APIs"
                       className="h-auto border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
                     />
                   </div>
@@ -123,7 +123,7 @@ export function Header() {
                       key={item.label}
                       asChild
                       variant="ghost"
-                      className="h-11 w-full justify-start rounded-2xl border border-white/10 bg-white/5 px-4 text-sm hover:bg-white/10"
+                      className="h-11 w-full justify-start rounded-2xl border border-primary/20 bg-background px-4 text-sm hover:border-primary/35 hover:bg-primary/10"
                       onClick={() => setMobileOpen(false)}
                     >
                       <Link href={item.href}>{item.label}</Link>
@@ -135,7 +135,7 @@ export function Header() {
                   <CollapsibleTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="h-11 w-full justify-between rounded-2xl border border-white/10 bg-white/5 px-4 text-sm hover:bg-white/10"
+                      className="h-11 w-full justify-between rounded-2xl border border-primary/20 bg-background px-4 text-sm hover:border-primary/35 hover:bg-primary/10"
                     >
                       Learn
                       <ChevronDown className={cn("size-4 transition-transform", mobileLearnOpen && "rotate-180")} />
@@ -145,7 +145,7 @@ export function Header() {
                     <Button
                       asChild
                       variant="ghost"
-                      className="h-10 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3.5 text-sm"
+                      className="h-10 w-full justify-start rounded-xl border border-primary/20 bg-background px-3.5 text-sm hover:border-primary/35 hover:bg-primary/10"
                       onClick={() => setMobileOpen(false)}
                     >
                       <Link href="https://docs.runash.in">Documentation</Link>
@@ -155,7 +155,7 @@ export function Header() {
                         key={category.slug}
                         asChild
                         variant="ghost"
-                        className="h-10 w-full justify-start rounded-xl border border-white/10 bg-white/5 px-3.5 text-sm text-muted-foreground"
+                        className="h-10 w-full justify-start rounded-xl border border-primary/20 bg-background px-3.5 text-sm text-muted-foreground hover:border-primary/35 hover:bg-primary/10"
                         onClick={() => setMobileOpen(false)}
                       >
                         <Link href={`/category/${category.slug}`}>{category.name}</Link>
